@@ -123,7 +123,7 @@ bool loadMedia() {
         printf( "Failed to load sprite sheet texture!\n" );
         success = false;
     }
-    if (!lootTexture.loadImageFromFile("loot03bag.gif",gRenderer)){
+    if (!lootTexture.loadImageFromFile("bag.gif",gRenderer)){
         printf( "Failed to load sprite sheet texture!\n" );
         success = false;
     }
@@ -243,6 +243,12 @@ int main( int argc, char* args[] )
                 playerTexture.render(
                         playerTexture.getPlayer().getPosition().getX()
                         ,playerTexture.getPlayer().getPosition().getY()
+                        ,&playerRectangle,gRenderer);
+
+
+                playerTexture.render(
+                        playerTexture.getPlayer().getPosition().getX()+200
+                        ,playerTexture.getPlayer().getPosition().getY()+200
                         ,&playerRectangle,gRenderer);
 
 

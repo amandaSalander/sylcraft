@@ -26,180 +26,140 @@ Carte::Carte(std::string filename) {
         //std::cout << line << std::endl;
         j++;
         for (int i = 0; i <line.size() ; ++i) {
-            std::cout << line[i] << " " <<std::endl;
+//            std::cout << line[i] << " " <<std::endl;
 
             if (line[i]=='*'){
-                ObstacleTexture obstacleTexture;
-                obstacleTexture.getObstacle().setPosition(Position(i*32,(j-1)*32));
-                obstacleTexture.getObstacle().setType("crystal.gif");
-                obstacleTexture.setOWidth(32);
-                obstacleTexture.setOHeight(32);
-
-
-                carte.push_back(new ObstacleTexture(obstacleTexture));
+                Obstacle obstacle;
+                obstacle.setPosition(Position(i*32,(j-1)*32));
+                obstacle.setType("crystal.gif");
+                carte.push_back(new Obstacle(obstacle));
+                // 32*32
             }
             if (line[i]=='0'){
-                ObstacleTexture obstacleTexture;
-                obstacleTexture.getObstacle().setPosition(Position(i*32,(j-1)*32));
-                obstacleTexture.getObstacle().setType("water.jpg");
-                obstacleTexture.setOHeight(32);
-                obstacleTexture.setOWidth(32);
-
-                carte.push_back(new ObstacleTexture(obstacleTexture));
+                Obstacle obstacle;
+                obstacle.setPosition(Position(i*32,(j-1)*32));
+                obstacle.setType("water.jpg");
+                carte.push_back(new Obstacle(obstacle));
+                // 32*320
             }
             if (line[i]=='1'){
-                ObstacleTexture obstacleTexture;
-                obstacleTexture.getObstacle().setPosition(Position(i*32,(j-1)*32));
-                obstacleTexture.getObstacle().setType("water.png");
-                obstacleTexture.setOHeight(32);
-                obstacleTexture.setOWidth(32);
-
-                carte.push_back(new ObstacleTexture(obstacleTexture));
+                Obstacle obstacle;
+                obstacle.setPosition(Position(i*32,(j-1)*32));
+                obstacle.setType("water.png");
+                carte.push_back(new Obstacle(obstacle));
+                // 32*32
             }
             if (line[i]=='8'){
-                ObstacleTexture obstacleTexture;
-                obstacleTexture.getObstacle().setPosition(Position(i*32,(j-1)*32));
-                obstacleTexture.getObstacle().setType("tree_blue.png");
-                obstacleTexture.setOHeight(96);
-                obstacleTexture.setOWidth(64);
-
-                carte.push_back(new ObstacleTexture(obstacleTexture));
+                Obstacle obstacle;
+                obstacle.setPosition(Position(i*32,(j-1)*32));
+                obstacle.setType("tree_blue.png");
+                carte.push_back(new Obstacle(obstacle));
+                //96*64
             }
             if (line[i]=='5'){
-                ObstacleTexture obstacleTexture;
-                obstacleTexture.getObstacle().setPosition(Position(i*32,(j-1)*32));
-                obstacleTexture.getObstacle().setType("inn_house.png");
-                obstacleTexture.setOHeight(96);
-                obstacleTexture.setOWidth(128);
-
-                carte.push_back(new ObstacleTexture(obstacleTexture));
+                Obstacle obstacle;
+                obstacle.setPosition(Position(i*32,(j-1)*32));
+                obstacle.setType("inn_house.png");
+                carte.push_back(new Obstacle(obstacle));
             }
 
             else if ( line[i]=='+'){
-                LootTexture lootTexture;
-                lootTexture.getLoot().setPosition(Position(i*32,(j-1)*32));
-                carte.push_back(new LootTexture (lootTexture));
+                Loot loot;
+                loot.setPosition(Position(i*32,(j-1)*32));
+                loot.setType("bag.gif");
+                carte.push_back(new Loot (loot));
 
             }
-
             else if (line[i]=='a'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_middle.jpeg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_middle.jpeg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='b'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_up.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_up.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='c'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_down.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_down.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='d'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_left.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_left.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='e'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_right.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_right.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='f'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_bottom_right.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_bottom_right.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='j'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_top_left.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_top_left.jpg");
+                carte.push_back(new Decoration (decoration));
 
             }
             else if (line[i]=='l'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_top_right.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_top_right.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='k'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_bottom_left.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_bottom_left.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='m'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_end_left.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_end_left.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='n'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_end_left_top.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_end_left_top.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='o'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_end_right.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
-
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_end_right.jpg");
+                carte.push_back(new Decoration (decoration));
             }
             else if (line[i]=='p'){
-                DecorationTexture decorationTexture;
-                decorationTexture.getDecoration().setPosition(Position(i*32,(j-1)*32));
-                decorationTexture.getDecoration().setType("tile_end_right_top.jpg");
-                decorationTexture.setDHeight(32);
-                decorationTexture.setDWidth(32);
-                carte.push_back(new DecorationTexture (decorationTexture));
+                Decoration decoration;
+                decoration.setPosition(Position(i*32,(j-1)*32));
+                decoration.setType("tile_end_right_top.jpg");
+                carte.push_back(new Decoration (decoration));
 
             }
-            std::cout << "CARTE SIZE "<<carte.size() << std::endl;
+//            else if (line[i]=='/'){
+//                ElementTexture elementTexture;
+//                elementTexture.getElement().setPosition(Position(i*32,(j-1)*32));
+//                elementTexture.getElement().setType("tile_end_right_top.jpg");
+//                elementTexture.setEHeight(32);
+//                elementTexture.setEWidth(32);
+//                carte.push_back(new ElementTexture (elementTexture));
+//
+//            }
+//            std::cout << "CARTE SIZE "<<carte.size() << std::endl;
         }
 
 
@@ -223,10 +183,10 @@ void Carte::setHauteur(int hauteur) {
     Carte::hauteur = hauteur;
 }
 
-std::vector<ElementTexture*> &Carte::getCarte() {
+std::vector<Element*> &Carte::getCarte() {
     return carte;
 }
 
-void Carte::setCarte(const std::vector<ElementTexture> &carte) {
+void Carte::setCarte(const std::vector<Element> &carte) {
 //    Carte::carte = carte;
 }

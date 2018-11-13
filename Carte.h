@@ -12,14 +12,14 @@
 #include <cstring>
 #include <vector>
 #include "Element.h"
-#include "ElementTexture.h"
+
 
 class Carte {
 
 private:
     int largeur; // en pixel
     int hauteur; //en pixel
-    std::vector<ElementTexture*>  carte;
+    std::vector<Element*>  carte;
 public:
     Carte():largeur(0),hauteur(0){};
     Carte(int l,int h):largeur(l),hauteur(h){}
@@ -33,9 +33,9 @@ public:
 
     void setHauteur(int hauteur);
 
-    std::vector<ElementTexture*> &getCarte();
+    std::vector<Element*> &getCarte();
 
-    void setCarte(const std::vector<ElementTexture> &carte);;
+    void setCarte(const std::vector<Element> &carte);;
 };
 
 

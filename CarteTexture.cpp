@@ -22,40 +22,58 @@ CarteTexture::~CarteTexture() {
 
 void CarteTexture::render(SDL_Renderer *gRenderer) {
 
-    ObstacleTexture *o = nullptr;
-    LootTexture *l = nullptr;
-    DecorationTexture *d=nullptr;
-    for (int i = 0; i < carte.getCarte().size(); ++i) {
-         if ( o = dynamic_cast<ObstacleTexture*>(carte.getCarte().at(i)) ){
 
-             o->loadImageFromFile(
-                     o->getObstacle().getType()
-                     ,gRenderer);
-             o->render(
-                     o->getObstacle().getPosition().getX(),
-                     o->getObstacle().getPosition().getY(),
-                     NULL,
+    Element *e= nullptr;
+
+    for (int i = 0; i < carte.getCarte().size(); ++i) {
+
+         e = carte.getCarte().at(i);
+
+         Obstacle *o= nullptr;
+         Decoration *d= nullptr;
+         Loot *l= nullptr;
+
+         if (o= dynamic_cast<Obstacle*>(carte.getCarte().at(i))){
+            ObstacleTexture obstacleTexture;
+            obstacleTexture.loadImageFromFile(
+                    o->getType(),
+                    gRenderer
+                    );
+            obstacleTexture.render(o->getPosition().getX(),
+                                    o->getPosition().getY(),
+                                    NULL,
+                                    gRenderer
+                    );
+         }
+        else if (d= dynamic_cast<Decoration*>(carte.getCarte().at(i))){
+            DecorationTexture decorationTexture;
+            decorationTexture.loadImageFromFile(
+                    d->getType(),
+                    gRenderer
+            );
+            decorationTexture.render(d->getPosition().getX(),
+                                   d->getPosition().getY(),
+                                   NULL,
+                                   gRenderer
+            );
+        }
+        else if (l= dynamic_cast<Loot*>(carte.getCarte().at(i))){
+             LootTexture lootTexture;
+             lootTexture.loadImageFromFile(
+                     l->getType(),
                      gRenderer
              );
-         }
-         else if (l = dynamic_cast<LootTexture*>(carte.getCarte().at(i))){
-             l->loadImageFromFile("loot03bag.gif",gRenderer);
-             l->render(
-                     l->getLoot().getPosition().getX(),
-                     l->getLoot().getPosition().getY(),
-                     NULL,
-                     gRenderer
+             lootTexture.render(l->getPosition().getX(),
+                                      l->getPosition().getY(),
+                                      NULL,
+                                      gRenderer
              );
-         }
-         else if (d = dynamic_cast<DecorationTexture*>(carte.getCarte().at(i))){
-             d->loadImageFromFile(d->getDecoration().getType(),gRenderer);
-             d->render(
-                     d->getDecoration().getPosition().getX(),
-                     d->getDecoration().getPosition().getY(),
-                     NULL,
-                     gRenderer
-             );
-         }
+        }
+
+
+
+
+
 
     }
 

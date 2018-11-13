@@ -12,38 +12,6 @@
 #include <iostream>
 
 class ObstacleTexture: virtual public ElementTexture {
-private:
-    //The actual hardware texture
-    SDL_Texture* obstacleTexture;
-    //Image dimensions
-    int oWidth;
-    int oHeight;
-    Obstacle obstacle;
-
-public:
-
-    ObstacleTexture();
-    virtual  ~ObstacleTexture();
-    bool loadImageFromFile(std::string path, SDL_Renderer* gRenderer);
-    void free();
-
-    void render( int x, int y, SDL_Rect* clip, SDL_Renderer* gRenderer );
-
-    SDL_Texture *getObstacleTexture() const;
-
-    void setObstacleTexture(SDL_Texture *obstacleTexture);
-
-    int getOWidth() const;
-
-    void setOWidth(int oWidth);
-
-    int getOHeight() const;
-
-    void setOHeight(int oHeight);
-
-    Obstacle &getObstacle();
-
-    void setObstacle(const Obstacle &obstacle);
 
 };
 

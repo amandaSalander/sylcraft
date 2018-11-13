@@ -9,7 +9,7 @@
 
 #include "Element.h"
 
-class Obstacle : public Element{
+class Obstacle : virtual public Element{
 public:
     const std::string &getType() const;
 
