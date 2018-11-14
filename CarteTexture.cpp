@@ -6,6 +6,7 @@
 #include "ObstacleTexture.h"
 #include "LootTexture.h"
 #include "DecorationTexture.h"
+#include "PlayerTexture.h"
 
 
 CarteTexture::CarteTexture() {
@@ -13,6 +14,11 @@ CarteTexture::CarteTexture() {
     cWidth=0;
     cTexture=NULL;
     carte=Carte("hi");
+    sdl_rect.w=32;
+    sdl_rect.h=32;
+    sdl_rect.x=0;
+    sdl_rect.y=0;
+
 }
 
 CarteTexture::~CarteTexture() {
@@ -91,6 +97,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer, int a){
             Obstacle *o= nullptr;
             Decoration *d= nullptr;
             Loot *l= nullptr;
+            Player *p= nullptr;
 
             if (o= dynamic_cast<Obstacle*>(carte.getLayers().at(i).at(j))){
 
@@ -131,15 +138,39 @@ void CarteTexture::render(SDL_Renderer *gRenderer, int a){
                                    gRenderer
                 );
             }
+            else if (p= dynamic_cast<Player*>(carte.getLayers().at(i).at(j))){
+                PlayerTexture *playerTexture=new PlayerTexture();
+                playerTexture->setPlayer(*p);
+                if (playerTexture->loadImageFromFile("katia_civil.png",gRenderer)){
+
+                    playerTexture->render(p->getPosition().getX(),
+                                         p->getPosition().getY(),
+                                         &sdl_rect,
+                                         gRenderer
+                    );
+                    this->playerTexture= *playerTexture;
+
+
+                }
+                else {
+                    std::cout<< "COULDN'T LOAD THE PLAYER" <<std::endl;
+                }
+
+            }
 
         }
     }
 }
 
+void CarteTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode key) {
+
+    playerTexture.changeCurrentRender(&sdl_rect,key);
+}
+
 void CarteTexture::free() {
-    if (cTexture!=NULL){
+    if (cTexture!= nullptr){
         SDL_DestroyTexture(cTexture);
-        cTexture=NULL;
+        cTexture=nullptr;
         cWidth=0;
         cHeight=0;
     }
@@ -175,4 +206,17 @@ Carte &CarteTexture::getCarte(){
 
 void CarteTexture::setCarte(const Carte &carte) {
     CarteTexture::carte = carte;
+}
+
+
+void CarteTexture::setPlayerTexture(const PlayerTexture &playerTexture) {
+    CarteTexture::playerTexture = playerTexture;
+}
+
+SDL_Rect &CarteTexture::getSdl_rect(){
+    return sdl_rect;
+}
+
+void CarteTexture::setSdl_rect(const SDL_Rect &sdl_rect) {
+    CarteTexture::sdl_rect = sdl_rect;
 }

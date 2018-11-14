@@ -331,6 +331,10 @@ void Carte::setLayers(const std::vector<std::vector<Element *>> &layers) {
 }
 
 
-void Carte::addPlayerToMap(Player* player) {
-    
+void Carte::addPlayerToMap(Player* player, int position) {
+    if (layers.size()!=0){
+
+        layers.at(layers.size()-1).push_back(player);
+    }
+
 }

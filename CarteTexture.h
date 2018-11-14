@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string>
 #include "Carte.h"
+#include "PlayerTexture.h"
 
 class CarteTexture {
 private:
@@ -17,6 +18,8 @@ private:
     int cWidth;
     int cHeight;
     Carte carte;
+    PlayerTexture playerTexture;
+    SDL_Rect sdl_rect;
 
 public:
     CarteTexture();
@@ -30,6 +33,10 @@ public:
 
 
     void render(SDL_Renderer *gRenderer, int a);
+
+
+    void changeCurrentRender(SDL_Rect *playerRectangle,SDL_Keycode key);
+
 
     SDL_Texture *getCTexture() const;
 
@@ -46,6 +53,16 @@ public:
     Carte &getCarte();
 
     void setCarte(const Carte &carte);
+
+    PlayerTexture *getPlayerTexture();
+
+    void setPlayerTexture(PlayerTexture *playerTexture);
+
+    void setPlayerTexture(const PlayerTexture &playerTexture);
+
+    SDL_Rect &getSdl_rect();
+
+    void setSdl_rect(const SDL_Rect &sdl_rect);
 
 
 };

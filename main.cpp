@@ -216,7 +216,14 @@ int main( int argc, char* args[] )
                 //Render texture to screen
                 SDL_RenderCopy( gRenderer, gTexture, NULL, NULL );
                 //Update screen
+                carteTexture.setCarte(carte1);
 
+                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),50);
+
+                Player a;
+                a.setType("katia_civil.png");
+                a.setPosition(Position(200,200));
+                carteTexture.getCarte().addPlayerToMap(new Player(a),0);
                 //Handle events on queue
                 int k_w(0),k_h(0);
                 while( SDL_PollEvent( &e ) != 0 )
@@ -228,6 +235,7 @@ int main( int argc, char* args[] )
                     }
                     else if( e.type == SDL_KEYDOWN ) {
                         playerTexture.changeCurrentRender(&playerRectangle,e.key.keysym.sym);
+                        carteTexture.changeCurrentRender(&(carteTexture.getSdl_rect()),e.key.keysym.sym);
 
                     }
                 }
@@ -240,15 +248,18 @@ int main( int argc, char* args[] )
 
 
 //                carteTexture.render(gRenderer);
-                carteTexture.setCarte(carte1);
+
+
+
+
+
+
                 carteTexture.render(gRenderer,0);
 
-
-
-                playerTexture.render(
-                        playerTexture.getPlayer().getPosition().getX()+200
-                        ,playerTexture.getPlayer().getPosition().getY()+200
-                        ,&playerRectangle,gRenderer);
+//                playerTexture.render(
+//                        playerTexture.getPlayer().getPosition().getX()+200
+//                        ,playerTexture.getPlayer().getPosition().getY()+200
+//                        ,&playerRectangle,gRenderer);
 
 
                 SDL_RenderPresent( gRenderer );

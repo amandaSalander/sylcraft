@@ -48,7 +48,7 @@ public:
 
     void setLayers(const std::vector<std::vector<Element *>> &layers);;
 
-    void addPlayerToMap(Player* player);
+    void addPlayerToMap(Player* player,int position);
 };
 
 

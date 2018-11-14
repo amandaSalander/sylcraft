@@ -14,17 +14,17 @@
 class PlayerTexture: public ElementTexture {
 
 public:
-    PlayerTexture();
+//    PlayerTexture();
 
-    ~PlayerTexture() override;
+//    ~PlayerTexture() override;
 
-    bool loadImageFromFile(std::string path,SDL_Renderer* gRenderer) override;
+//    bool loadImageFromFile(std::string path,SDL_Renderer* gRenderer) override;
 
-    void free() override;
+//    void free() override;
 
     //Renders texture at given point
 
-    void render( int x, int y, SDL_Rect* clip = nullptr,SDL_Renderer* gRenderer= nullptr );
+//    void render( int x, int y, SDL_Rect* clip = nullptr,SDL_Renderer* gRenderer= nullptr );
 
     //Gets image dimensions
 
@@ -42,7 +42,7 @@ public:
 
     void setMHeight(int mHeight);
 
-    const Player &getPlayer() const;
+    Player &getPlayer() ;
 
     void setPlayer(const Player &player);
 
