@@ -81,6 +81,61 @@ void CarteTexture::render(SDL_Renderer *gRenderer) {
 }
 
 
+void CarteTexture::render(SDL_Renderer *gRenderer, int a){
+
+//    std::cout << "LAYERS " << carte.getLayers().size() << std::endl;
+    for (int i = 0; i < carte.getLayers().size(); ++i) {
+
+        for (int j = 0; j < carte.getLayers().at(i).size(); ++j) {
+
+            Obstacle *o= nullptr;
+            Decoration *d= nullptr;
+            Loot *l= nullptr;
+
+            if (o= dynamic_cast<Obstacle*>(carte.getLayers().at(i).at(j))){
+
+                ObstacleTexture obstacleTexture;
+                obstacleTexture.loadImageFromFile(
+                        o->getType(),
+                        gRenderer
+                );
+                obstacleTexture.render(o->getPosition().getX(),
+                                       o->getPosition().getY(),
+                                       NULL,
+                                       gRenderer
+                );
+            }
+            else if (l= dynamic_cast<Loot*>(carte.getLayers().at(i).at(j))){
+
+                LootTexture lootTexture;
+                lootTexture.loadImageFromFile(
+                        l->getType(),
+                        gRenderer
+                );
+                lootTexture.render(l->getPosition().getX(),
+                                       l->getPosition().getY(),
+                                       NULL,
+                                       gRenderer
+                );
+            }
+            else if (d= dynamic_cast<Decoration*>(carte.getLayers().at(i).at(j))){
+
+                DecorationTexture decorationTexture;
+                decorationTexture.loadImageFromFile(
+                        d->getType(),
+                        gRenderer
+                );
+                decorationTexture.render(d->getPosition().getX(),
+                                   d->getPosition().getY(),
+                                   NULL,
+                                   gRenderer
+                );
+            }
+
+        }
+    }
+}
+
 void CarteTexture::free() {
     if (cTexture!=NULL){
         SDL_DestroyTexture(cTexture);

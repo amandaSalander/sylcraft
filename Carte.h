@@ -12,6 +12,7 @@
 #include <cstring>
 #include <vector>
 #include "Element.h"
+#include "Player.h"
 
 
 class Carte {
@@ -20,10 +21,16 @@ private:
     int largeur; // en pixel
     int hauteur; //en pixel
     std::vector<Element*>  carte;
+    std::vector<std::vector<Element*>> layers;
 public:
     Carte():largeur(0),hauteur(0){};
     Carte(int l,int h):largeur(l),hauteur(h){}
     Carte(std::string filename);
+
+    // THIS METHOD IS TO TEST A NEW FEATURE WHICH IS RENDERING CARTE BY LAYERS, THE LAST LAYERS CONTAIN ONLY OBSTACLE OBJECTS
+    Carte(std::string filename,int);
+
+
 
     int getLargeur() const;
 
@@ -35,7 +42,13 @@ public:
 
     std::vector<Element*> &getCarte();
 
-    void setCarte(const std::vector<Element> &carte);;
+    void setCarte(const std::vector<Element> &carte);
+
+    const std::vector<std::vector<Element *>> &getLayers() const;
+
+    void setLayers(const std::vector<std::vector<Element *>> &layers);;
+
+    void addPlayerToMap(Player* player);
 };
 
 

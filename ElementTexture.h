@@ -21,11 +21,11 @@ private:
 public:
     ElementTexture();
     virtual ~ElementTexture();
-    void free();
+    virtual void free();
 
-    bool loadImageFromFile(std::string path, SDL_Renderer* gRenderer);
+    virtual bool loadImageFromFile(std::string path, SDL_Renderer* gRenderer);
 
-    void render(int x, int y, SDL_Rect *clip, SDL_Renderer *gRenderer);
+    virtual void render(int x, int y, SDL_Rect *clip, SDL_Renderer *gRenderer);
 
     const std::string &getEType() const;
 

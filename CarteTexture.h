@@ -26,7 +26,10 @@ public:
     void free();
 
 
-    void render(SDL_Renderer *gRender);
+    void render(SDL_Renderer *gRenderer);
+
+
+    void render(SDL_Renderer *gRenderer, int a);
 
     SDL_Texture *getCTexture() const;
 

@@ -183,6 +183,8 @@ int main( int argc, char* args[] )
 {
     Carte carte("cdff");
 
+    Carte carte1("ccc",0);
+
     std::cout<<carte.getHauteur()<<std::endl;
 
     //Start up SDL and create window
@@ -237,13 +239,10 @@ int main( int argc, char* args[] )
 
 
 
+//                carteTexture.render(gRenderer);
+                carteTexture.setCarte(carte1);
+                carteTexture.render(gRenderer,0);
 
-                carteTexture.render(gRenderer);
-
-                playerTexture.render(
-                        playerTexture.getPlayer().getPosition().getX()
-                        ,playerTexture.getPlayer().getPosition().getY()
-                        ,&playerRectangle,gRenderer);
 
 
                 playerTexture.render(

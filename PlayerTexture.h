@@ -16,14 +16,15 @@ class PlayerTexture: public ElementTexture {
 public:
     PlayerTexture();
 
-    ~PlayerTexture();
+    ~PlayerTexture() override;
 
-    bool loadImageFromFile(std::string path,SDL_Renderer* gRenderer);
+    bool loadImageFromFile(std::string path,SDL_Renderer* gRenderer) override;
 
-    void free();
+    void free() override;
 
     //Renders texture at given point
-    void render( int x, int y, SDL_Rect* clip = NULL,SDL_Renderer* gRenderer=NULL );
+
+    void render( int x, int y, SDL_Rect* clip = nullptr,SDL_Renderer* gRenderer= nullptr );
 
     //Gets image dimensions
 
