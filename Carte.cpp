@@ -207,7 +207,7 @@ Carte::Carte(std::string filename, int) {
 
         for (int i = 0; i <line.size() ; ++i) {
 
-            if (line[i] == '*' || line[i]=='8' || line[i]=='5') {
+            if (line[i] == '*' || line[i]=='8' || line[i]=='5' || line[i]=='9') {
 
                 Obstacle obstacle;
 
@@ -222,6 +222,9 @@ Carte::Carte(std::string filename, int) {
                         break;
                     case '5':
                         obstacle.setType("inn_house.png");
+                        break;
+                    case '9':
+                        obstacle.setType("invisible.png");
                         break;
                 }
 
@@ -302,7 +305,6 @@ Carte::Carte(std::string filename, int) {
 
                 layers.at(layers.size()-1).push_back(new Decoration(decoration));
             }
-
             else {
                 vector.push_back(nullptr);
             }
@@ -334,7 +336,7 @@ void Carte::setLayers(const std::vector<std::vector<Element *>> &layers) {
 void Carte::addPlayerToMap(Player* player, int position) {
     if (layers.size()!=0){
 
-        layers.at(layers.size()-1).push_back(player);
+        layers.at(layers.size()-1).at(position)=player;
     }
 
 }

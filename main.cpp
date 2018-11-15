@@ -218,12 +218,13 @@ int main( int argc, char* args[] )
                 //Update screen
                 carteTexture.setCarte(carte1);
 
-                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),50);
+                playerTexture.getPlayer().setType("haru_civil.png");
+                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),93);
 
                 Player a;
                 a.setType("katia_civil.png");
                 a.setPosition(Position(200,200));
-                carteTexture.getCarte().addPlayerToMap(new Player(a),0);
+                carteTexture.getCarte().addPlayerToMap(new Player(a),100);
                 //Handle events on queue
                 int k_w(0),k_h(0);
                 while( SDL_PollEvent( &e ) != 0 )

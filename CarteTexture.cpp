@@ -90,6 +90,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer) {
 void CarteTexture::render(SDL_Renderer *gRenderer, int a){
 
 //    std::cout << "LAYERS " << carte.getLayers().size() << std::endl;
+    int index=0;
     for (int i = 0; i < carte.getLayers().size(); ++i) {
 
         for (int j = 0; j < carte.getLayers().at(i).size(); ++j) {
@@ -139,16 +140,36 @@ void CarteTexture::render(SDL_Renderer *gRenderer, int a){
                 );
             }
             else if (p= dynamic_cast<Player*>(carte.getLayers().at(i).at(j))){
-                PlayerTexture *playerTexture=new PlayerTexture();
-                playerTexture->setPlayer(*p);
-                if (playerTexture->loadImageFromFile("katia_civil.png",gRenderer)){
 
-                    playerTexture->render(p->getPosition().getX(),
-                                         p->getPosition().getY(),
-                                         &sdl_rect,
-                                         gRenderer
-                    );
-                    this->playerTexture= *playerTexture;
+
+                PlayerTexture *pT=new PlayerTexture();
+                playerTexture.setPlayer(*p);
+                SDL_Rect sdl_rect1= SDL_Rect(sdl_rect);
+                sdl_rect1.x=0;
+                sdl_rect1.y=0;
+                sdl_rect1.h=32;
+                sdl_rect1.w=32;
+                if (pT->loadImageFromFile(p->getType(),gRenderer)){
+
+
+                    /*** THE FIRST PLAYER TO BE ADDED IS ALWAYS THE ONE WHICH IS DIRECTLY SELECTED***/
+                    if (index==0){
+                        pT->render(p->getPosition().getX(),
+                                   p->getPosition().getY(),
+                                   &sdl_rect,
+                                   gRenderer
+                        );
+                        playerTexture= *pT;
+                        index++;
+                    } else{
+                        pT->render(p->getPosition().getX(),
+                                   p->getPosition().getY(),
+                                   &sdl_rect1,
+                                   gRenderer
+                        );
+                    }
+
+
 
 
                 }
@@ -166,6 +187,8 @@ void CarteTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode ke
 
     playerTexture.changeCurrentRender(&sdl_rect,key);
 }
+
+
 
 void CarteTexture::free() {
     if (cTexture!= nullptr){
@@ -219,4 +242,14 @@ SDL_Rect &CarteTexture::getSdl_rect(){
 
 void CarteTexture::setSdl_rect(const SDL_Rect &sdl_rect) {
     CarteTexture::sdl_rect = sdl_rect;
+}
+
+bool CarteTexture::allowedMovement(SDL_Keycode key) {
+    std::vector<Element*> v=carte.getLayers().at(carte.getLayers().size()-1);
+
+    switch (key){
+        case SDL_KEYUP:
+
+            break;
+    }
 }

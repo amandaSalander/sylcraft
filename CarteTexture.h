@@ -64,7 +64,7 @@ public:
 
     void setSdl_rect(const SDL_Rect &sdl_rect);
 
-
+    bool allowedMovement(SDL_Keycode key);
 };
 
 
