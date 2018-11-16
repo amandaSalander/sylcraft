@@ -17,7 +17,7 @@ public:
     Element(){};
     Element(const Position &pos): position(pos){};
     virtual  ~Element(){}
-    const Position &getPosition();
+    const Position &getPosition()const;
     void setPosition(const Position &pos);
 
     const std::string &getType() const;

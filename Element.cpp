@@ -6,7 +6,7 @@
 #include "Element.h"
 
 
-const Position &Element::getPosition(){
+const Position &Element::getPosition() const{
     return position;
 }
 

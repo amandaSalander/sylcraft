@@ -217,14 +217,22 @@ int main( int argc, char* args[] )
                 SDL_RenderCopy( gRenderer, gTexture, NULL, NULL );
                 //Update screen
                 carteTexture.setCarte(carte1);
-
+                playerTexture.getPlayer().setPosition(Position(300,240));
                 playerTexture.getPlayer().setType("haru_civil.png");
-                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),93);
+                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),593);
+
 
                 Player a;
                 a.setType("katia_civil.png");
                 a.setPosition(Position(200,200));
-                carteTexture.getCarte().addPlayerToMap(new Player(a),100);
+                carteTexture.getCarte().addPlayerToMap(new Player(a),594);
+
+                Player b;
+                b.setType("Aldusa_Grai_de_Civille.png");
+                b.setPosition(Position(300,400));
+                carteTexture.getCarte().addPlayerToMap(new Player(b),595);
+
+
                 //Handle events on queue
                 int k_w(0),k_h(0);
                 while( SDL_PollEvent( &e ) != 0 )
@@ -235,7 +243,7 @@ int main( int argc, char* args[] )
                         quit = true;
                     }
                     else if( e.type == SDL_KEYDOWN ) {
-                        playerTexture.changeCurrentRender(&playerRectangle,e.key.keysym.sym);
+//                        playerTexture.changeCurrentRender(&playerRectangle,e.key.keysym.sym);
                         carteTexture.changeCurrentRender(&(carteTexture.getSdl_rect()),e.key.keysym.sym);
 
                     }

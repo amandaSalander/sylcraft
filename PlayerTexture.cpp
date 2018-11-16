@@ -69,7 +69,7 @@ void PlayerTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode k
     }
     playerRectangle->w=32;
     playerRectangle->h=32;
-    std::cout<< "I AM HERE " <<std::endl;
+
     switch (key){
         case SDLK_UP:
             playerRectangle->y=3*32;
@@ -115,17 +115,7 @@ void PlayerTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode k
 
 }
 
-//void PlayerTexture::render( int x, int y, SDL_Rect* clip, SDL_Renderer* gRenderer ) {
-//    //Set rendering space and render to screen
-//    SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-//    //Set clip rendering dimensions
-//    if( clip != NULL ) {
-//        renderQuad.w = clip->w;
-//        renderQuad.h = clip->h;
-//    }
-//    //Render to screen
-//    SDL_RenderCopy( gRenderer, mTexture, clip, &renderQuad );
-//}
+
 
 Player &PlayerTexture::getPlayer() {
     return player;

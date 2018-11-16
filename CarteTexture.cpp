@@ -143,23 +143,28 @@ void CarteTexture::render(SDL_Renderer *gRenderer, int a){
 
 
                 PlayerTexture *pT=new PlayerTexture();
-                playerTexture.setPlayer(*p);
+                pT->setPlayer(*p);
                 SDL_Rect sdl_rect1= SDL_Rect(sdl_rect);
                 sdl_rect1.x=0;
                 sdl_rect1.y=0;
                 sdl_rect1.h=32;
                 sdl_rect1.w=32;
+                if ( playerTexture.getPlayer().getPosition().getY()==0 &&
+                                playerTexture.getPlayer().getPosition().getX()==0){
+                    playerTexture.getPlayer().setPosition(p->getPosition());
+                }
                 if (pT->loadImageFromFile(p->getType(),gRenderer)){
 
 
                     /*** THE FIRST PLAYER TO BE ADDED IS ALWAYS THE ONE WHICH IS DIRECTLY SELECTED***/
                     if (index==0){
-                        pT->render(p->getPosition().getX(),
-                                   p->getPosition().getY(),
-                                   &sdl_rect,
-                                   gRenderer
-                        );
-                        playerTexture= *pT;
+
+                            pT->render(playerTexture.getPlayer().getPosition().getX(),
+                                       playerTexture.getPlayer().getPosition().getY(),
+                                       &sdl_rect,
+                                       gRenderer
+                            );
+
                         index++;
                     } else{
                         pT->render(p->getPosition().getX(),
@@ -185,7 +190,19 @@ void CarteTexture::render(SDL_Renderer *gRenderer, int a){
 
 void CarteTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode key) {
 
-    playerTexture.changeCurrentRender(&sdl_rect,key);
+//    std::cout << "VALUE OF ALLOW " <<carte.allowedMovement(key,playerTexture.getPlayer().getPosition())<<std::endl;
+    if ( carte.allowedMovement(key,playerTexture.getPlayer().getPosition()) == true){
+        playerTexture.changeCurrentRender(&sdl_rect,key);
+        carte.updatePosition(playerTexture.getPlayer().getPosition(),0);
+        std::cout << "CAN WALK " << std::endl;
+    }
+    else {
+        std::cout << "CANNOT WALK " << std::endl;
+    }
+
+
+
+
 }
 
 
@@ -245,11 +262,7 @@ void CarteTexture::setSdl_rect(const SDL_Rect &sdl_rect) {
 }
 
 bool CarteTexture::allowedMovement(SDL_Keycode key) {
-    std::vector<Element*> v=carte.getLayers().at(carte.getLayers().size()-1);
+//    std::vector<Element*> v=carte.getLayers().at(carte.getLayers().size()-1);
 
-    switch (key){
-        case SDL_KEYUP:
-
-            break;
-    }
+//    carte.allowedMovement(SDL_KEYUP,0);
 }

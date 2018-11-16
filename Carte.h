@@ -14,6 +14,8 @@
 #include "Element.h"
 #include "Player.h"
 
+#include <SDL2/SDL.h>
+
 
 class Carte {
 
@@ -49,6 +51,10 @@ public:
     void setLayers(const std::vector<std::vector<Element *>> &layers);;
 
     void addPlayerToMap(Player* player,int position);
+
+    bool allowedMovement(SDL_Keycode key,Position position);
+
+    void updatePosition(Position position,int indexPlayer);
 };
 
 
