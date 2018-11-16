@@ -365,66 +365,67 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
 
 
                 if ( layers.at( layers.size()-1 ).at(pos-largeur)==nullptr ){
-                    return 1;
+                    return true;
                 }
                 else {
 
                     if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos-largeur)) ){
-                        return 0;
+                        return false;
                     }
                     else {
-                        return 1;
+                        return true;
                     }
                 }
 
             }
         case SDLK_DOWN:
 
-            if (pos +largeur < largeur*hauteur){
+            if (pos < largeur*hauteur-largeur-1){
                 if ( layers.at( layers.size()-1 ).at(pos+largeur)==nullptr ){
-                    return 1;
+                    return true;
                 }
                 else {
 
                     if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos+largeur)) ){
-                        return 0;
+                        return false;
                     }
                     else {
-                        return 1;
+                        return true;
                     }
                 }
             }
         case SDLK_LEFT:
             if (pos -1> 0){
                 if ( layers.at( layers.size()-1 ).at(pos-1)==nullptr ){
-                    return 1;
+                    return true;
                 }
                 else {
 
                     if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos-1)) ){
-                        return 0;
+                        return false;
                     }
                     else {
-                        return 1;
+                        return true;
                     }
                 }
             }
 
         case SDLK_RIGHT:
-            if (pos +1< largeur*hauteur){
+            if ( (pos +2) < largeur*hauteur){
 
                 if ( layers.at( layers.size()-1 ).at(pos+1)==nullptr ){
-                    return 1;
+                    return true;
                 }
                 else {
                     if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos+1)) ){
-
+                        return false;
                     }
                     else {
-                        return 1;
+                        return true;
                     }
                 }
             }
+            else return false;
 
 
         default:break;
