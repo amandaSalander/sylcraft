@@ -14,8 +14,8 @@
 Carte::Carte(std::string filename) {
     std::string line;
 
-//    std::
     std::ifstream carteFile("cartes/carte_1.txt");
+
 
     std::cout << carteFile.is_open() << std::endl;
     largeur=960;
@@ -28,7 +28,7 @@ Carte::Carte(std::string filename) {
     std::getline(carteFile,line);
     int layer=std::stoi(line);
 
-    int l=0;
+    size_t l=0;
     int j=0;
 
     for (int k = 0; k < layer; ++k) {
@@ -196,7 +196,7 @@ const std::vector<std::vector<Element *>> &Carte::getLayers() const {
 void Carte::addPlayerToMap(Player* player, int position) {
     if (!layers.empty()){
 
-        layers.at(layers.size()-1).at(position)=player;
+        layers.at(layers.size()-1).at((size_t)position)=player;
     }
 
 }
@@ -211,7 +211,7 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
             if (pos-largeur>0){
 
 
-                if ( layers.at( layers.size()-1 ).at(pos-largeur)==nullptr ){
+                if ( layers.at( layers.size()-1 ).at((size_t) pos-largeur)==nullptr ){
                     return true;
                 }
                 else {
@@ -228,7 +228,7 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
         case SDLK_DOWN:
 
             if (pos < largeur*hauteur-largeur-1){
-                if ( layers.at( layers.size()-1 ).at(pos+largeur)==nullptr ){
+                if ( layers.at( layers.size()-1 ).at((size_t)pos+largeur)==nullptr ){
                     return true;
                 }
                 else {
@@ -243,7 +243,7 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
             }
         case SDLK_LEFT:
             if (pos -1> 0){
-                if ( layers.at( layers.size()-1 ).at(pos-1)==nullptr ){
+                if ( layers.at( layers.size()-1 ).at((size_t)pos-1)==nullptr ){
                     return true;
                 }
                 else {
@@ -260,7 +260,7 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
         case SDLK_RIGHT:
             if ( (pos +2) < largeur*hauteur){
 
-                if ( layers.at( layers.size()-1 ).at(pos+1)==nullptr ){
+                if ( layers.at( layers.size()-1 ).at((size_t)pos+1)==nullptr ){
                     return true;
                 }
                 else {
@@ -285,8 +285,7 @@ void Carte::updatePosition(Position position, int indexPlayer) {
     Player *p= nullptr;
     int currentIndex=0;
 
-    int pos;
-    for (int i = 0; i < layers.at( layers.size()-1 ).size(); ++i) {
+    for (size_t i = 0; i < layers.at( layers.size()-1 ).size(); ++i) {
         if (p= dynamic_cast<Player*>(layers.at( layers.size()-1 ).at(i)  )){
 
             if (currentIndex== indexPlayer){

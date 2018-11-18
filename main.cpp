@@ -200,7 +200,7 @@ int main( int argc, char* args[] )
 
 
     std::string filename="carte_1";
-    Carte carte1(filename.c_str());
+    Carte carte1(filename);
 
 
     //Start up SDL and create window
