@@ -30,21 +30,10 @@ public:
 
     void changeCurrentRender(SDL_Rect *playerRectangle,SDL_Keycode key);
 
-    SDL_Texture *getMTexture() const;
-
-    void setMTexture(SDL_Texture *mTexture);
-
-    int getMWidth() const;
-
-    void setMWidth(int mWidth);
-
-    int getMHeight() const;
-
-    void setMHeight(int mHeight);
-
-    Player &getPlayer() ;
+    Player &getPlayer();
 
     void setPlayer(const Player &player);
+
 
 private:
     //The actual hardware texture

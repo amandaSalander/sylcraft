@@ -23,15 +23,9 @@ public:
 
     void render(SDL_Renderer *gRenderer);
 
-    SDL_Texture *getPlayerStatTexture() const;
-
-    void setPlayerStatTexture(SDL_Texture *playerStatTexture);
-
-    Player *getPlayer() const;
 
     void setPlayer(Player *player);
 
-    const Position &getPosition() const;
 
     void setPosition(const Position &position);
 };

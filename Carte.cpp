@@ -216,7 +216,7 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
                 }
                 else {
 
-                    if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos-largeur)) ){
+                    if ( (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos-largeur)) ) ){
                         return false;
                     }
                     else {
@@ -285,13 +285,13 @@ void Carte::updatePosition(Position position, int indexPlayer) {
     Player *p= nullptr;
     int currentIndex=0;
 
-    for (size_t i = 0; i < layers.at( layers.size()-1 ).size(); ++i) {
-        if (p= dynamic_cast<Player*>(layers.at( layers.size()-1 ).at(i)  )){
+    for (auto &i : layers.at(layers.size() - 1)) {
+        if ((p= dynamic_cast<Player*>(i  ) )){
 
             if (currentIndex== indexPlayer){
 
                 p->setPosition(position);
-                layers.at( layers.size()-1 ).at(i)=p;
+                i =p;
 
                 break;
             }

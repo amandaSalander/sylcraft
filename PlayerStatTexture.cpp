@@ -74,9 +74,9 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
 
     /** For each item in vector we display the graphical bar that it belongs to**/
     for (int i = 0; i < liste.size(); ++i) {
-        if( !textTexture.loadFromRenderedText(liste.at(i), textColor,gRenderer,gFont ) )
+        if( !textTexture.loadFromRenderedText(liste.at((size_t)i), textColor,gRenderer,gFont ) )
         {
-            std::cout <<"Failed to load TEXT ! SDL_ttf Error at : " << liste.at(i) <<std::endl;
+            std::cout <<"Failed to load TEXT ! SDL_ttf Error at : " << liste.at((size_t)i) <<std::endl;
         }
         else {
             textTexture.render(position.getX()+5,position.getY()+20+i*15, nullptr,0.0, nullptr,SDL_FLIP_NONE,gRenderer);
@@ -122,26 +122,12 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
 
 }
 
-SDL_Texture *PlayerStatTexture::getPlayerStatTexture() const {
-    return playerStatTexture;
-}
 
-
-void PlayerStatTexture::setPlayerStatTexture(SDL_Texture *playerStatTexture) {
-    PlayerStatTexture::playerStatTexture = playerStatTexture;
-}
-
-Player *PlayerStatTexture::getPlayer() const {
-    return player;
-}
 
 void PlayerStatTexture::setPlayer(Player *player) {
     PlayerStatTexture::player = player;
 }
 
-const Position &PlayerStatTexture::getPosition() const {
-    return position;
-}
 
 void PlayerStatTexture::setPosition(const Position &position) {
     PlayerStatTexture::position = position;
