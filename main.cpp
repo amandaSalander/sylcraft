@@ -51,8 +51,8 @@ ObstacleTexture obstacleTexture;
 LootTexture lootTexture;
 CarteTexture carteTexture;
 
-Player a;
-Player b;
+Player a("Mini Tchuchu","Halo",Classes("healer"),Position(100,100));
+Player b("Billel","Halo",Classes("wizard"),Position(300,400));
 
 Player c("Sylia","Killer Bee",Classes("warrior"),Position(400,400));
 
@@ -239,16 +239,28 @@ int main( int argc, char* args[] )
                 //Update screen
                 carteTexture.setCarte(carte1
                 );
-                c.setType("katia_civil.png");
-                c.setPosition(Position(200,200));
+                c.setType("haru_civil.png");
+                c.setPosition(Position(300,200));
 
                 PlayerStatTexture playerStatTexture;
+                playerStatTexture.setPlayer(new Player(c));
+                playerStatTexture.setPosition(Position(960,0));
                 playerStatTexture.render(gRenderer);
+
+                playerStatTexture.setPlayer(new Player(b));
+                playerStatTexture.setPosition(Position(960,140));
+                playerStatTexture.render(gRenderer);
+
+                playerStatTexture.setPlayer(new Player(a));
+                playerStatTexture.setPosition(Position(960,280));
+                playerStatTexture.render(gRenderer);
+
+
 
                 carteTexture.getCarte().addPlayerToMap(new Player(b),595);
                 carteTexture.getCarte().addPlayerToMap(new Player(a),594);
-                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),593);
-                carteTexture.getCarte().addPlayerToMap(new Player(c),596);
+                carteTexture.getCarte().addPlayerToMap(new Player(c),593);
+//                carteTexture.getCarte().addPlayerToMap(new Player(c),596);
 
                 //Handle events on queue
                 int k_w(0),k_h(0);

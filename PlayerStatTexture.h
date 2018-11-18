@@ -14,6 +14,8 @@ class PlayerStatTexture {
 private:
     SDL_Texture *playerStatTexture;
     Player *player;
+    Position position;
+
 public:
     PlayerStatTexture();
 
@@ -28,6 +30,10 @@ public:
     Player *getPlayer() const;
 
     void setPlayer(Player *player);
+
+    const Position &getPosition() const;
+
+    void setPosition(const Position &position);
 };
 
 
