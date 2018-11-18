@@ -27,10 +27,9 @@ private:
 public:
     Carte():largeur(0),hauteur(0){};
     Carte(int l,int h):largeur(l),hauteur(h){}
-    Carte(std::string filename);
 
     // THIS METHOD IS TO TEST A NEW FEATURE WHICH IS RENDERING CARTE BY LAYERS, THE LAST LAYERS CONTAIN ONLY OBSTACLE OBJECTS
-    Carte(std::string filename,int);
+    Carte(std::string filename);
 
 
 

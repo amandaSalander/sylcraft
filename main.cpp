@@ -204,7 +204,7 @@ int main( int argc, char* args[] )
     int player(0);
     Carte carte("cdff");
 
-    Carte carte1("ccc",0);
+    Carte carte1("ccc");
 
     std::cout<<carte.getHauteur()<<std::endl;
 
