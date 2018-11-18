@@ -65,9 +65,8 @@ Carte::Carte(std::string filename) {
                     obstacle.setType("inn_house.png");
                     carte.push_back(new Obstacle(obstacle));
                 } else if (line[i] == '+') {
-                    Loot loot;
+                    Loot loot("bag");
                     loot.setPosition(Position(i * 32, (j - 1) * 32));
-                    loot.setType("bag.gif");
                     carte.push_back(new Loot(loot));
 
                 } else if (line[i] == 'a') {
@@ -242,20 +241,36 @@ Carte::Carte(std::string filename, int) {
             }
 
             // THIS IS FOR THE LOOT
-            else if (line[i]=='+' || line[i]=='='){
-                Loot loot;
-                loot.setPosition(Position(i*32,j*32));
+            else if (line[i]=='+' || line[i]=='=' || line[i]=='<' || line[i]=='>' || line[i]=='@' || line[i]=='#'){
+                std::string type;
+
 
                 switch (line[i]){
                     case '+':
-                        loot.setType("bag.gif");
+                        type="bag";
                         break;
                     case '=':
-                        loot.setType("apple.png");
+                        type="apple";
+                        break;
+                    case '<':
+                        type="greenCrystal";
+                        break;
+                    case '>':
+                        type="blueCrystal";
+                        break;
+                    case '@':
+                        type="heart";
+                        break;
+                    case '#':
+                        type="scroll";
                         break;
                 }
 
+                Loot loot(type);
+                loot.setPosition(Position(i*32,j*32));
                 layers.at(l).push_back(new Loot(loot));
+
+
 
             }
 

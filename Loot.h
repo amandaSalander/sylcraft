@@ -5,6 +5,8 @@
 #ifndef PROJECT_1_LOOT_H
 #define PROJECT_1_LOOT_H
 
+#include <fstream>
+#include <iostream>
 
 #include "Element.h"
 
@@ -12,6 +14,7 @@ class Loot: public Element {
 public:
     Loot(): stamina(0),strength(0),luck(0),defense(0){};
     Loot(int str, int sta, int lu, int de): stamina(sta),strength(str),luck(lu),defense(de){}
+    Loot(std::string type);
 
     int getStrength() const;
 
