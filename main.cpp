@@ -14,7 +14,7 @@ and may not be redistributed without written permission.*/
 
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 960;
+const int SCREEN_WIDTH = 1160;
 const int SCREEN_HEIGHT = 640;
 
 //Starts up SDL and creates window
@@ -272,7 +272,7 @@ int main( int argc, char* args[] )
 
 
 
-                carteTexture.render(gRenderer,0);
+                carteTexture.render(gRenderer);
 
 
 

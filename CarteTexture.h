@@ -14,9 +14,7 @@
 
 class CarteTexture {
 private:
-    SDL_Texture* cTexture;
-    int cWidth;
-    int cHeight;
+
     Carte carte;
     PlayerTexture playerTexture;
     SDL_Rect sdl_rect;
@@ -27,29 +25,17 @@ private:
 public:
     CarteTexture();
 
-    ~CarteTexture();
+    virtual  ~CarteTexture();
 
-    void free();
+
 
 
     void render(SDL_Renderer *gRenderer);
 
 
-    void render(SDL_Renderer *gRenderer, int a);
-
-
     void changeCurrentRender(SDL_Rect *playerRectangle,SDL_Keycode key);
 
 
-    SDL_Texture *getCTexture() const;
-
-    void setCTexture(SDL_Texture *cTexture);
-
-    int getCWidth() const;
-
-    void setCWidth(int cWidth);
-
-    int getCHeight() const;
 
     void setCHeight(int cHeight);
 
@@ -59,19 +45,15 @@ public:
 
 
 
-    void setPlayerTexture(PlayerTexture *playerTexture);
 
 
 
     SDL_Rect &getSdl_rect();
 
-    void setSdl_rect(const SDL_Rect &sdl_rect);
-
-    bool allowedMovement(SDL_Keycode key);
 
     void updateCurrentPlayer(SDL_Keycode key);
 
-    PlayerTexture *getPlayerTexture() const;
+
 
     const std::vector<PlayerTexture *> &getPlayerInMap() const;
 
