@@ -1,0 +1,5 @@
+assets/loots/bag.gif
+5
+5
+0
+0

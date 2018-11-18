@@ -1,0 +1,5 @@
+assets/loots/scroll.png
+0
+0
+0
+5

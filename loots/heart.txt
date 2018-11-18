@@ -1,0 +1,5 @@
+assets/loots/heart.png
+2
+5
+0
+0

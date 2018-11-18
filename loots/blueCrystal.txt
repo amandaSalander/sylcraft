@@ -1,0 +1,5 @@
+assets/loots/blueCrystal.png
+0
+0
+2
+0

@@ -1,0 +1,5 @@
+assets/loots/greenCrystal.png
+0
+0
+2
+0
