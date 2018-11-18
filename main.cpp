@@ -11,6 +11,7 @@ and may not be redistributed without written permission.*/
 #include "ObstacleTexture.h"
 #include "LootTexture.h"
 #include "CarteTexture.h"
+#include "PlayerStatTexture.h"
 
 
 //Screen dimension constants
@@ -52,6 +53,8 @@ CarteTexture carteTexture;
 
 Player a;
 Player b;
+
+Player c("Sylia","Killer Bee",Classes("warrior"),Position(400,400));
 
 
 
@@ -197,6 +200,7 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
+    Classes classes("warrior");
     int player(0);
     Carte carte("cdff");
 
@@ -235,11 +239,16 @@ int main( int argc, char* args[] )
                 //Update screen
                 carteTexture.setCarte(carte1
                 );
+                c.setType("katia_civil.png");
+                c.setPosition(Position(200,200));
+
+                PlayerStatTexture playerStatTexture;
+                playerStatTexture.render(gRenderer);
 
                 carteTexture.getCarte().addPlayerToMap(new Player(b),595);
                 carteTexture.getCarte().addPlayerToMap(new Player(a),594);
                 carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),593);
-
+                carteTexture.getCarte().addPlayerToMap(new Player(c),596);
 
                 //Handle events on queue
                 int k_w(0),k_h(0);

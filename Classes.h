@@ -21,8 +21,12 @@ private: int strength;
          std::string name;
 
 
-public: Classes():strength(0),stamina(0),defense(0),dexterity(0),wisdom(0),willpower(0),luck(0),name(""){classes_number++;};
-        Classes(int se,int st, int df,int dx, int ws,int wl,int lu,std::string na): strength(se),stamina(st),defense(df),dexterity(dx),wisdom(ws),willpower(wl),luck(lu),name(na){classes_number++;}
+public:
+    Classes():strength(0),stamina(0),defense(0),dexterity(0),wisdom(0),willpower(0),luck(0),name(""){classes_number++;};
+
+    Classes(int se,int st, int df,int dx, int ws,int wl,int lu,std::string na): strength(se),stamina(st),defense(df),dexterity(dx),wisdom(ws),willpower(wl),luck(lu),name(na){classes_number++;}
+
+    Classes(std::string type);
 
     int getStrength() const;
 
