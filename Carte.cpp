@@ -456,3 +456,45 @@ void Carte::updatePosition(Position position, int indexPlayer) {
 
     }
 }
+
+void Carte::updateCurrentPlayer() {
+
+    std::vector<int> liste;
+    Player *p= nullptr;
+    Element *player;
+    for (int i = 0; i < layers.at( layers.size()-1 ).size(); ++i) {
+        if (p= dynamic_cast<Player*>( layers.at( layers.size()-1 ).at(i) )){
+            liste.push_back(i);
+
+        }
+    }
+    for (int j = 0; j < liste.size(); ++j) {
+
+        if (j==0){
+            player= layers.at( layers.size()-1 ).at(liste.at(0)) ;
+
+        }
+        if (j+1== liste.size()){
+            std::swap(
+                    layers.at( layers.size()-1 ).at(liste.at(j)),
+                    player
+            );
+        }
+        else{
+            std::swap(
+                    layers.at( layers.size()-1 ).at(liste.at(j)),
+                    layers.at( layers.size()-1 ).at(liste.at(j+1))
+            );
+        }
+
+    }
+
+    for (int i = 0; i < layers.at( layers.size()-1 ).size(); ++i) {
+        if (p= dynamic_cast<Player*>( layers.at( layers.size()-1 ).at(i) )){
+            std::cout << "********************************" <<std::endl;
+            std::cout << "PLAYER NAME " << p->getType() <<std::endl;
+            std::cout << "********************************" <<std::endl;
+
+        }
+    }
+}

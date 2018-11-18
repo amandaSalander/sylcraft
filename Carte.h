@@ -55,6 +55,8 @@ public:
     bool allowedMovement(SDL_Keycode key,Position position);
 
     void updatePosition(Position position,int indexPlayer);
+
+    void updateCurrentPlayer();
 };
 
 

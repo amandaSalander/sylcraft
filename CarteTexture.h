@@ -20,6 +20,9 @@ private:
     Carte carte;
     PlayerTexture playerTexture;
     SDL_Rect sdl_rect;
+    std::vector<PlayerTexture*> playerInMap;
+    int playerIndex;
+    bool changedPlayer;
 
 public:
     CarteTexture();
@@ -54,17 +57,25 @@ public:
 
     void setCarte(const Carte &carte);
 
-    PlayerTexture *getPlayerTexture();
+
 
     void setPlayerTexture(PlayerTexture *playerTexture);
 
-    void setPlayerTexture(const PlayerTexture &playerTexture);
+
 
     SDL_Rect &getSdl_rect();
 
     void setSdl_rect(const SDL_Rect &sdl_rect);
 
     bool allowedMovement(SDL_Keycode key);
+
+    void updateCurrentPlayer(SDL_Keycode key);
+
+    PlayerTexture *getPlayerTexture() const;
+
+    const std::vector<PlayerTexture *> &getPlayerInMap() const;
+
+    void setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap);
 };
 
 

@@ -18,6 +18,8 @@ CarteTexture::CarteTexture() {
     sdl_rect.h=32;
     sdl_rect.x=0;
     sdl_rect.y=0;
+    playerIndex= -1;
+    changedPlayer=false;
 
 }
 
@@ -88,6 +90,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer) {
 
 
 void CarteTexture::render(SDL_Renderer *gRenderer, int a){
+//    playerInMap.clear();
 
 //    std::cout << "LAYERS " << carte.getLayers().size() << std::endl;
     int index=0;
@@ -142,37 +145,18 @@ void CarteTexture::render(SDL_Renderer *gRenderer, int a){
             else if (p= dynamic_cast<Player*>(carte.getLayers().at(i).at(j))){
 
 
+
                 PlayerTexture *pT=new PlayerTexture();
                 pT->setPlayer(*p);
-                SDL_Rect sdl_rect1= SDL_Rect(sdl_rect);
-                sdl_rect1.x=0;
-                sdl_rect1.y=0;
-                sdl_rect1.h=32;
-                sdl_rect1.w=32;
-                if ( playerTexture.getPlayer().getPosition().getY()==0 &&
-                                playerTexture.getPlayer().getPosition().getX()==0){
-                    playerTexture.getPlayer().setPosition(p->getPosition());
-                }
+
+
                 if (pT->loadImageFromFile(p->getType(),gRenderer)){
 
 
                     /*** THE FIRST PLAYER TO BE ADDED IS ALWAYS THE ONE WHICH IS DIRECTLY SELECTED***/
-                    if (index==0){
 
-                            pT->render(playerTexture.getPlayer().getPosition().getX(),
-                                       playerTexture.getPlayer().getPosition().getY(),
-                                       &sdl_rect,
-                                       gRenderer
-                            );
+                    if (playerIndex==-1){playerInMap.push_back(pT);}
 
-                        index++;
-                    } else{
-                        pT->render(p->getPosition().getX(),
-                                   p->getPosition().getY(),
-                                   &sdl_rect1,
-                                   gRenderer
-                        );
-                    }
 
 
 
@@ -183,25 +167,60 @@ void CarteTexture::render(SDL_Renderer *gRenderer, int a){
                 }
 
             }
+            else {
+            }
 
         }
-    }
-}
+        if (playerIndex==-1){playerIndex=playerInMap.size()-1;}
 
-void CarteTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode key) {
-
-//    std::cout << "VALUE OF ALLOW " <<carte.allowedMovement(key,playerTexture.getPlayer().getPosition())<<std::endl;
-    if ( carte.allowedMovement(key,playerTexture.getPlayer().getPosition()) == true){
-        playerTexture.changeCurrentRender(&sdl_rect,key);
-        carte.updatePosition(playerTexture.getPlayer().getPosition(),0);
-        std::cout << "CAN WALK " << std::endl;
-    }
-    else {
-        std::cout << "CANNOT WALK " << std::endl;
     }
 
 
+    if ( playerTexture.getPlayer().getPosition().getY()==0 &&
+         playerTexture.getPlayer().getPosition().getX()==0 ){
+        playerTexture.getPlayer().setPosition(playerInMap.at(playerIndex)->getPlayer().getPosition());
+    }
 
+    SDL_Rect sdl_rect1;
+    for (int k = 0; k < playerInMap.size(); ++k) {
+        if (k!=playerIndex){
+
+
+            sdl_rect1.y=0;
+            sdl_rect1.x=0;
+            sdl_rect1.w=32;
+            sdl_rect1.h=32;
+
+            playerInMap.at(k)->render(
+                    playerInMap.at(k)->getPlayer().getPosition().getX(),
+                    playerInMap.at(k)->getPlayer().getPosition().getY(),
+                    &sdl_rect1,
+                    gRenderer
+            );
+        }
+        else {
+            if (changedPlayer){
+                playerTexture= *(playerInMap.at(playerIndex));
+                playerInMap.at(playerIndex)->render(
+                        playerTexture.getPlayer().getPosition().getX(),
+                        playerTexture.getPlayer().getPosition().getY(),
+                        &sdl_rect,
+                        gRenderer
+                );
+            }
+            else {
+                playerInMap.at(playerIndex)->render(
+                        playerTexture.getPlayer().getPosition().getX(),
+                        playerTexture.getPlayer().getPosition().getY(),
+                        &sdl_rect,
+                        gRenderer
+                );
+            }
+
+        }
+
+    }
+    changedPlayer=false;
 
 }
 
@@ -249,8 +268,8 @@ void CarteTexture::setCarte(const Carte &carte) {
 }
 
 
-void CarteTexture::setPlayerTexture(const PlayerTexture &playerTexture) {
-    CarteTexture::playerTexture = playerTexture;
+void CarteTexture::setPlayerTexture( PlayerTexture *playerTexture) {
+    CarteTexture::playerTexture = *playerTexture;
 }
 
 SDL_Rect &CarteTexture::getSdl_rect(){
@@ -262,7 +281,68 @@ void CarteTexture::setSdl_rect(const SDL_Rect &sdl_rect) {
 }
 
 bool CarteTexture::allowedMovement(SDL_Keycode key) {
-//    std::vector<Element*> v=carte.getLayers().at(carte.getLayers().size()-1);
 
-//    carte.allowedMovement(SDL_KEYUP,0);
+}
+
+void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
+
+    switch (key){
+        case SDLK_1:
+            playerIndex=0;
+            break;
+        case SDLK_2:
+            if (playerInMap.size()>1) {playerIndex=1;}
+            break;
+        case SDLK_3:
+            if (playerInMap.size()>2) {playerIndex=2;}
+            break;
+        case SDLK_4:
+            if (playerInMap.size()>3) {playerIndex=3;}
+            break;
+        case SDLK_5:
+            if (playerInMap.size()>4){ playerIndex=4;}
+            break;
+        case SDLK_6:
+            if (playerInMap.size()>5) playerIndex=5;
+            break;
+        case SDLK_7:
+            if (playerInMap.size()>6) playerIndex=6;
+            break;
+        case SDLK_8:
+            if (playerInMap.size()>7) playerIndex=7;
+            break;
+        case SDLK_9:
+            if (playerInMap.size()>8) playerIndex=8;
+            break;
+        default:break;
+
+    }
+    changedPlayer=true;
+}
+
+
+
+const std::vector<PlayerTexture *> &CarteTexture::getPlayerInMap() const {
+    return playerInMap;
+}
+
+void CarteTexture::setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap) {
+    CarteTexture::playerInMap = playerInMap;
+}
+
+void CarteTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode key) {
+
+
+    if ( carte.allowedMovement(key,playerTexture.getPlayer().getPosition()) == true){
+        playerTexture.changeCurrentRender(&sdl_rect,key);
+
+        carte.updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
+        playerInMap.at(playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
+
+    }
+
+
+
+
+
 }

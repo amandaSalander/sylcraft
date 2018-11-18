@@ -50,6 +50,8 @@ ObstacleTexture obstacleTexture;
 LootTexture lootTexture;
 CarteTexture carteTexture;
 
+Player a;
+Player b;
 
 
 
@@ -128,6 +130,20 @@ bool loadMedia() {
         success = false;
     }
 
+    playerTexture.getPlayer().setPosition(Position(300,240));
+    playerTexture.getPlayer().setType("haru_civil.png");
+
+
+
+    a.setType("katia_civil.png");
+    a.setPosition(Position(200,200));
+
+
+
+    b.setType("Aldusa_Grai_de_Civille.png");
+    b.setPosition(Position(300,400));
+
+
 
 
     return success;
@@ -181,6 +197,7 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
+    int player(0);
     Carte carte("cdff");
 
     Carte carte1("ccc",0);
@@ -216,21 +233,12 @@ int main( int argc, char* args[] )
                 //Render texture to screen
                 SDL_RenderCopy( gRenderer, gTexture, NULL, NULL );
                 //Update screen
-                carteTexture.setCarte(carte1);
-                playerTexture.getPlayer().setPosition(Position(300,240));
-                playerTexture.getPlayer().setType("haru_civil.png");
-                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),593);
+                carteTexture.setCarte(carte1
+                );
 
-
-                Player a;
-                a.setType("katia_civil.png");
-                a.setPosition(Position(200,200));
-                carteTexture.getCarte().addPlayerToMap(new Player(a),594);
-
-                Player b;
-                b.setType("Aldusa_Grai_de_Civille.png");
-                b.setPosition(Position(300,400));
                 carteTexture.getCarte().addPlayerToMap(new Player(b),595);
+                carteTexture.getCarte().addPlayerToMap(new Player(a),594);
+                carteTexture.getCarte().addPlayerToMap(new Player(playerTexture.getPlayer()),593);
 
 
                 //Handle events on queue
@@ -243,20 +251,21 @@ int main( int argc, char* args[] )
                         quit = true;
                     }
                     else if( e.type == SDL_KEYDOWN ) {
-//                        playerTexture.changeCurrentRender(&playerRectangle,e.key.keysym.sym);
+
                         carteTexture.changeCurrentRender(&(carteTexture.getSdl_rect()),e.key.keysym.sym);
+//                        if (e.key.keysym.sym==SDLK_1){
+                        carteTexture.updateCurrentPlayer(e.key.keysym.sym);
+
+//                        }
+
+
 
                     }
                 }
-                k_h++;
-                k_w++;
 
 
 
 
-
-
-//                carteTexture.render(gRenderer);
 
 
 
@@ -265,10 +274,7 @@ int main( int argc, char* args[] )
 
                 carteTexture.render(gRenderer,0);
 
-//                playerTexture.render(
-//                        playerTexture.getPlayer().getPosition().getX()+200
-//                        ,playerTexture.getPlayer().getPosition().getY()+200
-//                        ,&playerRectangle,gRenderer);
+
 
 
                 SDL_RenderPresent( gRenderer );
