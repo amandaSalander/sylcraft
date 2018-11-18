@@ -28,19 +28,15 @@ bool loadMedia();
 void close();
 
 //The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+SDL_Window* gWindow = nullptr;
 
-//The surface contained by the window
-SDL_Surface* gScreenSurface = NULL;
 
-//The image we will load and show on the screen
-SDL_Surface* gXOut = NULL;
 
 //The window renderer
-SDL_Renderer* gRenderer = NULL;
+SDL_Renderer* gRenderer = nullptr;
 //Current displayed texture
 //
-SDL_Texture* gTexture = NULL;
+SDL_Texture* gTexture = nullptr;
 
 //Loads individual image as texture
 SDL_Texture* loadTexture( std::string path );
@@ -73,7 +69,7 @@ bool init()
     {
         //Create window
         gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-        if( gWindow == NULL )
+        if( gWindow == nullptr )
         {
             printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
             success = false;
@@ -83,7 +79,7 @@ bool init()
             //Get window surface
             //gScreenSurface = SDL_GetWindowSurface( gWindow );
             gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED );
-            if( gRenderer == NULL ) {
+            if( gRenderer == nullptr ) {
                 printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
                 success = false;
             }
@@ -109,7 +105,7 @@ bool loadMedia() {
     bool success = true;
     //Load PNG texture
     gTexture = loadTexture( "texture.png" );
-    if( gTexture == NULL ) {
+    if( gTexture == nullptr ) {
         printf( "Failed to load texture image!\n" );
         success = false;
     }
@@ -158,12 +154,12 @@ void close() {
     playerTexture.free();
     //Free loaded image
     SDL_DestroyTexture( gTexture );
-    gTexture = NULL;
+    gTexture = nullptr;
     //Destroy window
     SDL_DestroyRenderer( gRenderer );
     SDL_DestroyWindow( gWindow );
-    gWindow = NULL;
-    gRenderer = NULL;
+    gWindow = nullptr;
+    gRenderer = nullptr;
     //Quit SDL subsystems
     IMG_Quit();
     SDL_Quit();
@@ -172,11 +168,11 @@ void close() {
 SDL_Texture* loadTexture( std::string path )
 {
     //The final texture
-    SDL_Texture* newTexture = NULL;
+    SDL_Texture* newTexture = nullptr;
 
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if( loadedSurface == NULL )
+    if( loadedSurface == nullptr )
     {
         printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
     }
@@ -184,7 +180,7 @@ SDL_Texture* loadTexture( std::string path )
     {
         //Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
-        if( newTexture == NULL )
+        if( newTexture == nullptr )
         {
             printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
         }
@@ -235,7 +231,7 @@ int main( int argc, char* args[] )
                 //Clear screen
                 SDL_RenderClear( gRenderer );
                 //Render texture to screen
-                SDL_RenderCopy( gRenderer, gTexture, NULL, NULL );
+                SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
                 carteTexture.setCarte(carte1
                 );
@@ -260,10 +256,9 @@ int main( int argc, char* args[] )
                 carteTexture.getCarte().addPlayerToMap(new Player(b),595);
                 carteTexture.getCarte().addPlayerToMap(new Player(a),594);
                 carteTexture.getCarte().addPlayerToMap(new Player(c),593);
-//                carteTexture.getCarte().addPlayerToMap(new Player(c),596);
+
 
                 //Handle events on queue
-                int k_w(0),k_h(0);
                 while( SDL_PollEvent( &e ) != 0 )
                 {
                     //User requests quit
@@ -274,27 +269,14 @@ int main( int argc, char* args[] )
                     else if( e.type == SDL_KEYDOWN ) {
 
                         carteTexture.changeCurrentRender(&(carteTexture.getSdl_rect()),e.key.keysym.sym);
-//                        if (e.key.keysym.sym==SDLK_1){
+
                         carteTexture.updateCurrentPlayer(e.key.keysym.sym);
-
-//                        }
-
 
 
                     }
                 }
 
-
-
-
-
-
-
-
-
-
                 carteTexture.render(gRenderer);
-
 
 
 
