@@ -197,12 +197,11 @@ SDL_Texture* loadTexture( std::string path )
 int main( int argc, char* args[] )
 {
     Classes classes("warrior");
-    int player(0);
-    Carte carte("cdff");
 
-    Carte carte1("ccc");
 
-    std::cout<<carte.getHauteur()<<std::endl;
+    std::string filename="carte_1";
+    Carte carte1(filename.c_str());
+
 
     //Start up SDL and create window
     if( !init() )

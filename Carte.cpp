@@ -14,8 +14,10 @@
 Carte::Carte(std::string filename) {
     std::string line;
 
-    std::ifstream carteFile("carte_1.txt");
+//    std::
+    std::ifstream carteFile("cartes/carte_1.txt");
 
+    std::cout << carteFile.is_open() << std::endl;
     largeur=960;
     hauteur=640;
 
@@ -169,7 +171,6 @@ Carte::Carte(std::string filename) {
 
             std::cout << layers.size() <<std::endl;
 
-//            layers.push_back(vector);
             l++;
 
             j=0;
@@ -182,30 +183,6 @@ Carte::Carte(std::string filename) {
 
 
 
-int Carte::getLargeur() const {
-    return largeur;
-}
-
-void Carte::setLargeur(int largeur) {
-    Carte::largeur = largeur;
-}
-
-int Carte::getHauteur() const {
-    return hauteur;
-}
-
-void Carte::setHauteur(int hauteur) {
-    Carte::hauteur = hauteur;
-}
-
-std::vector<Element*> &Carte::getCarte() {
-    return carte;
-}
-
-void Carte::setCarte(const std::vector<Element> &carte) {
-//    Carte::carte = carte;
-}
-
 
 
 
@@ -214,9 +191,6 @@ const std::vector<std::vector<Element *>> &Carte::getLayers() const {
     return layers;
 }
 
-void Carte::setLayers(const std::vector<std::vector<Element *>> &layers) {
-    Carte::layers = layers;
-}
 
 
 void Carte::addPlayerToMap(Player* player, int position) {
@@ -327,47 +301,5 @@ void Carte::updatePosition(Position position, int indexPlayer) {
             }
         }
 
-    }
-}
-
-void Carte::updateCurrentPlayer() {
-
-    std::vector<int> liste;
-    Player *p= nullptr;
-    Element *player;
-    for (int i = 0; i < layers.at( layers.size()-1 ).size(); ++i) {
-        if (p= dynamic_cast<Player*>( layers.at( layers.size()-1 ).at(i) )){
-            liste.push_back(i);
-
-        }
-    }
-    for (int j = 0; j < liste.size(); ++j) {
-
-        if (j==0){
-            player= layers.at( layers.size()-1 ).at(liste.at(0)) ;
-
-        }
-        if (j+1== liste.size()){
-            std::swap(
-                    layers.at( layers.size()-1 ).at(liste.at(j)),
-                    player
-            );
-        }
-        else{
-            std::swap(
-                    layers.at( layers.size()-1 ).at(liste.at(j)),
-                    layers.at( layers.size()-1 ).at(liste.at(j+1))
-            );
-        }
-
-    }
-
-    for (int i = 0; i < layers.at( layers.size()-1 ).size(); ++i) {
-        if (p= dynamic_cast<Player*>( layers.at( layers.size()-1 ).at(i) )){
-            std::cout << "********************************" <<std::endl;
-            std::cout << "PLAYER NAME " << p->getType() <<std::endl;
-            std::cout << "********************************" <<std::endl;
-
-        }
     }
 }
