@@ -11,6 +11,7 @@
 #include <string>
 #include "Carte.h"
 #include "PlayerTexture.h"
+#include "LootTexture.h"
 
 class CarteTexture {
 private:
@@ -19,6 +20,7 @@ private:
     PlayerTexture playerTexture;
     SDL_Rect sdl_rect;
     std::vector<PlayerTexture*> playerInMap;
+    std::vector<LootTexture*> lootInMap;
     int playerIndex;
     bool changedPlayer;
 
@@ -43,6 +45,8 @@ public:
 
     void setCarte(const Carte &carte);
 
+    /** This method is to pick up a loot if it's possible to do so.**/
+    void PickUpLoot(SDL_Keycode key);
 
 
 

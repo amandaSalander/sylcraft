@@ -24,15 +24,11 @@ CarteTexture::~CarteTexture() = default;
 
 
 void CarteTexture::render(SDL_Renderer *gRenderer){
+//    lootInMap.clear();
 
     for (const auto &i : carte.getLayers()) {
 
         for (auto j : i) {
-
-//            Obstacle *o= nullptr;
-//            Decoration *d= nullptr;
-//            Loot *l= nullptr;
-//            Player *p= nullptr;
 
             if (auto *o= dynamic_cast<Obstacle*>(j)){
 
@@ -59,6 +55,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                    nullptr,
                                        gRenderer
                 );
+//                lootInMap.emplace_back(l);
             }
             else if (auto *d= dynamic_cast<Decoration*>(j)){
 
@@ -82,14 +79,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
                 if (pT->loadImageFromFile(p->getType(),gRenderer)){
 
-
-                    /*** THE FIRST PLAYER TO BE ADDED IS ALWAYS THE ONE WHICH IS DIRECTLY SELECTED***/
-
                     if (playerIndex==-1){playerInMap.push_back(pT);}
-
-
-
-
 
                 }
                 else {
@@ -231,9 +221,50 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key) {
         playerInMap.at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
 
     }
+    std::cout << "PICKING STATE : ( " << carte.allowedPick(playerTexture.getPlayer().getPosition()).getX()
+    <<" , " << carte.allowedPick(playerTexture.getPlayer().getPosition()).getY() << " ) " <<std::endl;
 
+}
 
+void CarteTexture::PickUpLoot(SDL_Keycode key) {
+    switch (key){
+        case SDLK_a:
+        {
+            Position pos=carte.allowedPick(playerTexture.getPlayer().getPosition());
+            if (pos.getX()==-1 && pos.getY()==-1){
+                std::cout << "Cannot delete empty case you dumbass " <<std::endl;
+            }
+            else {
+                Loot loot=carte.deleteLoot(pos);
+                std::cout << "strength : "<< loot.getStrength() <<std::endl;
+                std::cout << "stamina : "<< loot.getStamina() <<std::endl;
+                std::cout << "defense : "<< loot.getDefense() <<std::endl;
+                std::cout << "luck : "<< loot.getLuck() <<std::endl;
 
+                playerTexture.getPlayer().getClasse()->setStrength(
+                        playerTexture.getPlayer().getClasse()->getStrength()+
+                        loot.getStrength());
+                playerTexture.getPlayer().getClasse()->setDefense(
+                        playerTexture.getPlayer().getClasse()->getDefense()+
+                        loot.getDefense());
+                playerTexture.getPlayer().getClasse()->setStamina(
+                        playerTexture.getPlayer().getClasse()->getStamina()+
+                        loot.getStamina());
+                playerTexture.getPlayer().getClasse()->setLuck(
+                        playerTexture.getPlayer().getClasse()->getLuck()+ loot.getLuck());
 
+            }
 
+            carte.updatePlayerStat(playerTexture.getPlayer(),playerIndex);
+
+            std::cout << "*********************************************************************" <<std::endl;
+            std::cout << "PLAYER STRENGTH : "<< playerTexture.getPlayer().getClasse()->getStrength()<<std::endl;
+            std::cout << "PLAYER STAMINA : "<< playerTexture.getPlayer().getClasse()->getStamina()<<std::endl;
+            std::cout << "PLAYER DEFENSE : "<< playerTexture.getPlayer().getClasse()->getDefense()<<std::endl;
+            std::cout << "PLAYER LUCK : "<< playerTexture.getPlayer().getClasse()->getLuck()<<std::endl;
+            std::cout << "*********************************************************************" <<std::endl;
+        }
+            break;
+        default:break;
+    }
 }

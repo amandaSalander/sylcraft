@@ -14,12 +14,12 @@ class Player : public Element {
 private:
     std::string name;
     std::string team;
-    Classes classe;
+    Classes *classe;
 public:static int players_number;
 
 public:
     Player();
-    Player(std::string na,std::string te,Classes cl,Position po);
+    Player(std::string na,std::string te,Classes *cl,Position po);
 
     const std::string &getName() const;
 
@@ -29,15 +29,17 @@ public:
 
     void setTeam(const std::string &team);
 
-    const Classes &getClasse() const;
 
-    void setClasse(const Classes &classe);
 
     static int getPlayers_number();
 
     static void setPlayers_number(int players_number);
 
     ~Player() override;
+
+    Classes *getClasse() const;
+
+    void setClasse(Classes *classe);
 
 };
 

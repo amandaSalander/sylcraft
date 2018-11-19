@@ -19,7 +19,7 @@ public:
 //    Loot(): stamina(0),strength(0),luck(0),defense(0){};
 //    Loot(int str, int sta, int lu, int de): stamina(sta),strength(str),luck(lu),defense(de){}
 **/
-    explicit Loot(std::string type);
+    Loot(std::string type);
 
     int getStrength() const;
 //

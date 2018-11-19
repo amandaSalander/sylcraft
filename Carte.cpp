@@ -50,16 +50,16 @@ Carte::Carte(std::string filename) {
 
                 switch (line[i]){
                     case '*':
-                        obstacle.setType("crystal.gif");
+                        obstacle.setType("assets/obstacles/crystal.gif");
                         break;
                     case '8':
-                        obstacle.setType("tree_blue.png");
+                        obstacle.setType("assets/obstacles/tree_blue.png");
                         break;
                     case '5':
-                        obstacle.setType("inn_house.png");
+                        obstacle.setType("assets/obstacles/inn_house.png");
                         break;
                     case '9':
-                        obstacle.setType("invisible.png");
+                        obstacle.setType("assets/obstacles/invisible.png");
                         break;
                     default:break;
                 }
@@ -292,6 +292,89 @@ void Carte::updatePosition(Position position, int indexPlayer) {
 
                 p->setPosition(position);
                 i =p;
+
+                break;
+            }
+            else {
+                currentIndex++;
+            }
+        }
+
+    }
+}
+
+Position const Carte::allowedPick(Position position) {
+    int pos_min=  position.getY()/32*largeur+ position.getX()/32;
+    int pos_max=  position.getY()/32*largeur+ (int) round(position.getX()/32.0);
+
+    /** Get al the value surrouding the player **/
+    std::vector<short> positions;
+    positions.emplace_back(-31);
+    positions.emplace_back(-30);
+    positions.emplace_back(-29);
+    positions.emplace_back(-1);
+    positions.emplace_back(0);
+    positions.emplace_back(1);
+    positions.emplace_back(29);
+    positions.emplace_back(30);
+    positions.emplace_back(31);
+
+
+    Position a(-1,-1);
+
+    for (int i = 0; i <positions.size() ; ++i) {
+        if (positions.at(i)<0){
+            if (pos_min +positions.at(i) >0){
+                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_min+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+            if (pos_max +positions.at(i) >0){
+                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_max+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+        }
+        else {
+            if (pos_min +positions.at((size_t)i) <largeur*hauteur){
+                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_min+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+            if (pos_max +positions.at((size_t)i) >0){
+                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_max+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+        }
+    }
+
+    return a;
+}
+
+const Loot Carte::deleteLoot(const Position &position) {
+    /** calculate the position of the Loot in the layer**/
+    int pos=  position.getY()/32*largeur+ position.getX()/32;
+
+
+    Element *e=layers[layers.size()-1][pos];e->setPosition(Position(-100,-100));
+
+    return *dynamic_cast<Loot*>(e);
+
+}
+
+
+void Carte::updatePlayerStat(const Player &player, int indexPlayer) {
+    Player *p= nullptr;
+    int currentIndex=0;
+
+    for (auto &i : layers.at(layers.size() - 1)) {
+        if ((p= dynamic_cast<Player*>(i) )){
+
+            if (currentIndex== indexPlayer){
+
+                p->setClasse(player.getClasse());
+
 
                 break;
             }

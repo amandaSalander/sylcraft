@@ -15,7 +15,7 @@ Player::Player() {
     players_number++;
 }
 
-Player::Player(std::string na,std::string te,Classes cl,Position po): name(std::move(na)),team(std::move(te)),classe(cl) {
+Player::Player(std::string na,std::string te,Classes *cl,Position po): name(std::move(na)),team(std::move(te)),classe(cl) {
     players_number++;
 //    setPosition(po);
 }
@@ -40,13 +40,6 @@ void Player::setTeam(const std::string &team) {
     Player::team = team;
 }
 
-const Classes &Player::getClasse() const {
-    return classe;
-}
-
-void Player::setClasse(const Classes &classe) {
-    Player::classe = classe;
-}
 
 int Player::getPlayers_number() {
     return players_number;
@@ -54,4 +47,12 @@ int Player::getPlayers_number() {
 
 void Player::setPlayers_number(int players_number) {
     Player::players_number = players_number;
+}
+
+Classes *Player::getClasse() const {
+    return classe;
+}
+
+void Player::setClasse(Classes *classe) {
+    Player::classe = classe;
 }

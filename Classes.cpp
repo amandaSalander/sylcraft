@@ -6,7 +6,7 @@
 #include <fstream>
 #include "Classes.h"
 
-int Classes::classes_number=0;
+
 
 Classes::Classes(std::string type) {
 
@@ -42,7 +42,7 @@ Classes::Classes(std::string type) {
 }
 
 Classes::~Classes() {
-    classes_number--;
+
 }
 
 
@@ -58,24 +58,24 @@ int Classes::getStrength() const {
     return strength;
 }
 
-void Classes::setStrength(int strength) {
-    Classes::strength = strength;
+void Classes::setStrength(int strength)  {
+    this->strength = strength;
 }
 
 int Classes::getStamina() const {
     return stamina;
 }
 
-void Classes::setStamina(int stamina) {
-    Classes::stamina = stamina;
+void Classes::setStamina(int stamina)  {
+    this->stamina = stamina;
 }
 
 int Classes::getDefense() const {
     return defense;
 }
 
-void Classes::setDefense(int defense) {
-    Classes::defense = defense;
+void Classes::setDefense(int defense)  {
+    this->defense = defense;
 }
 
 int Classes::getDexterity() const {
@@ -107,5 +107,5 @@ int Classes::getLuck() const {
 }
 
 void Classes::setLuck(int luck) {
-    Classes::luck = luck;
+    this->luck = luck;
 }

@@ -54,7 +54,7 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
 
     /** END: THIS IS FOR THE BORDER OF PLAYER INFORMATION **/
 
-    if( !textTexture.loadFromRenderedText( player->getClasse().getName()+" : "+ player->getName(), textColor,gRenderer,gFont ) )
+    if( !textTexture.loadFromRenderedText( player->getClasse()->getName()+" : "+ player->getName(), textColor,gRenderer,gFont ) )
     {
         std::cout <<"Failed to load TEXT ! SDL_ttf Error: "<<std::endl;
     }
@@ -88,31 +88,31 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
     }
 
     /** For Each skills we display the exact percentage of the skill**/
-    SDL_Rect interRect= {position.getX()+80,position.getY()+20, (int)( 115.0*(player->getClasse().getStrength()/20.0 ) )  ,10};
+    SDL_Rect interRect= {position.getX()+80,position.getY()+20, (int)( 115.0*(player->getClasse()->getStrength()/20.0 ) )  ,10};
     SDL_SetRenderDrawColor( gRenderer, 0,116,217, 0xFF );
     SDL_RenderFillRect( gRenderer, &interRect );
 
-    interRect= {position.getX()+80,position.getY()+35, (int)( 115.0*(player->getClasse().getStamina()/20.0 ) )  ,10};
+    interRect= {position.getX()+80,position.getY()+35, (int)( 115.0*(player->getClasse()->getStamina()/20.0 ) )  ,10};
     SDL_SetRenderDrawColor( gRenderer, 255,65,54, 0xFF );
     SDL_RenderFillRect( gRenderer, &interRect );
 
-    interRect= {position.getX()+80,position.getY()+50, (int)( 115.0*(player->getClasse().getDefense()/20.0 ) ) ,10};
+    interRect= {position.getX()+80,position.getY()+50, (int)( 115.0*(player->getClasse()->getDefense()/20.0 ) ) ,10};
     SDL_SetRenderDrawColor( gRenderer, 46,204,64, 0xFF );
     SDL_RenderFillRect( gRenderer, &interRect );
 
-    interRect= {position.getX()+80,position.getY()+65, (int)( 115.0*(player->getClasse().getDexterity()/20.0 ) )  ,10};
+    interRect= {position.getX()+80,position.getY()+65, (int)( 115.0*(player->getClasse()->getDexterity()/20.0 ) )  ,10};
     SDL_SetRenderDrawColor( gRenderer, 255,133,27, 0xFF );
     SDL_RenderFillRect( gRenderer, &interRect );
 
-    interRect= {position.getX()+80,position.getY()+80, (int)( 115.0*(player->getClasse().getWisdom()/20.0 ) )  ,10};
+    interRect= {position.getX()+80,position.getY()+80, (int)( 115.0*(player->getClasse()->getWisdom()/20.0 ) )  ,10};
     SDL_SetRenderDrawColor( gRenderer, 0,31,63, 0xFF );
     SDL_RenderFillRect( gRenderer, &interRect );
 
-    interRect= {position.getX()+80,position.getY()+95, (int)( 115.0*(player->getClasse().getWillpower()/20.0 ) )  ,10};
+    interRect= {position.getX()+80,position.getY()+95, (int)( 115.0*(player->getClasse()->getWillpower()/20.0 ) )  ,10};
     SDL_SetRenderDrawColor( gRenderer, 133,20,75, 0xFF );
     SDL_RenderFillRect( gRenderer, &interRect );
 
-    interRect= {position.getX()+80,position.getY()+110,(int)( 115.0*(player->getClasse().getLuck()/20.0 ) ) ,10};
+    interRect= {position.getX()+80,position.getY()+110,(int)( 115.0*(player->getClasse()->getLuck()/20.0 ) ) ,10};
     SDL_SetRenderDrawColor( gRenderer, 61,153,112, 0xFF );
     SDL_RenderFillRect( gRenderer, &interRect );
 

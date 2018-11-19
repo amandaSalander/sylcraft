@@ -13,6 +13,7 @@
 #include <vector>
 #include "Element.h"
 #include "Player.h"
+#include "Loot.h"
 
 #include <SDL2/SDL.h>
 
@@ -40,6 +41,12 @@ public:
 
     void updatePosition(Position position,int indexPlayer);
 
+    Position const allowedPick(Position position);
+
+    const Loot deleteLoot(const Position &position);
+
+
+    void updatePlayerStat(const Player &player, int indexPlayer );
 
 };
 

@@ -47,12 +47,14 @@ ObstacleTexture obstacleTexture;
 LootTexture lootTexture;
 CarteTexture carteTexture;
 
-Player a("Hora","Halo",Classes("healer"),Position(100,100));
-Player b("kiyan","Halo",Classes("wizard"),Position(300,400));
+Player a("Hora","Halo",new Classes("healer"),Position(100,100));
+Player b("kiyan","Halo",new Classes("wizard"),Position(300,400));
 
-Player c("Kate","Killer Bee",Classes("warrior"),Position(400,400));
-Player d("Nil","Killer Bee",Classes("mage"),Position(500,400));
+Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
+Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
 
+std::string filename="cartes/carte_1.txt";
+Carte carte1(filename);
 
 
 bool init()
@@ -197,12 +199,6 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
-    Classes classes("warrior");
-
-
-    std::string filename="cartes/carte_1.txt";
-    Carte carte1(filename);
-
 
     //Start up SDL and create window
     if( !init() )
@@ -279,7 +275,11 @@ int main( int argc, char* args[] )
 
                         carteTexture.changeCurrentRender(e.key.keysym.sym);
 
+                        carteTexture.PickUpLoot(e.key.keysym.sym);
+
                         carteTexture.updateCurrentPlayer(e.key.keysym.sym);
+
+
 
 
                     }
