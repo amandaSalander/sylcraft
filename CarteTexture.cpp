@@ -10,7 +10,7 @@
 
 
 CarteTexture::CarteTexture() {
-    carte=Carte("hi");
+//    carte=Carte("hi");
     sdl_rect.w=32;
     sdl_rect.h=32;
     sdl_rect.x=0;
@@ -20,26 +20,21 @@ CarteTexture::CarteTexture() {
 
 }
 
-CarteTexture::~CarteTexture() {
-}
-
-
-
+CarteTexture::~CarteTexture() = default;
 
 
 void CarteTexture::render(SDL_Renderer *gRenderer){
 
-    int index=0;
-    for (int i = 0; i < carte.getLayers().size(); ++i) {
+    for (const auto &i : carte.getLayers()) {
 
-        for (int j = 0; j < carte.getLayers().at(i).size(); ++j) {
+        for (auto j : i) {
 
-            Obstacle *o= nullptr;
-            Decoration *d= nullptr;
-            Loot *l= nullptr;
-            Player *p= nullptr;
+//            Obstacle *o= nullptr;
+//            Decoration *d= nullptr;
+//            Loot *l= nullptr;
+//            Player *p= nullptr;
 
-            if (o= dynamic_cast<Obstacle*>(carte.getLayers().at(i).at(j))){
+            if (auto *o= dynamic_cast<Obstacle*>(j)){
 
                 ObstacleTexture obstacleTexture;
                 obstacleTexture.loadImageFromFile(
@@ -48,11 +43,11 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
                 obstacleTexture.render(o->getPosition().getX(),
                                        o->getPosition().getY(),
-                                       NULL,
+                                       nullptr,
                                        gRenderer
                 );
             }
-            else if (l= dynamic_cast<Loot*>(carte.getLayers().at(i).at(j))){
+            else if (auto *l= dynamic_cast<Loot*>(j)){
 
                 LootTexture lootTexture;
                 lootTexture.loadImageFromFile(
@@ -61,11 +56,11 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
                 lootTexture.render(l->getPosition().getX(),
                                        l->getPosition().getY(),
-                                       NULL,
+                                   nullptr,
                                        gRenderer
                 );
             }
-            else if (d= dynamic_cast<Decoration*>(carte.getLayers().at(i).at(j))){
+            else if (auto *d= dynamic_cast<Decoration*>(j)){
 
                 DecorationTexture decorationTexture;
                 decorationTexture.loadImageFromFile(
@@ -74,15 +69,14 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
                 decorationTexture.render(d->getPosition().getX(),
                                    d->getPosition().getY(),
-                                   NULL,
+                                         nullptr,
                                    gRenderer
                 );
             }
-            else if (p= dynamic_cast<Player*>(carte.getLayers().at(i).at(j))){
+            else if (auto *p= dynamic_cast<Player*>(j)){
 
 
-
-                PlayerTexture *pT=new PlayerTexture();
+                auto *pT=new PlayerTexture();
                 pT->setPlayer(*p);
 
 
@@ -107,18 +101,18 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             }
 
         }
-        if (playerIndex==-1){playerIndex=playerInMap.size()-1;}
+        if (playerIndex==-1){playerIndex=(int)playerInMap.size()-1;}
 
     }
 
 
     if ( playerTexture.getPlayer().getPosition().getY()==0 &&
          playerTexture.getPlayer().getPosition().getX()==0 ){
-        playerTexture.getPlayer().setPosition(playerInMap.at(playerIndex)->getPlayer().getPosition());
+        playerTexture.getPlayer().setPosition(playerInMap.at((size_t) playerIndex)->getPlayer().getPosition());
     }
 
     SDL_Rect sdl_rect1;
-    for (int k = 0; k < playerInMap.size(); ++k) {
+    for (size_t k = 0; k < playerInMap.size(); ++k) {
         if (k!=playerIndex){
 
 
@@ -136,8 +130,8 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
         }
         else {
             if (changedPlayer){
-                playerTexture= *(playerInMap.at(playerIndex));
-                playerInMap.at(playerIndex)->render(
+                playerTexture= *(playerInMap.at((size_t)playerIndex));
+                playerInMap.at((size_t)playerIndex)->render(
                         playerTexture.getPlayer().getPosition().getX(),
                         playerTexture.getPlayer().getPosition().getY(),
                         &sdl_rect,
@@ -145,7 +139,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
             }
             else {
-                playerInMap.at(playerIndex)->render(
+                playerInMap.at((size_t)playerIndex)->render(
                         playerTexture.getPlayer().getPosition().getX(),
                         playerTexture.getPlayer().getPosition().getY(),
                         &sdl_rect,
@@ -175,9 +169,9 @@ void CarteTexture::setCarte(const Carte &carte) {
 
 
 
-SDL_Rect &CarteTexture::getSdl_rect(){
-    return sdl_rect;
-}
+//SDL_Rect &CarteTexture::getSdl_rect(){
+//    return sdl_rect;
+//}
 
 
 
@@ -219,22 +213,22 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 
 
-const std::vector<PlayerTexture *> &CarteTexture::getPlayerInMap() const {
-    return playerInMap;
-}
+//const std::vector<PlayerTexture *> &CarteTexture::getPlayerInMap() const {
+//    return playerInMap;
+//}
 
-void CarteTexture::setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap) {
-    CarteTexture::playerInMap = playerInMap;
-}
+//void CarteTexture::setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap) {
+//    CarteTexture::playerInMap = playerInMap;
+//}
 
-void CarteTexture::changeCurrentRender(SDL_Rect *playerRectangle, SDL_Keycode key) {
+void CarteTexture::changeCurrentRender(SDL_Keycode key) {
 
 
-    if ( carte.allowedMovement(key,playerTexture.getPlayer().getPosition()) == true){
+    if ( carte.allowedMovement(key,playerTexture.getPlayer().getPosition())){
         playerTexture.changeCurrentRender(&sdl_rect,key);
 
         carte.updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
-        playerInMap.at(playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
+        playerInMap.at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
 
     }
 

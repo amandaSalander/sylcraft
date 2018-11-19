@@ -47,10 +47,11 @@ ObstacleTexture obstacleTexture;
 LootTexture lootTexture;
 CarteTexture carteTexture;
 
-Player a("Mini Tchuchu","Halo",Classes("healer"),Position(100,100));
-Player b("Billel","Halo",Classes("wizard"),Position(300,400));
+Player a("Hora","Halo",Classes("healer"),Position(100,100));
+Player b("kiyan","Halo",Classes("wizard"),Position(300,400));
 
-Player c("Sylia","Killer Bee",Classes("warrior"),Position(400,400));
+Player c("Kate","Killer Bee",Classes("warrior"),Position(400,400));
+Player d("Nil","Killer Bee",Classes("mage"),Position(500,400));
 
 
 
@@ -199,7 +200,7 @@ int main( int argc, char* args[] )
     Classes classes("warrior");
 
 
-    std::string filename="carte_1";
+    std::string filename="cartes/carte_1.txt";
     Carte carte1(filename);
 
 
@@ -237,11 +238,15 @@ int main( int argc, char* args[] )
                 c.setType("haru_civil.png");
                 c.setPosition(Position(300,200));
 
+                d.setType("mage_1.png");
+                d.setPosition(Position(400,200));
+
                 PlayerStatTexture playerStatTexture;
                 playerStatTexture.setPlayer(new Player(c));
                 playerStatTexture.setPosition(Position(960,0));
                 playerStatTexture.render(gRenderer);
 
+                b.setType("wizard_1.png");
                 playerStatTexture.setPlayer(new Player(b));
                 playerStatTexture.setPosition(Position(960,140));
                 playerStatTexture.render(gRenderer);
@@ -250,11 +255,16 @@ int main( int argc, char* args[] )
                 playerStatTexture.setPosition(Position(960,280));
                 playerStatTexture.render(gRenderer);
 
+                playerStatTexture.setPlayer(new Player(d));
+                playerStatTexture.setPosition(Position(960,420));
+                playerStatTexture.render(gRenderer);
+
 
 
                 carteTexture.getCarte().addPlayerToMap(new Player(b),595);
                 carteTexture.getCarte().addPlayerToMap(new Player(a),594);
                 carteTexture.getCarte().addPlayerToMap(new Player(c),593);
+                carteTexture.getCarte().addPlayerToMap(new Player(d),596);
 
 
                 //Handle events on queue
@@ -267,7 +277,7 @@ int main( int argc, char* args[] )
                     }
                     else if( e.type == SDL_KEYDOWN ) {
 
-                        carteTexture.changeCurrentRender(&(carteTexture.getSdl_rect()),e.key.keysym.sym);
+                        carteTexture.changeCurrentRender(e.key.keysym.sym);
 
                         carteTexture.updateCurrentPlayer(e.key.keysym.sym);
 

@@ -14,7 +14,7 @@
 Carte::Carte(std::string filename) {
     std::string line;
 
-    std::ifstream carteFile("cartes/carte_1.txt");
+    std::ifstream carteFile(filename);
 
 
     std::cout << carteFile.is_open() << std::endl;

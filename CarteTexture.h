@@ -33,11 +33,11 @@ public:
     void render(SDL_Renderer *gRenderer);
 
 
-    void changeCurrentRender(SDL_Rect *playerRectangle,SDL_Keycode key);
+    void changeCurrentRender(SDL_Keycode key);
 
 
 
-    void setCHeight(int cHeight);
+//    void setCHeight(int cHeight);
 
     Carte &getCarte();
 
@@ -48,16 +48,16 @@ public:
 
 
 
-    SDL_Rect &getSdl_rect();
+//    SDL_Rect &getSdl_rect();
 
 
     void updateCurrentPlayer(SDL_Keycode key);
 
 
 
-    const std::vector<PlayerTexture *> &getPlayerInMap() const;
+//    const std::vector<PlayerTexture *> &getPlayerInMap() const;
 
-    void setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap);
+//    void setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap);
 };
 
 
