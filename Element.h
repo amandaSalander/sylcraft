@@ -14,9 +14,10 @@ class Element {
 private: Position position;
          std::string type;
 public:
-    Element(){};
-    Element(const Position &pos): position(pos){};
-    virtual  ~Element(){}
+    Element() = default;;
+
+    virtual  ~Element() = default;
+
     const Position &getPosition()const;
     void setPosition(const Position &pos);
 

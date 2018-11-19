@@ -8,35 +8,33 @@
 ElementTexture::ElementTexture() {
     eWidth=0;
     eHeight=0;
-    elementTexture=NULL;
-//    eType="invisible.png";
+    elementTexture= nullptr;
 }
 
 ElementTexture::~ElementTexture() {
     free();
 }
 void ElementTexture::free() {
-    if (elementTexture!=NULL){
+    if (elementTexture!=nullptr){
         SDL_DestroyTexture(elementTexture);
-        elementTexture=NULL;
+        elementTexture=nullptr;
         eHeight=0;
         eWidth=0;
-        eType="";
 
     }
 }
 
-bool ElementTexture::loadImageFromFile(std::string path, SDL_Renderer *gRenderer) {
+bool ElementTexture::loadImageFromFile(const std::string &path, SDL_Renderer *gRenderer) {
 
     //Get rid of preexisting texture
     free();
 
     //The final texture
-    SDL_Texture* newTexture = NULL;
+    SDL_Texture* newTexture = nullptr;
 
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if( loadedSurface == NULL )
+    if( loadedSurface == nullptr )
     {
         printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
     }
@@ -47,7 +45,7 @@ bool ElementTexture::loadImageFromFile(std::string path, SDL_Renderer *gRenderer
 
         //Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
-        if( newTexture == NULL )
+        if( newTexture == nullptr )
         {
             printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
         }
@@ -64,7 +62,7 @@ bool ElementTexture::loadImageFromFile(std::string path, SDL_Renderer *gRenderer
 
     //Return success
     elementTexture= newTexture;
-    return elementTexture!= NULL;
+    return elementTexture!= nullptr;
 
 }
 
@@ -73,7 +71,7 @@ void ElementTexture::render(int x, int y, SDL_Rect *clip, SDL_Renderer *gRendere
     //Set rendering space and render to screen
     SDL_Rect renderQuad = { x, y, eWidth, eHeight};
     //Set clip rendering dimensions
-    if( clip != NULL ) {
+    if( clip != nullptr ) {
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
     }
@@ -81,13 +79,6 @@ void ElementTexture::render(int x, int y, SDL_Rect *clip, SDL_Renderer *gRendere
     SDL_RenderCopy( gRenderer, elementTexture, clip, &renderQuad );
 }
 
-const std::string &ElementTexture::getEType() const {
-    return eType;
-}
-
-void ElementTexture::setEType(const std::string &eType) {
-    ElementTexture::eType = eType;
-}
 
 SDL_Texture *ElementTexture::getElementTexture() const {
     return elementTexture;

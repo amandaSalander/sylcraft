@@ -3,11 +3,3 @@
 //
 
 #include "Obstacle.h"
-
-const std::string &Obstacle::getType() const {
-    return type;
-}
-
-void Obstacle::setType(const std::string &type) {
-    Obstacle::type = type;
-}

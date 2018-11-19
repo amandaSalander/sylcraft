@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by amanda on 27/10/18.
 //
@@ -13,7 +15,7 @@ Player::Player() {
     players_number++;
 }
 
-Player::Player(std::string na,std::string te,Classes cl,Position po): name(na),team(te),classe(cl) {
+Player::Player(std::string na,std::string te,Classes cl,Position po): name(std::move(na)),team(std::move(te)),classe(cl) {
     players_number++;
 //    setPosition(po);
 }

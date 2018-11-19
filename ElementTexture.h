@@ -12,24 +12,19 @@
 
 class ElementTexture {
 private:
-    std::string eType;
     SDL_Texture* elementTexture;
     int eWidth;
     int eHeight;
-//    Element element;
 
 public:
     ElementTexture();
     virtual ~ElementTexture();
     virtual void free();
 
-    virtual bool loadImageFromFile(std::string path, SDL_Renderer* gRenderer);
+    virtual bool loadImageFromFile(const std::string &path, SDL_Renderer* gRenderer);
 
     virtual void render(int x, int y, SDL_Rect *clip, SDL_Renderer *gRenderer);
 
-    const std::string &getEType() const;
-
-    void setEType(const std::string &eType);
 
     SDL_Texture *getElementTexture() const;
 

@@ -10,13 +10,7 @@
 #include "Element.h"
 
 class Obstacle : virtual public Element{
-public:
-    const std::string &getType() const;
 
-    void setType(const std::string &type);
-
-private:
-    std::string type;
 };
 
 

@@ -37,7 +37,7 @@ public:
 
     static void setPlayers_number(int players_number);
 
-    virtual ~Player();
+    ~Player() override;
 
 };
 
