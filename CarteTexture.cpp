@@ -26,7 +26,7 @@ CarteTexture::~CarteTexture() = default;
 void CarteTexture::render(SDL_Renderer *gRenderer){
 //    lootInMap.clear();
 
-    for (const auto &i : carte.getLayers()) {
+    for (const auto &i : *(carte->getLayers()) ) {
 
         for (auto j : i) {
 
@@ -55,7 +55,6 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                    nullptr,
                                        gRenderer
                 );
-//                lootInMap.emplace_back(l);
             }
             else if (auto *d= dynamic_cast<Decoration*>(j)){
 
@@ -148,20 +147,14 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
 
 
-Carte &CarteTexture::getCarte(){
+Carte *CarteTexture::getCarte(){
     return carte;
 }
 
-void CarteTexture::setCarte(const Carte &carte) {
-    CarteTexture::carte = carte;
+void CarteTexture::setCarte(Carte *carte) {
+    this->carte = carte;
 }
 
-
-
-
-//SDL_Rect &CarteTexture::getSdl_rect(){
-//    return sdl_rect;
-//}
 
 
 
@@ -214,15 +207,15 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 void CarteTexture::changeCurrentRender(SDL_Keycode key) {
 
 
-    if ( carte.allowedMovement(key,playerTexture.getPlayer().getPosition())){
+    if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
         playerTexture.changeCurrentRender(&sdl_rect,key);
 
-        carte.updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
+        carte->updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
         playerInMap.at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
 
     }
-    std::cout << "PICKING STATE : ( " << carte.allowedPick(playerTexture.getPlayer().getPosition()).getX()
-    <<" , " << carte.allowedPick(playerTexture.getPlayer().getPosition()).getY() << " ) " <<std::endl;
+    std::cout << "PICKING STATE : ( " << carte->allowedPick(playerTexture.getPlayer().getPosition()).getX()
+    <<" , " << carte->allowedPick(playerTexture.getPlayer().getPosition()).getY() << " ) " <<std::endl;
 
 }
 
@@ -230,12 +223,12 @@ void CarteTexture::PickUpLoot(SDL_Keycode key) {
     switch (key){
         case SDLK_a:
         {
-            Position pos=carte.allowedPick(playerTexture.getPlayer().getPosition());
+            Position pos=carte->allowedPick(playerTexture.getPlayer().getPosition());
             if (pos.getX()==-1 && pos.getY()==-1){
                 std::cout << "Cannot delete empty case you dumbass " <<std::endl;
             }
             else {
-                Loot loot=carte.deleteLoot(pos);
+                Loot loot=carte->deleteLoot(pos);
                 std::cout << "strength : "<< loot.getStrength() <<std::endl;
                 std::cout << "stamina : "<< loot.getStamina() <<std::endl;
                 std::cout << "defense : "<< loot.getDefense() <<std::endl;
@@ -255,7 +248,7 @@ void CarteTexture::PickUpLoot(SDL_Keycode key) {
 
             }
 
-            carte.updatePlayerStat(playerTexture.getPlayer(),playerIndex);
+            carte->updatePlayerStat(playerTexture.getPlayer(),playerIndex);
 
             std::cout << "*********************************************************************" <<std::endl;
             std::cout << "PLAYER STRENGTH : "<< playerTexture.getPlayer().getClasse()->getStrength()<<std::endl;

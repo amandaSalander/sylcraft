@@ -24,7 +24,7 @@ private:
     int largeur; // en pixel
     int hauteur; //en pixel
 
-    std::vector<std::vector<Element*>> layers;
+    std::vector<std::vector<Element*>>* layers;
 public:
     Carte():largeur(0),hauteur(0){};
 
@@ -32,7 +32,9 @@ public:
     Carte(std::string filename);
 
 
-    const std::vector<std::vector<Element *>> &getLayers() const;
+//    const std::vector<std::vector<Element *>> &getLayers() const;
+
+    std::vector<std::vector<Element *>>* getLayers() const;
 
 
     void addPlayerToMap(Player* player,int position);
@@ -47,6 +49,8 @@ public:
 
 
     void updatePlayerStat(const Player &player, int indexPlayer );
+
+    bool addLootToMap(Loot *loot, const Position &position);
 
 };
 

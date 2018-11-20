@@ -54,6 +54,7 @@ Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
 Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
 
 std::string filename="cartes/carte_1.txt";
+
 Carte carte1(filename);
 
 
@@ -199,7 +200,7 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
-
+    printf( "Failed to initialize!\n" );
     //Start up SDL and create window
     if( !init() )
     {
@@ -229,7 +230,7 @@ int main( int argc, char* args[] )
                 //Render texture to screen
                 SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
-                carteTexture.setCarte(carte1
+                carteTexture.setCarte(&carte1
                 );
                 c.setType("haru_civil.png");
                 c.setPosition(Position(300,200));
@@ -257,10 +258,10 @@ int main( int argc, char* args[] )
 
 
 
-                carteTexture.getCarte().addPlayerToMap(new Player(b),595);
-                carteTexture.getCarte().addPlayerToMap(new Player(a),594);
-                carteTexture.getCarte().addPlayerToMap(new Player(c),593);
-                carteTexture.getCarte().addPlayerToMap(new Player(d),596);
+                carteTexture.getCarte()->addPlayerToMap(new Player(b),595);
+                carteTexture.getCarte()->addPlayerToMap(new Player(a),594);
+                carteTexture.getCarte()->addPlayerToMap(new Player(c),593);
+                carteTexture.getCarte()->addPlayerToMap(new Player(d),596);
 
 
                 //Handle events on queue
@@ -279,7 +280,9 @@ int main( int argc, char* args[] )
 
                         carteTexture.updateCurrentPlayer(e.key.keysym.sym);
 
-
+                        if (e.key.keysym.sym==SDLK_b){
+                            std::cout << carteTexture.getCarte()->addLootToMap(new Loot("bag"),Position(64,94)) <<std::endl;
+                        }
 
 
                     }

@@ -31,8 +31,9 @@ Carte::Carte(std::string filename) {
     size_t l=0;
     int j=0;
 
+    layers =new std::vector<std::vector<Element*>>();
     for (int k = 0; k < layer; ++k) {
-        layers.emplace_back(std::vector<Element*>());
+        layers->emplace_back(std::vector<Element*>());
     }
 
 
@@ -64,7 +65,7 @@ Carte::Carte(std::string filename) {
                     default:break;
                 }
 
-                layers.at(l).push_back(new Obstacle(obstacle));
+                layers->at(l).push_back(new Obstacle(obstacle));
 
 
             }
@@ -98,7 +99,7 @@ Carte::Carte(std::string filename) {
 
                 Loot loot(type);
                 loot.setPosition(Position(i*32,j*32));
-                layers.at(l).push_back(new Loot(loot));
+                layers->at(l).push_back(new Loot(loot));
 
 
 
@@ -112,67 +113,63 @@ Carte::Carte(std::string filename) {
 
                 switch (line[i]){
                     case 'a':
-                        decoration.setType("tile_middle.jpeg");
+                        decoration.setType("assets/tiles/tile_middle.jpeg");
                         break;
                     case 'b':
-                        decoration.setType("tile_up.jpg");
+                        decoration.setType("assets/tiles/tile_up.jpg");
                         break;
                     case 'c':
-                        decoration.setType("tile_down.jpg");
+                        decoration.setType("assets/tiles/tile_down.jpg");
                         break;
                     case 'd':
-                        decoration.setType("tile_left.jpg");
+                        decoration.setType("assets/tiles/tile_left.jpg");
                         break;
                     case 'e':
-                        decoration.setType("tile_right.jpg");
+                        decoration.setType("assets/tiles/tile_right.jpg");
                         break;
                     case 'f':
-                        decoration.setType("tile_top_left.jpg");
+                        decoration.setType("assets/tiles/tile_top_left.jpg");
                         break;
                     case 'g':
-                        decoration.setType("tile_bottom_right.jpg");
+                        decoration.setType("assets/tiles/tile_bottom_right.jpg");
                         break;
                     case 'h':
-                        decoration.setType("tile_bottom_left.jpg");
+                        decoration.setType("assets/tiles/tile_bottom_left.jpg");
                         break;
                     case 'i':
-                        decoration.setType("tile_top_right.jpg");
+                        decoration.setType("assets/tiles/tile_top_right.jpg");
                         break;
                     case 'j':
-                        decoration.setType("tile_end_left.jpg");
+                        decoration.setType("assets/tiles/tile_end_left.jpg");
                         break;
                     case 'k':
-                        decoration.setType("tile_end_left_top.jpg");
+                        decoration.setType("assets/tiles/tile_end_left_top.jpg");
                         break;
                     case 'l':
-                        decoration.setType("tile_end_right_top.jpg");
+                        decoration.setType("assets/tiles/tile_end_right_top.jpg");
                         break;
                     case 'm':
-                        decoration.setType("tile_end_right.jpg");
+                        decoration.setType("assets/tiles/tile_end_right.jpg");
                         break;
                     case 'n':
-                        decoration.setType("tile_n.jpg");
+                        decoration.setType("assets/tiles/tile_n.jpg");
                         break;
                     default:break;
                 }
 
 
-                layers.at(l).push_back(new Decoration(decoration));
+                layers->at(l).push_back(new Decoration(decoration));
             }
             else {
-                layers.at(l).push_back(nullptr);
+                layers->at(l).push_back(nullptr);
             }
         }
         j++;
         if (j%hauteur==0){
 
-            std::cout << " J LENGTH " << j<<std::endl;
             std::vector<Element*> vec;
-
-            std::cout << layers.size() <<std::endl;
-
+            std::cout << layers->size() <<std::endl;
             l++;
-
             j=0;
         }
 
@@ -185,18 +182,19 @@ Carte::Carte(std::string filename) {
 
 
 
-
-
-const std::vector<std::vector<Element *>> &Carte::getLayers() const {
+std::vector<std::vector<Element *>>* Carte::getLayers() const {
     return layers;
 }
 
+//const std::vector<std::vector<Element *>> &Carte::getLayers() const {
+//    return layers;
+//}
 
 
 void Carte::addPlayerToMap(Player* player, int position) {
-    if (!layers.empty()){
+    if (!layers->empty()){
 
-        layers.at(layers.size()-1).at((size_t)position)=player;
+        layers->at(layers->size()-1).at((size_t)position)=player;
     }
 
 }
@@ -211,12 +209,12 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
             if (pos-largeur>0){
 
 
-                if ( layers.at( layers.size()-1 ).at((size_t) pos-largeur)==nullptr ){
+                if ( layers->at( layers->size()-1 ).at((size_t) pos-largeur)==nullptr ){
                     return true;
                 }
                 else {
 
-                    if ( (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos-largeur)) ) ){
+                    if ( (o= dynamic_cast<Obstacle*>( layers->at( layers->size()-1 ).at(pos-largeur)) ) ){
                         return false;
                     }
                     else {
@@ -228,12 +226,12 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
         case SDLK_DOWN:
 
             if (pos < largeur*hauteur-largeur-1){
-                if ( layers.at( layers.size()-1 ).at((size_t)pos+largeur)==nullptr ){
+                if ( layers->at( layers->size()-1 ).at((size_t)pos+largeur)==nullptr ){
                     return true;
                 }
                 else {
 
-                    if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos+largeur)) ){
+                    if (o= dynamic_cast<Obstacle*>( layers->at( layers->size()-1 ).at(pos+largeur)) ){
                         return false;
                     }
                     else {
@@ -243,12 +241,12 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
             }
         case SDLK_LEFT:
             if (pos -1> 0){
-                if ( layers.at( layers.size()-1 ).at((size_t)pos-1)==nullptr ){
+                if ( layers->at( layers->size()-1 ).at((size_t)pos-1)==nullptr ){
                     return true;
                 }
                 else {
 
-                    if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos-1)) ){
+                    if (o= dynamic_cast<Obstacle*>( layers->at( layers->size()-1 ).at(pos-1)) ){
                         return false;
                     }
                     else {
@@ -260,11 +258,11 @@ bool Carte::allowedMovement(SDL_Keycode key,Position position) {
         case SDLK_RIGHT:
             if ( (pos +2) < largeur*hauteur){
 
-                if ( layers.at( layers.size()-1 ).at((size_t)pos+1)==nullptr ){
+                if ( layers->at( layers->size()-1 ).at((size_t)pos+1)==nullptr ){
                     return true;
                 }
                 else {
-                    if (o= dynamic_cast<Obstacle*>( layers.at( layers.size()-1 ).at(pos+1)) ){
+                    if (o= dynamic_cast<Obstacle*>( layers->at( layers->size()-1 ).at(pos+1)) ){
                         return false;
                     }
                     else {
@@ -285,7 +283,7 @@ void Carte::updatePosition(Position position, int indexPlayer) {
     Player *p= nullptr;
     int currentIndex=0;
 
-    for (auto &i : layers.at(layers.size() - 1)) {
+    for (auto &i : layers->at(layers->size() - 1)) {
         if ((p= dynamic_cast<Player*>(i  ) )){
 
             if (currentIndex== indexPlayer){
@@ -325,24 +323,24 @@ Position const Carte::allowedPick(Position position) {
     for (int i = 0; i <positions.size() ; ++i) {
         if (positions.at(i)<0){
             if (pos_min +positions.at(i) >0){
-                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_min+positions.at(i)) )){
+                if (auto *l = dynamic_cast<Loot*>( layers->at( layers->size()-1 ).at(pos_min+positions.at(i)) )){
                     a=l->getPosition();
                 }
             }
             if (pos_max +positions.at(i) >0){
-                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_max+positions.at(i)) )){
+                if (auto *l = dynamic_cast<Loot*>( layers->at( layers->size()-1 ).at(pos_max+positions.at(i)) )){
                     a=l->getPosition();
                 }
             }
         }
         else {
             if (pos_min +positions.at((size_t)i) <largeur*hauteur){
-                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_min+positions.at(i)) )){
+                if (auto *l = dynamic_cast<Loot*>( layers->at( layers->size()-1 ).at(pos_min+positions.at(i)) )){
                     a=l->getPosition();
                 }
             }
             if (pos_max +positions.at((size_t)i) >0){
-                if (auto *l = dynamic_cast<Loot*>( layers.at( layers.size()-1 ).at(pos_max+positions.at(i)) )){
+                if (auto *l = dynamic_cast<Loot*>( layers->at( layers->size()-1 ).at(pos_max+positions.at(i)) )){
                     a=l->getPosition();
                 }
             }
@@ -357,7 +355,8 @@ const Loot Carte::deleteLoot(const Position &position) {
     int pos=  position.getY()/32*largeur+ position.getX()/32;
 
 
-    Element *e=layers[layers.size()-1][pos];e->setPosition(Position(-100,-100));
+    Element *e=layers->at(layers->size()-1)[pos];
+    layers->at(layers->size()-1)[pos]= nullptr;
 
     return *dynamic_cast<Loot*>(e);
 
@@ -368,7 +367,7 @@ void Carte::updatePlayerStat(const Player &player, int indexPlayer) {
     Player *p= nullptr;
     int currentIndex=0;
 
-    for (auto &i : layers.at(layers.size() - 1)) {
+    for (auto &i : layers->at(layers->size() - 1)) {
         if ((p= dynamic_cast<Player*>(i) )){
 
             if (currentIndex== indexPlayer){
@@ -383,5 +382,19 @@ void Carte::updatePlayerStat(const Player &player, int indexPlayer) {
             }
         }
 
+    }
+}
+
+bool Carte::addLootToMap(Loot *loot, const Position &position) {
+    int pos=  position.getY()/32*largeur+ position.getX()/32;
+    std::cout << " ( " << position.getX() << " , " << position.getY() << " ) " <<std::endl;
+    std::cout << "pos "  << pos << std::endl;
+    if (layers->at( layers->size()-1 )[pos]== nullptr){
+        std::cout << "I AM HERE "<<std::endl;
+        layers->at(layers->size()-1 )[pos]=loot;
+        return  true;
+    }
+    else {
+        return false;
     }
 }

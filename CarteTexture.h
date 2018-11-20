@@ -16,7 +16,7 @@
 class CarteTexture {
 private:
 
-    Carte carte;
+    Carte *carte;
     PlayerTexture playerTexture;
     SDL_Rect sdl_rect;
     std::vector<PlayerTexture*> playerInMap;
@@ -30,38 +30,23 @@ public:
     virtual  ~CarteTexture();
 
 
-
-
     void render(SDL_Renderer *gRenderer);
 
 
     void changeCurrentRender(SDL_Keycode key);
 
 
+    Carte *getCarte();
 
-//    void setCHeight(int cHeight);
-
-    Carte &getCarte();
-
-    void setCarte(const Carte &carte);
+    void setCarte(Carte *carte);
 
     /** This method is to pick up a loot if it's possible to do so.**/
     void PickUpLoot(SDL_Keycode key);
 
 
-
-
-
-//    SDL_Rect &getSdl_rect();
-
-
     void updateCurrentPlayer(SDL_Keycode key);
 
 
-
-//    const std::vector<PlayerTexture *> &getPlayerInMap() const;
-
-//    void setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap);
 };
 
 
