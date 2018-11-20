@@ -281,7 +281,12 @@ int main( int argc, char* args[] )
                         carteTexture.updateCurrentPlayer(e.key.keysym.sym);
 
                         if (e.key.keysym.sym==SDLK_b){
-                            std::cout << carteTexture.getCarte()->addLootToMap(new Loot("bag"),Position(64,94)) <<std::endl;
+                            Loot l("heart");
+
+                            l.setPosition(Position(64,94));
+
+                            std::cout << carteTexture.getCarte()->addLootToMap(new Loot(l)) <<std::endl;
+//
                         }
 
 

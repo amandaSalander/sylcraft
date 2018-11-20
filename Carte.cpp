@@ -385,12 +385,11 @@ void Carte::updatePlayerStat(const Player &player, int indexPlayer) {
     }
 }
 
-bool Carte::addLootToMap(Loot *loot, const Position &position) {
-    int pos=  position.getY()/32*largeur+ position.getX()/32;
-    std::cout << " ( " << position.getX() << " , " << position.getY() << " ) " <<std::endl;
-    std::cout << "pos "  << pos << std::endl;
+bool Carte::addLootToMap(Loot *loot) {
+    int pos=  loot->getPosition().getY()/32*largeur+ loot->getPosition().getX()/32;
+
     if (layers->at( layers->size()-1 )[pos]== nullptr){
-        std::cout << "I AM HERE "<<std::endl;
+
         layers->at(layers->size()-1 )[pos]=loot;
         return  true;
     }

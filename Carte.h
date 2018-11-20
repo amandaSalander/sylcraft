@@ -50,7 +50,8 @@ public:
 
     void updatePlayerStat(const Player &player, int indexPlayer );
 
-    bool addLootToMap(Loot *loot, const Position &position);
+    bool addLootToMap(Loot *loot);
+    
 
 };
 
