@@ -7,6 +7,7 @@
 #include "LootTexture.h"
 #include "DecorationTexture.h"
 #include "HarmingObjects.h"
+#include "NPC.h"
 #include <math.h>
 
 
@@ -165,6 +166,24 @@ Carte::Carte(std::string filename) {
                 HarmingObjects harmingObjects("fire");
                 harmingObjects.setPosition(Position(i*32,j*32));
                 layers->at(l).emplace_back(new HarmingObjects(harmingObjects));
+            }
+            else if(line[i]=='O' || line[i]=='P' || line[i]=='M'){
+                NPC npc("oldMan");
+
+                switch (line[i]){
+                    case 'O':
+                        npc=NPC("oldMan");
+                        break;
+                    case 'P':
+                        npc= NPC("priest");
+                        break;
+                    case 'M':
+                        npc=NPC("mysteriousLady");
+                        break;
+                }
+
+                npc.setPosition(Position(i*32,j*32));
+                layers->at(l).emplace_back(new NPC(npc));
             }
             else {
                 layers->at(l).push_back(nullptr);

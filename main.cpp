@@ -14,6 +14,7 @@ and may not be redistributed without written permission.*/
 #include "PlayerStatTexture.h"
 #include "HarmingObjects.h"
 #include "Timer.h"
+#include "BubbleTalk.h"
 
 
 //Screen dimension constants
@@ -205,6 +206,8 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
+    BubbleTalk bubbleTalk(new Position(60,60));
+
     HarmingObjects harmingObjects("fire");
     std::cout << harmingObjects.getStrength() <<std::endl;
     std::cout << harmingObjects.getStamina() <<std::endl;
@@ -318,7 +321,7 @@ int main( int argc, char* args[] )
 
 //                std::cout << "TIMER " << timeStep <<std::endl;
 
-
+                bubbleTalk.render("Priest","You shall be punished for your recklessness",gRenderer);
 
                 SDL_RenderPresent( gRenderer );
 

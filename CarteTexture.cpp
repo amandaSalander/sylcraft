@@ -9,6 +9,8 @@
 #include "PlayerTexture.h"
 #include "HarmingObjects.h"
 #include "HarmingObjectsTexture.h"
+#include "NPCTexture.h"
+#include "NPC.h"
 
 
 CarteTexture::CarteTexture() {
@@ -69,6 +71,19 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                    h->getPosition().getY(),
                                    nullptr,
                                    gRenderer
+                );
+            }
+            else if (auto *n= dynamic_cast<NPC*>(j)){
+
+                NPCTexture npcTexture;
+                npcTexture.loadImageFromFile(
+                        n->getType(),
+                        gRenderer
+                );
+                npcTexture.render(n->getPosition().getX(),
+                                             n->getPosition().getY(),
+                                             nullptr,
+                                             gRenderer
                 );
             }
             else if (auto *d= dynamic_cast<Decoration*>(j)){
