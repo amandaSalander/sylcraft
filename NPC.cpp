@@ -20,3 +20,19 @@ NPC::NPC(std::string type) {
         prompts.emplace_back(line);
     }
 }
+
+const std::vector<std::string> &NPC::getPrompts() const {
+    return prompts;
+}
+
+void NPC::setPrompts(const std::vector<std::string> &prompts) {
+    NPC::prompts = prompts;
+}
+
+const std::string &NPC::getName() const {
+    return name;
+}
+
+void NPC::setName(const std::string &name) {
+    NPC::name = name;
+}

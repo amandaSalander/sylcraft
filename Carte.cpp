@@ -469,3 +469,52 @@ Position const Carte::isHarming(const Position &position,float &timestep,float &
     else return Position(-1,-1);
 
 }
+
+Position const Carte::allowedTalkToNPC(Position position) {
+    int pos_min=  position.getY()/32*largeur+ position.getX()/32;
+    int pos_max=  position.getY()/32*largeur+ (int) round(position.getX()/32.0);
+
+    /** Get al the value surrouding the player **/
+    std::vector<short> positions;
+    positions.emplace_back(-31);
+    positions.emplace_back(-30);
+    positions.emplace_back(-29);
+    positions.emplace_back(-1);
+    positions.emplace_back(0);
+    positions.emplace_back(1);
+    positions.emplace_back(29);
+    positions.emplace_back(30);
+    positions.emplace_back(31);
+
+
+    Position a(-1,-1);
+
+    for (int i = 0; i <positions.size() ; ++i) {
+        if (positions.at(i)<0){
+            if (pos_min +positions.at(i) >0){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_min+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+            if (pos_max +positions.at(i) >0){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_max+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+        }
+        else {
+            if (pos_min +positions.at((size_t)i) <largeur*hauteur){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_min+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+            if (pos_max +positions.at((size_t)i) >0){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_max+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+        }
+    }
+
+    return a;
+}

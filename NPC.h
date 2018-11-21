@@ -17,6 +17,14 @@ private:
 public:
     NPC(std::string type);
 
+    const std::vector<std::string> &getPrompts() const;
+
+    void setPrompts(const std::vector<std::string> &prompts);
+
+    const std::string &getName() const;
+
+    void setName(const std::string &name);
+
 };
 
 

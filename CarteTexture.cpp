@@ -11,6 +11,7 @@
 #include "HarmingObjectsTexture.h"
 #include "NPCTexture.h"
 #include "NPC.h"
+#include "BubbleTalk.h"
 
 
 CarteTexture::CarteTexture() {
@@ -21,6 +22,9 @@ CarteTexture::CarteTexture() {
     sdl_rect.y=0;
     playerIndex= -1;
     changedPlayer=false;
+    currentBubble= nullptr;
+    currentNPC= nullptr;
+    indexBubble=0;
 
 }
 
@@ -169,6 +173,9 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
         }
 
     }
+    if (currentBubble!= nullptr &&  currentNPC!= nullptr){
+        currentBubble->render(currentNPC->getName(),currentNPC->getPrompts().at(indexBubble),gRenderer);
+    }
     changedPlayer=false;
 
 }
@@ -226,7 +233,7 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 
 
-void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start) {
+void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start,SDL_Renderer *gRenderer) {
 
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
@@ -249,11 +256,47 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
                     );
         }
 
-    }
-    std::cout << "PICKING STATE : ( " << carte->allowedPick(playerTexture.getPlayer().getPosition()).getX()
-    <<" , " << carte->allowedPick(playerTexture.getPlayer().getPosition()).getY() << " ) " <<std::endl;
+        Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
-}
+        if (key==SDLK_c) {
+            if (npcPosition.getY() == -1 && npcPosition.getX() == -1) {
+
+            } else {
+
+                 currentBubble= new BubbleTalk(
+                         new Position(
+                                 npcPosition.getX()-100,
+                                 npcPosition.getY() - 60
+                         )
+                         );
+
+                currentNPC = dynamic_cast<NPC *>(
+                        carte->getLayers()->back().at(
+                                (size_t)npcPosition.getY()/32*30+npcPosition.getX()/32
+                                )
+                );
+
+                std::cout << "I AM HERE" <<std::endl;
+
+
+            }
+        }
+
+    }
+    if (currentNPC!= nullptr && key ==SDLK_k){
+        if (indexBubble+1 < currentNPC->getPrompts().size()){
+            ++indexBubble;
+        }
+        else {
+            currentNPC= nullptr;
+            currentBubble= nullptr;
+            indexBubble=0;
+        }
+        }
+    }
+
+
+
 
 void CarteTexture::PickUpLoot(SDL_Keycode key) {
     switch (key){

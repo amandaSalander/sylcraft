@@ -12,6 +12,8 @@
 #include "Carte.h"
 #include "PlayerTexture.h"
 #include "LootTexture.h"
+#include "BubbleTalk.h"
+#include "NPC.h"
 
 class CarteTexture {
 private:
@@ -23,6 +25,9 @@ private:
     std::vector<LootTexture*> lootInMap;
     int playerIndex;
     bool changedPlayer;
+    BubbleTalk *currentBubble;
+    NPC *currentNPC;
+    size_t indexBubble;
 
 public:
     CarteTexture();
@@ -33,7 +38,7 @@ public:
     void render(SDL_Renderer *gRenderer);
 
 
-    void changeCurrentRender(SDL_Keycode key,float &timestep,float &start);
+    void changeCurrentRender(SDL_Keycode key,float &timestep,float &start,SDL_Renderer *gRenderer);
 
 
     Carte *getCarte();

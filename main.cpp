@@ -289,7 +289,7 @@ int main( int argc, char* args[] )
                     }
                     else if( e.type == SDL_KEYDOWN ) {
 
-                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start);
+                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start,gRenderer);
 
                         carteTexture.PickUpLoot(e.key.keysym.sym);
 
@@ -314,14 +314,14 @@ int main( int argc, char* args[] )
                 }
                 times =times + timestep.getTicks() / 1000.f;
 
-                std::cout << "TIMER " << times <<std::endl;
+//                std::cout << "TIMER " << times <<std::endl;
                 carteTexture.render(gRenderer);
 
                 //Restart step timer
 
 //                std::cout << "TIMER " << timeStep <<std::endl;
 
-                bubbleTalk.render("Priest","You shall be punished for your recklessness",gRenderer);
+//                bubbleTalk.render("Priest","You shall be punished for your recklessness",gRenderer);
 
                 SDL_RenderPresent( gRenderer );
 
