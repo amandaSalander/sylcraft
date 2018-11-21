@@ -288,6 +288,9 @@ int main( int argc, char* args[] )
                             std::cout << carteTexture.getCarte()->addLootToMap(new Loot(l)) <<std::endl;
 //
                         }
+                        if (e.key.keysym.sym==SDLK_b){
+
+                        }
 
 
                     }

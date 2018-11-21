@@ -14,6 +14,7 @@
 #include "Element.h"
 #include "Player.h"
 #include "Loot.h"
+#include "Obstacle.h"
 
 #include <SDL2/SDL.h>
 
@@ -51,7 +52,9 @@ public:
     void updatePlayerStat(const Player &player, int indexPlayer );
 
     bool addLootToMap(Loot *loot);
-    
+
+    bool addObstacleToMap(Obstacle *obstacle);
+
 
 };
 

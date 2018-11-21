@@ -397,3 +397,16 @@ bool Carte::addLootToMap(Loot *loot) {
         return false;
     }
 }
+
+bool Carte::addObstacleToMap(Obstacle *obstacle) {
+    int pos=  obstacle->getPosition().getY()/32*largeur+ obstacle->getPosition().getX()/32;
+
+    if (layers->at( layers->size()-1 )[pos]== nullptr){
+
+        layers->at(layers->size()-1 )[pos]=obstacle;
+        return  true;
+    }
+    else {
+        return false;
+    }
+}
