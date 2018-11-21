@@ -55,6 +55,8 @@ public:
 
     bool addObstacleToMap(Obstacle *obstacle);
 
+    Position const isHarming(const Position &position,float &timestep,float &start);
+
 
 };
 

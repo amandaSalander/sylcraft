@@ -12,6 +12,8 @@ and may not be redistributed without written permission.*/
 #include "LootTexture.h"
 #include "CarteTexture.h"
 #include "PlayerStatTexture.h"
+#include "HarmingObjects.h"
+#include "Timer.h"
 
 
 //Screen dimension constants
@@ -40,7 +42,7 @@ SDL_Texture* gTexture = nullptr;
 
 //Loads individual image as texture
 SDL_Texture* loadTexture( std::string path );
-
+Timer timestep;
 PlayerTexture playerTexture;
 SDL_Rect playerRectangle;
 ObstacleTexture obstacleTexture;
@@ -56,6 +58,9 @@ Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
 std::string filename="cartes/carte_1.txt";
 
 Carte carte1(filename);
+
+float times=0;
+float start=0;
 
 
 bool init()
@@ -200,7 +205,11 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
-    printf( "Failed to initialize!\n" );
+    HarmingObjects harmingObjects("fire");
+    std::cout << harmingObjects.getStrength() <<std::endl;
+    std::cout << harmingObjects.getStamina() <<std::endl;
+    std::cout << harmingObjects.getDefense() <<std::endl;
+    std::cout << harmingObjects.getLuck() <<std::endl;
     //Start up SDL and create window
     if( !init() )
     {
@@ -236,7 +245,7 @@ int main( int argc, char* args[] )
                 c.setPosition(Position(300,200));
 
                 d.setType("mage_1.png");
-                d.setPosition(Position(400,200));
+                d.setPosition(Position(600,400));
 
                 PlayerStatTexture playerStatTexture;
                 playerStatTexture.setPlayer(new Player(c));
@@ -264,9 +273,12 @@ int main( int argc, char* args[] )
                 carteTexture.getCarte()->addPlayerToMap(new Player(d),596);
 
 
+
+
+
+
                 //Handle events on queue
-                while( SDL_PollEvent( &e ) != 0 )
-                {
+                while( SDL_PollEvent( &e ) != 0 ) {
                     //User requests quit
                     if( e.type == SDL_QUIT )
                     {
@@ -274,7 +286,7 @@ int main( int argc, char* args[] )
                     }
                     else if( e.type == SDL_KEYDOWN ) {
 
-                        carteTexture.changeCurrentRender(e.key.keysym.sym);
+                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start);
 
                         carteTexture.PickUpLoot(e.key.keysym.sym);
 
@@ -293,14 +305,24 @@ int main( int argc, char* args[] )
                         }
 
 
+
+//                        time+=time;
                     }
                 }
+                times =times + timestep.getTicks() / 1000.f;
 
+                std::cout << "TIMER " << times <<std::endl;
                 carteTexture.render(gRenderer);
+
+                //Restart step timer
+
+//                std::cout << "TIMER " << timeStep <<std::endl;
 
 
 
                 SDL_RenderPresent( gRenderer );
+
+                timestep.start();
 
             }
         }

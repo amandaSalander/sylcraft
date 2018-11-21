@@ -30,6 +30,8 @@ Loot::Loot(std::string type) {
     std::getline(loot,line);
     luck= std::stoi(line);
 
+    loot.close();
+
 }
 
 int Loot::getStrength() const {

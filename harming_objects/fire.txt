@@ -1,0 +1,5 @@
+assets/harmingObjects/5.png
+0
+2
+0
+0

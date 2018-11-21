@@ -6,6 +6,7 @@
 #include "ObstacleTexture.h"
 #include "LootTexture.h"
 #include "DecorationTexture.h"
+#include "HarmingObjects.h"
 #include <math.h>
 
 
@@ -159,6 +160,11 @@ Carte::Carte(std::string filename) {
 
 
                 layers->at(l).push_back(new Decoration(decoration));
+            }
+            else if(line[i]=='F'){
+                HarmingObjects harmingObjects("fire");
+                harmingObjects.setPosition(Position(i*32,j*32));
+                layers->at(l).emplace_back(new HarmingObjects(harmingObjects));
             }
             else {
                 layers->at(l).push_back(nullptr);
@@ -409,4 +415,38 @@ bool Carte::addObstacleToMap(Obstacle *obstacle) {
     else {
         return false;
     }
+}
+
+Position const Carte::isHarming(const Position &position,float &timestep,float &start) {
+    int pos=  position.getY()/32*largeur+ position.getX()/32;
+
+    std::cout << "timestep "<< timestep <<std::endl;
+    std::cout << "start "<< start <<std::endl;
+    if (auto *h = dynamic_cast<HarmingObjects*>(layers->back().at(pos))){
+
+
+            if (start==0){
+                start=0.3;
+                return h->getPosition();
+            }
+            else if ( timestep-start >0.3 ){
+                start=0.3;
+                timestep=0;
+
+                return  h->getPosition();
+
+            }
+            else {
+
+                return Position(-1,-1);
+            }
+
+
+
+
+//        else return Position(-1,-1);
+
+    }
+    else return Position(-1,-1);
+
 }

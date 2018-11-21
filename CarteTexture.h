@@ -33,7 +33,7 @@ public:
     void render(SDL_Renderer *gRenderer);
 
 
-    void changeCurrentRender(SDL_Keycode key);
+    void changeCurrentRender(SDL_Keycode key,float &timestep,float &start);
 
 
     Carte *getCarte();

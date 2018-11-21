@@ -7,6 +7,8 @@
 #include "LootTexture.h"
 #include "DecorationTexture.h"
 #include "PlayerTexture.h"
+#include "HarmingObjects.h"
+#include "HarmingObjectsTexture.h"
 
 
 CarteTexture::CarteTexture() {
@@ -54,6 +56,19 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                        l->getPosition().getY(),
                                    nullptr,
                                        gRenderer
+                );
+            }
+            else if (auto *h= dynamic_cast<HarmingObjects*>(j)){
+
+                HarmingObjectsTexture harmingObjectsTexture;
+                harmingObjectsTexture.loadImageFromFile(
+                        h->getType(),
+                        gRenderer
+                );
+                harmingObjectsTexture.render(h->getPosition().getX(),
+                                   h->getPosition().getY(),
+                                   nullptr,
+                                   gRenderer
                 );
             }
             else if (auto *d= dynamic_cast<Decoration*>(j)){
@@ -196,15 +211,7 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 
 
-//const std::vector<PlayerTexture *> &CarteTexture::getPlayerInMap() const {
-//    return playerInMap;
-//}
-
-//void CarteTexture::setPlayerInMap(const std::vector<PlayerTexture *> &playerInMap) {
-//    CarteTexture::playerInMap = playerInMap;
-//}
-
-void CarteTexture::changeCurrentRender(SDL_Keycode key) {
+void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start) {
 
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
@@ -212,6 +219,20 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key) {
 
         carte->updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
         playerInMap.at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
+
+        Position position= carte->isHarming(playerTexture.getPlayer().getPosition(),timestep,start);
+        int index= position.getY()/32*30+position.getX()/32;
+        HarmingObjects *harmingObjects= dynamic_cast<HarmingObjects*>(carte->getLayers()->back().at(index));
+        if (position.getX()==-1 && position.getY()==-1){
+
+        }
+        else {
+
+            playerTexture.getPlayer().getClasse()->setStamina(
+                    playerTexture.getPlayer().getClasse()->getStamina()-
+                        harmingObjects->getStamina()
+                    );
+        }
 
     }
     std::cout << "PICKING STATE : ( " << carte->allowedPick(playerTexture.getPlayer().getPosition()).getX()
