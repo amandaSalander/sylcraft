@@ -206,7 +206,7 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
-    BubbleTalk bubbleTalk(new Position(60,60));
+//    BubbleTalk bubbleTalk(new Position(60,60));
 
     HarmingObjects harmingObjects("fire");
     std::cout << harmingObjects.getStrength() <<std::endl;
@@ -214,6 +214,9 @@ int main( int argc, char* args[] )
     std::cout << harmingObjects.getDefense() <<std::endl;
     std::cout << harmingObjects.getLuck() <<std::endl;
     //Start up SDL and create window
+
+    std::cout << carte1.getLayers()->back().at(0)->getType() << std::endl;
+//    printf( "Failed to initialize!\n" );
     if( !init() )
     {
         printf( "Failed to initialize!\n" );
@@ -232,7 +235,7 @@ int main( int argc, char* args[] )
 
             //Event handler
             SDL_Event e;
-
+//            printf( "Failed to initialize!\n" );
             //While application is running
             while( !quit )
             {
@@ -240,10 +243,10 @@ int main( int argc, char* args[] )
                 //Clear screen
                 SDL_RenderClear( gRenderer );
                 //Render texture to screen
+//                printf( "Failed to initialize!\n" );
                 SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
-                carteTexture.setCarte(&carte1
-                );
+                carteTexture.setCarte(&carte1);
                 c.setType("haru_civil.png");
                 c.setPosition(Position(300,200));
 
@@ -267,7 +270,6 @@ int main( int argc, char* args[] )
                 playerStatTexture.setPlayer(new Player(d));
                 playerStatTexture.setPosition(Position(960,420));
                 playerStatTexture.render(gRenderer);
-
 
 
                 carteTexture.getCarte()->addPlayerToMap(new Player(b),595);
@@ -301,25 +303,20 @@ int main( int argc, char* args[] )
                             l.setPosition(Position(64,94));
 
                             std::cout << carteTexture.getCarte()->addLootToMap(new Loot(l)) <<std::endl;
-//
+
                         }
                         if (e.key.keysym.sym==SDLK_b){
 
                         }
 
 
-
-//                        time+=time;
                     }
                 }
                 times =times + timestep.getTicks() / 1000.f;
 
-//                std::cout << "TIMER " << times <<std::endl;
                 carteTexture.render(gRenderer);
 
-                //Restart step timer
 
-//                std::cout << "TIMER " << timeStep <<std::endl;
 
 //                bubbleTalk.render("Priest","You shall be punished for your recklessness",gRenderer);
 

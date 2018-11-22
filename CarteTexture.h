@@ -21,7 +21,7 @@ private:
     Carte *carte;
     PlayerTexture playerTexture;
     SDL_Rect sdl_rect;
-    std::vector<PlayerTexture*> playerInMap;
+    std::vector<PlayerTexture*> *playerInMap;
     std::vector<LootTexture*> lootInMap;
     int playerIndex;
     bool changedPlayer;

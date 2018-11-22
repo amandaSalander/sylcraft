@@ -25,6 +25,7 @@ CarteTexture::CarteTexture() {
     currentBubble= nullptr;
     currentNPC= nullptr;
     indexBubble=0;
+    playerInMap= new std::vector<PlayerTexture*>();
 
 }
 
@@ -112,7 +113,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
                 if (pT->loadImageFromFile(p->getType(),gRenderer)){
 
-                    if (playerIndex==-1){playerInMap.push_back(pT);}
+                    if (playerIndex==-1){playerInMap->push_back(pT);}
 
                 }
                 else {
@@ -124,18 +125,18 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             }
 
         }
-        if (playerIndex==-1){playerIndex=(int)playerInMap.size()-1;}
+        if (playerIndex==-1){playerIndex=(int)playerInMap->size()-1;}
 
     }
 
 
     if ( playerTexture.getPlayer().getPosition().getY()==0 &&
          playerTexture.getPlayer().getPosition().getX()==0 ){
-        playerTexture.getPlayer().setPosition(playerInMap.at((size_t) playerIndex)->getPlayer().getPosition());
+        playerTexture.getPlayer().setPosition(playerInMap->at((size_t) playerIndex)->getPlayer().getPosition());
     }
 
     SDL_Rect sdl_rect1;
-    for (size_t k = 0; k < playerInMap.size(); ++k) {
+    for (size_t k = 0; k < playerInMap->size(); ++k) {
         if (k!=playerIndex){
 
 
@@ -144,17 +145,17 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             sdl_rect1.w=32;
             sdl_rect1.h=32;
 
-            playerInMap.at(k)->render(
-                    playerInMap.at(k)->getPlayer().getPosition().getX(),
-                    playerInMap.at(k)->getPlayer().getPosition().getY(),
+            playerInMap->at(k)->render(
+                    playerInMap->at(k)->getPlayer().getPosition().getX(),
+                    playerInMap->at(k)->getPlayer().getPosition().getY(),
                     &sdl_rect1,
                     gRenderer
             );
         }
         else {
             if (changedPlayer){
-                playerTexture= *(playerInMap.at((size_t)playerIndex));
-                playerInMap.at((size_t)playerIndex)->render(
+                playerTexture= *(playerInMap->at((size_t)playerIndex));
+                playerInMap->at((size_t)playerIndex)->render(
                         playerTexture.getPlayer().getPosition().getX(),
                         playerTexture.getPlayer().getPosition().getY(),
                         &sdl_rect,
@@ -162,7 +163,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
             }
             else {
-                playerInMap.at((size_t)playerIndex)->render(
+                playerInMap->at((size_t)playerIndex)->render(
                         playerTexture.getPlayer().getPosition().getX(),
                         playerTexture.getPlayer().getPosition().getY(),
                         &sdl_rect,
@@ -202,28 +203,28 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
             playerIndex=0;
             break;
         case SDLK_2:
-            if (playerInMap.size()>1) {playerIndex=1;}
+            if (playerInMap->size()>1) {playerIndex=1;}
             break;
         case SDLK_3:
-            if (playerInMap.size()>2) {playerIndex=2;}
+            if (playerInMap->size()>2) {playerIndex=2;}
             break;
         case SDLK_4:
-            if (playerInMap.size()>3) {playerIndex=3;}
+            if (playerInMap->size()>3) {playerIndex=3;}
             break;
         case SDLK_5:
-            if (playerInMap.size()>4){ playerIndex=4;}
+            if (playerInMap->size()>4){ playerIndex=4;}
             break;
         case SDLK_6:
-            if (playerInMap.size()>5) playerIndex=5;
+            if (playerInMap->size()>5) playerIndex=5;
             break;
         case SDLK_7:
-            if (playerInMap.size()>6) playerIndex=6;
+            if (playerInMap->size()>6) playerIndex=6;
             break;
         case SDLK_8:
-            if (playerInMap.size()>7) playerIndex=7;
+            if (playerInMap->size()>7) playerIndex=7;
             break;
         case SDLK_9:
-            if (playerInMap.size()>8) playerIndex=8;
+            if (playerInMap->size()>8) playerIndex=8;
             break;
         default:break;
 
@@ -238,23 +239,32 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
         playerTexture.changeCurrentRender(&sdl_rect,key);
-
+//
         carte->updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
-        playerInMap.at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
+
+        if (playerInMap->size()==0){
+            std::cout << "LOL" <<std::endl;
+        }
+        else {
+            std::cout << "POP" <<std::endl;
+            playerInMap->at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
+        }
+
+// playerInMap->at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
 
         Position position= carte->isHarming(playerTexture.getPlayer().getPosition(),timestep,start);
         int index= position.getY()/32*30+position.getX()/32;
         HarmingObjects *harmingObjects= dynamic_cast<HarmingObjects*>(carte->getLayers()->back().at(index));
         if (position.getX()==-1 && position.getY()==-1){
-
+//
         }
         else {
-
             playerTexture.getPlayer().getClasse()->setStamina(
                     playerTexture.getPlayer().getClasse()->getStamina()-
                         harmingObjects->getStamina()
                     );
         }
+
 
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
