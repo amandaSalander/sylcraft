@@ -32,6 +32,7 @@ private:
     size_t indexBubble;
     std::vector<Position> *initialPositionsOfEnnemies;
     bool switched;
+    int frame;
 
 public:
     CarteTexture();

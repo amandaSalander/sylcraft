@@ -1,4 +1,4 @@
-assets/harmingObjects/5.png
+assets/harmingObjects/fire.png
 0
 2
 0

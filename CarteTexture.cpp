@@ -37,6 +37,7 @@ CarteTexture::CarteTexture() {
     initialPositionsOfEnnemies= new std::vector<Position>();
     ennemiesInMap= new std::vector<EnnemyTexture*>();
     switched=false;
+    frame=0;
 
 }
 
@@ -70,13 +71,70 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                         l->getType(),
                         gRenderer
                 );
+
+                SDL_Rect *rect= new SDL_Rect({0,0,32,32});
+                if (frame%4==0){
+                    rect->x=0;
+                }
+                else if (frame%4==1){
+                    rect->x=32;
+                }
+                else if (frame%4==2){
+                    rect->x=64;
+                }
+                else if (frame%4==3){
+                    rect->x=96;
+                }
                 lootTexture.render(l->getPosition().getX(),
                                        l->getPosition().getY(),
-                                   nullptr,
+                                   rect,
                                        gRenderer
                 );
             }
             else if (auto *h= dynamic_cast<HarmingObjects*>(j)){
+                auto *rect=new SDL_Rect({0,0,32,32});
+                if (frame%15==0){
+                    rect->x=0;
+                } else if (frame%15==1){
+                    rect->x=32;
+                } else if (frame%15==2){
+                    rect->x=64;
+                } else if (frame%15==3){
+                    rect->x=96;
+                }
+                else if (frame%15==4){
+                    rect->x=128;
+                }
+                else if (frame%15==5){
+                    rect->x=160;
+                }
+                else if (frame%15==6){
+                    rect->x=192;
+                }
+                else if (frame%15==7){
+                    rect->x=224;
+                }
+                else if (frame%15==8){
+                    rect->x=256;
+                }
+                else if (frame%15==9){
+                    rect->x=288;
+                }
+                else if (frame%15==10){
+                    rect->x=320;
+                }
+                else if (frame%15==11){
+                    rect->x=352;
+                }
+                else if (frame%15==12){
+                    rect->x=384;
+                }
+                else if (frame%15==13){
+                    rect->x=416;
+                }
+                else if (frame%15==14){
+                    rect->x=448;
+                }
 
                 HarmingObjectsTexture harmingObjectsTexture;
                 harmingObjectsTexture.loadImageFromFile(
@@ -85,9 +143,10 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
                 harmingObjectsTexture.render(h->getPosition().getX(),
                                    h->getPosition().getY(),
-                                   nullptr,
+                                   rect,
                                    gRenderer
                 );
+                frame= (frame+1)%15;
             }
             else if (auto *n= dynamic_cast<NPC*>(j)){
 

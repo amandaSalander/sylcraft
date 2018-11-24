@@ -362,6 +362,7 @@ int main( int argc, char* args[] )
 
 //                bubbleTalk.render("Priest","You shall be punished for your recklessness",gRenderer);
 
+                SDL_Delay(50);
                 SDL_RenderPresent( gRenderer );
 
                 timestep.start();
