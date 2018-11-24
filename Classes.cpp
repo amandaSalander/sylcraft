@@ -4,6 +4,9 @@
 //
 
 #include <fstream>
+#include <random>
+#include <map>
+#include <iomanip>
 #include "Classes.h"
 
 
@@ -46,6 +49,33 @@ Classes::~Classes() {
 }
 
 
+int Classes::attackPower(const int &_luck) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::bernoulli_distribution d(0.33* _luck/20.0);
+
+    int a;
+    if (d(gen)){
+        a= int ( (strength*8+willpower*2+wisdom*4)/8* 0.25 );
+    }else {
+        a= (strength*5+willpower*2+wisdom*3)/8;
+    }
+    return a;
+
+}
+
+int Classes::defensePower() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::bernoulli_distribution d(0.33* luck/20.0);
+    int a;
+    if (d(gen)){
+        a= (int)(defense/3*0.75);
+    }else {
+        a= defense/3;
+    }
+    return a;
+}
 
 const std::string &Classes::getName() const {
     return name;

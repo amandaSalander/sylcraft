@@ -12,20 +12,31 @@
 #include "NPCTexture.h"
 #include "NPC.h"
 #include "BubbleTalk.h"
+#include "Ennemy.h"
+#include "EnnemyTexture.h"
 
 
 CarteTexture::CarteTexture() {
 //    carte=Carte("hi");
-    sdl_rect.w=32;
-    sdl_rect.h=32;
-    sdl_rect.x=0;
-    sdl_rect.y=0;
+    /** pushing three empty SDL_rect in clips, each clip in clips represent
+     * current player clip
+     * current ennemy clip
+     * current boss clip
+     * **/
+    clips= new std::vector<SDL_Rect*>();
+    clips->emplace_back(new SDL_Rect({0,0,32,32}));
+    clips->emplace_back(new SDL_Rect({0,32,32,32}));
+    clips->emplace_back(new SDL_Rect({0,0,32,32}));
+    /** **/
     playerIndex= -1;
     changedPlayer=false;
     currentBubble= nullptr;
     currentNPC= nullptr;
     indexBubble=0;
     playerInMap= new std::vector<PlayerTexture*>();
+    initialPositionsOfEnnemies= new std::vector<Position>();
+    ennemiesInMap= new std::vector<EnnemyTexture*>();
+    switched=false;
 
 }
 
@@ -91,6 +102,30 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                              gRenderer
                 );
             }
+            else if (auto *e= dynamic_cast<Ennemy*>(j)){
+
+
+                if (initialPositionsOfEnnemies->size()<3) {
+                    initialPositionsOfEnnemies->emplace_back(e->getPosition());
+
+
+                    EnnemyTexture *ennemyTexture=new EnnemyTexture();
+                    ennemyTexture->setEnnemy(e);
+                    ennemyTexture->loadImageFromFile(
+                            e->getType(),
+                            gRenderer
+                    );
+                    ennemyTexture->render(e->getPosition().getX(),
+                                         e->getPosition().getY(),
+                                         clips->at(1),
+                                         gRenderer
+                    );
+                    ennemiesInMap->emplace_back(ennemyTexture);
+                }
+
+
+
+            }
             else if (auto *d= dynamic_cast<Decoration*>(j)){
 
                 DecorationTexture decorationTexture;
@@ -130,6 +165,57 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
     }
 
 
+
+
+        for ( size_t k = 0; k < ennemiesInMap->size(); k++) {
+            std::cout << "SWITCHED "<< switched <<std::endl;
+            if (!switched && ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() >
+                initialPositionsOfEnnemies->at(k).getX()-32
+                    ) {
+                ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-1,
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                ));
+                clips->at(1)=new SDL_Rect({0,32,32,32});
+            }
+            else if (  initialPositionsOfEnnemies->at(k).getX()-
+                       ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()   ==32
+                       ){
+                switched=true;
+
+
+
+            }
+
+
+            if (switched){
+
+                ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() + 1,
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                ));
+                clips->at(1)=new SDL_Rect({0,64,32,32});
+            }
+            if (  ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-
+                        initialPositionsOfEnnemies->at(k).getX()
+                          ==32
+                    ){
+                switched=false;
+
+            }
+
+
+
+            ennemiesInMap->at(k)->render(
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getX(),
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getY(),
+                    clips->at(1),
+                    gRenderer
+            );
+        }
+
+
+
     if ( playerTexture.getPlayer().getPosition().getY()==0 &&
          playerTexture.getPlayer().getPosition().getX()==0 ){
         playerTexture.getPlayer().setPosition(playerInMap->at((size_t) playerIndex)->getPlayer().getPosition());
@@ -158,7 +244,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 playerInMap->at((size_t)playerIndex)->render(
                         playerTexture.getPlayer().getPosition().getX(),
                         playerTexture.getPlayer().getPosition().getY(),
-                        &sdl_rect,
+                        clips->at(0),
                         gRenderer
                 );
             }
@@ -166,7 +252,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 playerInMap->at((size_t)playerIndex)->render(
                         playerTexture.getPlayer().getPosition().getX(),
                         playerTexture.getPlayer().getPosition().getY(),
-                        &sdl_rect,
+                        clips->at(0),
                         gRenderer
                 );
             }
@@ -238,7 +324,7 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
-        playerTexture.changeCurrentRender(&sdl_rect,key);
+        playerTexture.changeCurrentRender(clips->at(0),key);
 //
         carte->updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
 
@@ -263,6 +349,17 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
                     playerTexture.getPlayer().getClasse()->getStamina()-
                         harmingObjects->getStamina()
                     );
+            auto *playerMapTemp= new std::vector<PlayerTexture*>();
+            for (int i = 0; i <playerInMap->size() ; ++i) {
+                if (playerInMap->at(i)->getPlayer().getClasse()->getStamina()==0){
+                    playerIndex=0;
+                }else {
+                    playerMapTemp->emplace_back(playerInMap->at(i));
+                }
+            }
+            playerInMap=playerMapTemp;
+
+
         }
 
 

@@ -8,6 +8,7 @@
 #include "DecorationTexture.h"
 #include "HarmingObjects.h"
 #include "NPC.h"
+#include "Ennemy.h"
 #include <math.h>
 
 
@@ -184,6 +185,12 @@ Carte::Carte(std::string filename) {
 
                 npc.setPosition(Position(i*32,j*32));
                 layers->at(l).emplace_back(new NPC(npc));
+            }
+            else if (line[i]=='B'){
+                Ennemy ennemy("basic_ennemy_1");
+                ennemy.setPosition(Position(i*32,j*32));
+                layers->at(l).emplace_back(new Ennemy(ennemy));
+
             }
             else {
                 layers->at(l).push_back(nullptr);

@@ -14,20 +14,24 @@
 #include "LootTexture.h"
 #include "BubbleTalk.h"
 #include "NPC.h"
+#include "EnnemyTexture.h"
 
 class CarteTexture {
 private:
 
     Carte *carte;
     PlayerTexture playerTexture;
-    SDL_Rect sdl_rect;
+    std::vector<SDL_Rect*> *clips;
     std::vector<PlayerTexture*> *playerInMap;
     std::vector<LootTexture*> lootInMap;
+    std::vector<EnnemyTexture*> *ennemiesInMap;
     int playerIndex;
     bool changedPlayer;
     BubbleTalk *currentBubble;
     NPC *currentNPC;
     size_t indexBubble;
+    std::vector<Position> *initialPositionsOfEnnemies;
+    bool switched;
 
 public:
     CarteTexture();

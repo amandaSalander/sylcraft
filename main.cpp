@@ -208,6 +208,48 @@ int main( int argc, char* args[] )
 {
 //    BubbleTalk bubbleTalk(new Position(60,60));
 
+    Classes classes("assassin");
+    std::cout << "ASSASSIN " <<std::endl;
+    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
+    std::cout << "DEFENSE POWER " <<classes.defensePower()<<std::endl;
+
+
+    classes= Classes("healer");
+    std::cout << "HEALER " <<std::endl;
+    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
+    std::cout << "DEFENSE POWER " <<classes.defensePower()<<std::endl;
+
+    classes= Classes("warrior");
+    std::cout << "WARRIOR " <<std::endl;
+    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
+    std::cout << "DEFENSE POWER " <<classes.defensePower()<<std::endl;
+
+
+    classes= Classes("wizard");
+    std::cout << "WIZARD " <<std::endl;
+    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
+    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
+
+
+    classes= Classes("knight");
+    std::cout << "KNIGHT " <<std::endl;
+    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
+    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
+
+    classes= Classes("monk");
+    std::cout << "MONK " <<std::endl;
+    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
+    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
+
+
+    classes= Classes("mage");
+    std::cout << "MAGE " <<std::endl;
+    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
+    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
+
+
+
+
     HarmingObjects harmingObjects("fire");
     std::cout << harmingObjects.getStrength() <<std::endl;
     std::cout << harmingObjects.getStamina() <<std::endl;

@@ -26,6 +26,10 @@ public:
 
     Classes(std::string type);
 
+    int attackPower(const int &_luck);
+    int defensePower();
+
+
     int getStrength() const;
 
     void setStrength(int strength);
