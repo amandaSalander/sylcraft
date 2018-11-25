@@ -15,6 +15,7 @@ and may not be redistributed without written permission.*/
 #include "HarmingObjects.h"
 #include "Timer.h"
 #include "BubbleTalk.h"
+#include "PlayerLabel.h"
 
 
 //Screen dimension constants
@@ -49,9 +50,6 @@ SDL_Rect playerRectangle;
 ObstacleTexture obstacleTexture;
 LootTexture lootTexture;
 CarteTexture carteTexture;
-
-Player a("Hora","Halo",new Classes("healer"),Position(100,100));
-Player b("kiyan","Halo",new Classes("wizard"),Position(300,400));
 
 Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
 Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
@@ -120,40 +118,6 @@ bool loadMedia() {
         success = false;
     }
 
-    if (!playerTexture.loadImageFromFile("katia_civil.png",gRenderer)){
-        printf( "Failed to load sprite sheet texture!\n" );
-        success = false;
-    }
-    else{
-        playerRectangle.x=0;
-        playerRectangle.y=0;
-        playerRectangle.w=32;
-        playerRectangle.h=32;
-    }
-    if (!obstacleTexture.loadImageFromFile("crystal.gif",gRenderer)){
-        printf( "Failed to load sprite sheet texture!\n" );
-        success = false;
-    }
-    if (!lootTexture.loadImageFromFile("bag.gif",gRenderer)){
-        printf( "Failed to load sprite sheet texture!\n" );
-        success = false;
-    }
-
-    playerTexture.getPlayer().setPosition(Position(300,240));
-    playerTexture.getPlayer().setType("haru_civil.png");
-
-
-
-    a.setType("katia_civil.png");
-    a.setPosition(Position(200,200));
-
-
-
-    b.setType("Aldusa_Grai_de_Civille.png");
-    b.setPosition(Position(300,400));
-
-
-
 
     return success;
 }
@@ -206,59 +170,7 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
-//    BubbleTalk bubbleTalk(new Position(60,60));
 
-    Classes classes("assassin");
-    std::cout << "ASSASSIN " <<std::endl;
-    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
-    std::cout << "DEFENSE POWER " <<classes.defensePower()<<std::endl;
-
-
-    classes= Classes("healer");
-    std::cout << "HEALER " <<std::endl;
-    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
-    std::cout << "DEFENSE POWER " <<classes.defensePower()<<std::endl;
-
-    classes= Classes("warrior");
-    std::cout << "WARRIOR " <<std::endl;
-    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
-    std::cout << "DEFENSE POWER " <<classes.defensePower()<<std::endl;
-
-
-    classes= Classes("wizard");
-    std::cout << "WIZARD " <<std::endl;
-    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
-    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
-
-
-    classes= Classes("knight");
-    std::cout << "KNIGHT " <<std::endl;
-    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
-    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
-
-    classes= Classes("monk");
-    std::cout << "MONK " <<std::endl;
-    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
-    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
-
-
-    classes= Classes("mage");
-    std::cout << "MAGE " <<std::endl;
-    std::cout << "ATTACK POWER " <<classes.attackPower(5) <<std::endl;
-    std::cout << "DEFENSE POWER " <<classes.defensePower() <<std::endl;
-
-
-
-
-    HarmingObjects harmingObjects("fire");
-    std::cout << harmingObjects.getStrength() <<std::endl;
-    std::cout << harmingObjects.getStamina() <<std::endl;
-    std::cout << harmingObjects.getDefense() <<std::endl;
-    std::cout << harmingObjects.getLuck() <<std::endl;
-    //Start up SDL and create window
-
-    std::cout << carte1.getLayers()->back().at(0)->getType() << std::endl;
-//    printf( "Failed to initialize!\n" );
     if( !init() )
     {
         printf( "Failed to initialize!\n" );
@@ -289,10 +201,10 @@ int main( int argc, char* args[] )
                 SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
                 carteTexture.setCarte(&carte1);
-                c.setType("haru_civil.png");
+                c.setType("assets/players/warrior_1.png");
                 c.setPosition(Position(300,200));
 
-                d.setType("mage_1.png");
+                d.setType("assets/players/mage_1.png");
                 d.setPosition(Position(600,400));
 
                 PlayerStatTexture playerStatTexture;
@@ -300,22 +212,12 @@ int main( int argc, char* args[] )
                 playerStatTexture.setPosition(Position(960,0));
                 playerStatTexture.render(gRenderer);
 
-                b.setType("wizard_1.png");
-                playerStatTexture.setPlayer(new Player(b));
+
+
+                playerStatTexture.setPlayer(new Player(d));
                 playerStatTexture.setPosition(Position(960,140));
                 playerStatTexture.render(gRenderer);
 
-                playerStatTexture.setPlayer(new Player(a));
-                playerStatTexture.setPosition(Position(960,280));
-                playerStatTexture.render(gRenderer);
-
-                playerStatTexture.setPlayer(new Player(d));
-                playerStatTexture.setPosition(Position(960,420));
-                playerStatTexture.render(gRenderer);
-
-
-                carteTexture.getCarte()->addPlayerToMap(new Player(b),595);
-                carteTexture.getCarte()->addPlayerToMap(new Player(a),594);
                 carteTexture.getCarte()->addPlayerToMap(new Player(c),593);
                 carteTexture.getCarte()->addPlayerToMap(new Player(d),596);
 
@@ -359,8 +261,6 @@ int main( int argc, char* args[] )
                 carteTexture.render(gRenderer);
 
 
-
-//                bubbleTalk.render("Priest","You shall be punished for your recklessness",gRenderer);
 
                 SDL_Delay(50);
                 SDL_RenderPresent( gRenderer );

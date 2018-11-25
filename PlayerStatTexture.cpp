@@ -2,10 +2,7 @@
 // Created by amanda on 18/11/18.
 //
 
-#include <vector>
 #include "PlayerStatTexture.h"
-#include "TextTexture.h"
-
 
 PlayerStatTexture::PlayerStatTexture() {
     playerStatTexture= nullptr;

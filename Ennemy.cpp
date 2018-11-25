@@ -19,6 +19,29 @@ Ennemy::Ennemy(std::string type) {
     std::getline(file,line);
     attackEffect=std::stoi(line);
 
+    std::getline(file,line);
+    defenseEffect=std::stoi(line);
+
+    std::getline(file,line);
+    max_stamina=std::stoi(line);
+
+    file.close();
+}
+
+int Ennemy::getStamina() const {
+    return stamina;
+}
+
+int Ennemy::getAttackEffect() const {
+    return attackEffect;
+}
+
+int Ennemy::getDefenseEffect() const {
+    return defenseEffect;
+}
+
+int Ennemy::getMax_stamina() const {
+    return max_stamina;
 }
 
 

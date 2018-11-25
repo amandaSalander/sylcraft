@@ -9,6 +9,10 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "Player.h"
+#include <vector>
+
+#include "TextTexture.h"
+
 
 class PlayerStatTexture {
 private:

@@ -186,10 +186,20 @@ Carte::Carte(std::string filename) {
                 npc.setPosition(Position(i*32,j*32));
                 layers->at(l).emplace_back(new NPC(npc));
             }
-            else if (line[i]=='B'){
-                Ennemy ennemy("basic_ennemy_1");
-                ennemy.setPosition(Position(i*32,j*32));
-                layers->at(l).emplace_back(new Ennemy(ennemy));
+            else if (line[i]=='B' || line[i]=='C'){
+                Ennemy *ennemy;
+                switch (line[i]){
+                    case 'B':
+                        ennemy= new Ennemy("basic_ennemy");
+                        break;
+                    case 'C':
+                        ennemy= new Ennemy("medium_ennemy");
+                    default:
+                        break;
+                }
+
+                ennemy->setPosition(Position(i*32,j*32));
+                layers->at(l).emplace_back(ennemy);
 
             }
             else {
@@ -446,8 +456,7 @@ bool Carte::addObstacleToMap(Obstacle *obstacle) {
 Position const Carte::isHarming(const Position &position,float &timestep,float &start) {
     int pos=  position.getY()/32*largeur+ position.getX()/32;
 
-    std::cout << "timestep "<< timestep <<std::endl;
-    std::cout << "start "<< start <<std::endl;
+
     if (auto *h = dynamic_cast<HarmingObjects*>(layers->back().at(pos))){
 
 

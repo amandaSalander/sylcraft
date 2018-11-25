@@ -12,9 +12,19 @@ class Ennemy : public Element{
 private:
     int stamina;
     int attackEffect;
+    int defenseEffect;
+    int max_stamina;
 
 public:
     Ennemy(std::string type);
+
+    int getStamina() const;
+
+    int getAttackEffect() const;
+
+    int getDefenseEffect() const;
+
+    int getMax_stamina() const;
 };
 
 

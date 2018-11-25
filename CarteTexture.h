@@ -33,6 +33,8 @@ private:
     std::vector<Position> *initialPositionsOfEnnemies;
     bool switched;
     int frame;
+    bool renderCurrentPlayer;
+
 
 public:
     CarteTexture();

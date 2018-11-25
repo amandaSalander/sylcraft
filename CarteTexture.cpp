@@ -14,6 +14,8 @@
 #include "BubbleTalk.h"
 #include "Ennemy.h"
 #include "EnnemyTexture.h"
+#include "PlayerLabel.h"
+#include "EnnemyLabel.h"
 
 
 CarteTexture::CarteTexture() {
@@ -38,6 +40,7 @@ CarteTexture::CarteTexture() {
     ennemiesInMap= new std::vector<EnnemyTexture*>();
     switched=false;
     frame=0;
+    renderCurrentPlayer=true;
 
 }
 
@@ -45,7 +48,6 @@ CarteTexture::~CarteTexture() = default;
 
 
 void CarteTexture::render(SDL_Renderer *gRenderer){
-//    lootInMap.clear();
 
     for (const auto &i : *(carte->getLayers()) ) {
 
@@ -200,22 +202,10 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             }
             else if (auto *p= dynamic_cast<Player*>(j)){
 
-
                 auto *pT=new PlayerTexture();
                 pT->setPlayer(*p);
+                if (playerIndex==-1){playerInMap->push_back(pT);}
 
-
-                if (pT->loadImageFromFile(p->getType(),gRenderer)){
-
-                    if (playerIndex==-1){playerInMap->push_back(pT);}
-
-                }
-                else {
-                    std::cout<< "COULDN'T LOAD THE PLAYER" <<std::endl;
-                }
-
-            }
-            else {
             }
 
         }
@@ -227,7 +217,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
 
         for ( size_t k = 0; k < ennemiesInMap->size(); k++) {
-            std::cout << "SWITCHED "<< switched <<std::endl;
+
             if (!switched && ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() >
                 initialPositionsOfEnnemies->at(k).getX()-32
                     ) {
@@ -241,8 +231,6 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()   ==32
                        ){
                 switched=true;
-
-
 
             }
 
@@ -263,7 +251,11 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
             }
 
-
+            auto *ennemyLabel=new EnnemyLabel(
+                    ennemiesInMap->at(k)->getEnnemy()->getAttackEffect(),
+                    ennemiesInMap->at(k)->getEnnemy()->getDefenseEffect(),
+                    ennemiesInMap->at(k)->getEnnemy()->getStamina(),
+                    ennemiesInMap->at(k)->getEnnemy()->getMax_stamina());
 
             ennemiesInMap->at(k)->render(
                     ennemiesInMap->at(k)->getEnnemy()->getPosition().getX(),
@@ -271,6 +263,11 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                     clips->at(1),
                     gRenderer
             );
+            ennemyLabel->render(
+                    Position(ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()+4,
+                             ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()-20),
+                    gRenderer
+                             );
         }
 
 
@@ -281,42 +278,63 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
     }
 
     SDL_Rect sdl_rect1;
-    for (size_t k = 0; k < playerInMap->size(); ++k) {
+    for (size_t k = 0; k < playerInMap->size(); k++) {
+        auto *playerLabel= new PlayerLabel(
+                k+1,
+                playerInMap->at(k)->getPlayer().getName(),
+                k==playerIndex);
+
         if (k!=playerIndex){
+            sdl_rect1.y=0;sdl_rect1.x=0;sdl_rect1.w=32;sdl_rect1.h=32;
 
-
-            sdl_rect1.y=0;
-            sdl_rect1.x=0;
-            sdl_rect1.w=32;
-            sdl_rect1.h=32;
-
+            playerInMap->at(k)->loadImageFromFile(
+                    playerInMap->at(k)->getPlayer().getType(),
+                    gRenderer
+                    );
             playerInMap->at(k)->render(
                     playerInMap->at(k)->getPlayer().getPosition().getX(),
                     playerInMap->at(k)->getPlayer().getPosition().getY(),
                     &sdl_rect1,
                     gRenderer
             );
-        }
-        else {
-            if (changedPlayer){
-                playerTexture= *(playerInMap->at((size_t)playerIndex));
-                playerInMap->at((size_t)playerIndex)->render(
-                        playerTexture.getPlayer().getPosition().getX(),
-                        playerTexture.getPlayer().getPosition().getY(),
-                        clips->at(0),
-                        gRenderer
-                );
-            }
-            else {
-                playerInMap->at((size_t)playerIndex)->render(
-                        playerTexture.getPlayer().getPosition().getX(),
-                        playerTexture.getPlayer().getPosition().getY(),
-                        clips->at(0),
-                        gRenderer
-                );
-            }
 
         }
+        else {
+            if (renderCurrentPlayer){
+                if (changedPlayer){
+                    playerTexture= *(playerInMap->at((size_t)playerIndex));
+                }
+                playerInMap->at((size_t)playerIndex)->loadImageFromFile(
+                        playerInMap->at((size_t)playerIndex)->getPlayer().getType(),gRenderer);
+
+            }else {
+                if (changedPlayer){
+                    std::string tmp=playerTexture.getPlayer().getType().substr(0,
+                            playerTexture.getPlayer().getType().find('.'));
+                    tmp+="_harm.png";
+
+                    playerTexture= *(playerInMap->at((size_t)playerIndex));
+                    playerInMap->at((size_t)playerIndex)->loadImageFromFile(tmp,gRenderer);
+                }else {
+                    playerInMap->at((size_t)playerIndex)->loadImageFromFile(
+                            playerInMap->at((size_t)playerIndex)->getPlayer().getType(),gRenderer);
+
+                }
+
+            }
+
+            playerInMap->at(k)->render(
+                    playerInMap->at(k)->getPlayer().getPosition().getX(),
+                    playerInMap->at(k)->getPlayer().getPosition().getY(),
+                    clips->at(0),
+                    gRenderer
+            );
+
+        }
+        playerLabel->render(
+                Position( playerInMap->at(k)->getPlayer().getPosition().getX()+4,
+                          playerInMap->at(k)->getPlayer().getPosition().getY()-20),
+                gRenderer);
 
     }
     if (currentBubble!= nullptr &&  currentNPC!= nullptr){
@@ -384,42 +402,45 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
         playerTexture.changeCurrentRender(clips->at(0),key);
-//
+
         carte->updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
 
         if (playerInMap->size()==0){
-            std::cout << "LOL" <<std::endl;
+
         }
         else {
-            std::cout << "POP" <<std::endl;
+
             playerInMap->at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
         }
 
-// playerInMap->at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
 
         Position position= carte->isHarming(playerTexture.getPlayer().getPosition(),timestep,start);
         int index= position.getY()/32*30+position.getX()/32;
         HarmingObjects *harmingObjects= dynamic_cast<HarmingObjects*>(carte->getLayers()->back().at(index));
         if (position.getX()==-1 && position.getY()==-1){
-//
+            renderCurrentPlayer=true;
         }
         else {
             playerTexture.getPlayer().getClasse()->setStamina(
                     playerTexture.getPlayer().getClasse()->getStamina()-
                         harmingObjects->getStamina()
                     );
+
+            renderCurrentPlayer=false;
+
             auto *playerMapTemp= new std::vector<PlayerTexture*>();
             for (int i = 0; i <playerInMap->size() ; ++i) {
-                if (playerInMap->at(i)->getPlayer().getClasse()->getStamina()==0){
+                if (playerInMap->at(i)->getPlayer().getClasse()->getStamina()<=0){
                     playerIndex=0;
+                    renderCurrentPlayer=true;
                 }else {
                     playerMapTemp->emplace_back(playerInMap->at(i));
                 }
             }
             playerInMap=playerMapTemp;
 
-
         }
+
 
 
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
@@ -442,7 +463,7 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
                                 )
                 );
 
-                std::cout << "I AM HERE" <<std::endl;
+
 
 
             }
