@@ -41,6 +41,7 @@ CarteTexture::CarteTexture() {
     switched=false;
     frame=0;
     renderCurrentPlayer=true;
+    currentEnnemy=-1;
 
 }
 
@@ -250,12 +251,22 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 switched=false;
 
             }
-
             auto *ennemyLabel=new EnnemyLabel(
                     ennemiesInMap->at(k)->getEnnemy()->getAttackEffect(),
                     ennemiesInMap->at(k)->getEnnemy()->getDefenseEffect(),
                     ennemiesInMap->at(k)->getEnnemy()->getStamina(),
-                    ennemiesInMap->at(k)->getEnnemy()->getMax_stamina());
+                    ennemiesInMap->at(k)->getEnnemy()->getMax_stamina(),
+                    false,
+                    ennemyIsAllowedToAttack(k)
+            );
+            currentEnnemy=playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
+//            std::cout << "A "<< a<<std::endl;
+            std::cout << "K " <<k<<std::endl;
+            if ( currentEnnemy==k){
+                std::cout << "I AM HERE" <<std::endl;
+                ennemyLabel->setAttacked(true);
+            }else {currentEnnemy=-1;ennemyLabel->setAttacked(false);}
+
 
             ennemiesInMap->at(k)->render(
                     ennemiesInMap->at(k)->getEnnemy()->getPosition().getX(),
@@ -341,6 +352,15 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
         currentBubble->render(currentNPC->getName(),currentNPC->getPrompts().at(indexBubble),gRenderer);
     }
     changedPlayer=false;
+
+    /** START **/
+    /** CHECK AT EACH RENDER IF A PLAYER CAN ATTACK **/
+    if ( playerIsAllowedToAttack(playerTexture.getPlayer().getPosition()) !=-1  ){
+        std::cout << "PLAYER CAN ATTACK " <<std::endl;
+    }else {
+        std::cout << "PLAYER CANNOT ATTACK"<< std::endl;
+    }
+    /** END **/
 
 }
 
@@ -442,6 +462,7 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
         }
 
 
+        currentEnnemy=playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
 
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
@@ -526,4 +547,50 @@ void CarteTexture::PickUpLoot(SDL_Keycode key) {
             break;
         default:break;
     }
+}
+
+
+int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &margin) {
+
+    int a=-1;
+    int distance;
+    int realMargin( sqrt(2*pow(margin,2)) );
+    for (size_t l = 0; l < ennemiesInMap->size() ; ++l) {
+        distance =(int) sqrt(
+                pow(playerTexture.getPlayer().getPosition().getX()-
+                        ennemiesInMap->at(l)->getEnnemy()->getPosition().getX()
+                        ,2)+
+                pow(playerTexture.getPlayer().getPosition().getY()-
+                            ennemiesInMap->at(l)->getEnnemy()->getPosition().getY()
+                            ,2)
+        ) ;
+
+
+        if (distance <realMargin){
+            a=l;
+            break;
+        }
+    }
+    return a;
+
+}
+
+
+bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
+
+    bool a=false;
+    int distance;
+    int realMargin( (int) sqrt(2*pow(margin,2)) );
+
+
+    distance =(int) sqrt(
+                pow(playerTexture.getPlayer().getPosition().getX()-
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()
+                        ,2)+
+                pow(playerTexture.getPlayer().getPosition().getY()-
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                        ,2)) ;
+    if (distance<realMargin) a=true;
+
+    return a;
 }

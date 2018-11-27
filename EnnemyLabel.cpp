@@ -40,6 +40,18 @@ void EnnemyLabel::render(const Position &position, SDL_Renderer *gRenderer) {
 
     elementTexture.render(position.getX()+32,position.getY(), nullptr,gRenderer);
 
+    if (attacked){
+        elementTexture.loadImageFromFile("assets/tiles/attacked.png",gRenderer);
+
+        elementTexture.render(position.getX(),position.getY()-21, nullptr,gRenderer);
+    }
+    if (attaking){
+        elementTexture.loadImageFromFile("assets/tiles/attacking.png",gRenderer);
+
+        elementTexture.render(position.getX()+14,position.getY()-21, nullptr,gRenderer);
+    }
+
+
 
 
 
@@ -64,4 +76,8 @@ void EnnemyLabel::render(const Position &position, SDL_Renderer *gRenderer) {
 
     TTF_CloseFont(gFont);
 
+}
+
+void EnnemyLabel::setAttacked(bool attacked) {
+    EnnemyLabel::attacked = attacked;
 }

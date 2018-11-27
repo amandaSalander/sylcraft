@@ -19,10 +19,16 @@ private:
     int defensePower;
     int maxStamina;
     int stamina;
+    bool attacked;
+    bool attaking;
 public:
-    EnnemyLabel(const int &_attackPower, const int &_defensePower, const int &_stamina, const int &_maxStamina):
-    attackPower(_attackPower),defensePower(_defensePower),maxStamina(_maxStamina),stamina(_stamina){};
+    EnnemyLabel(const int &_attackPower, const int &_defensePower, const int &_stamina, const int &_maxStamina,
+            bool _attacked=false,bool _attaking=false):
+    attackPower(_attackPower),defensePower(_defensePower),maxStamina(_maxStamina),
+    stamina(_stamina),attacked(_attacked),attaking(_attaking){};
     void render(const Position &position,SDL_Renderer *gRenderer);
+
+    void setAttacked(bool attacked);
 };
 
 

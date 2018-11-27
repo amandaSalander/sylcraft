@@ -17,7 +17,7 @@
 #include "Obstacle.h"
 
 #include <SDL2/SDL.h>
-
+#include <algorithm>
 
 class Carte {
 
@@ -32,11 +32,7 @@ public:
     // THIS METHOD IS TO TEST A NEW FEATURE WHICH IS RENDERING CARTE BY LAYERS, THE LAST LAYERS CONTAIN ONLY OBSTACLE OBJECTS
     Carte(std::string filename);
 
-
-//    const std::vector<std::vector<Element *>> &getLayers() const;
-
     std::vector<std::vector<Element *>>* getLayers() const;
-
 
     void addPlayerToMap(Player* player,int position);
 
@@ -58,6 +54,9 @@ public:
     Position const isHarming(const Position &position,float &timestep,float &start);
 
     Position const allowedTalkToNPC(Position position);
+
+    /** margin can only be a multiplier of 32, e.g. 32,64,96,....  **/
+    bool playerIsAllowedToAttack(const Position &position,const int &margin=32);
 
 };
 

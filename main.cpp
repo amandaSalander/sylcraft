@@ -53,6 +53,7 @@ CarteTexture carteTexture;
 
 Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
 Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
+Player e("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
 
 std::string filename="cartes/carte_1.txt";
 
@@ -257,6 +258,7 @@ int main( int argc, char* args[] )
                     }
                 }
                 times =times + timestep.getTicks() / 1000.f;
+
 
                 carteTexture.render(gRenderer);
 

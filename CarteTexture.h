@@ -15,6 +15,9 @@
 #include "BubbleTalk.h"
 #include "NPC.h"
 #include "EnnemyTexture.h"
+#include <math.h>
+
+
 
 class CarteTexture {
 private:
@@ -34,6 +37,7 @@ private:
     bool switched;
     int frame;
     bool renderCurrentPlayer;
+    int currentEnnemy;
 
 
 public:
@@ -57,6 +61,10 @@ public:
 
 
     void updateCurrentPlayer(SDL_Keycode key);
+
+    int playerIsAllowedToAttack(const Position &position, const int &margin=48);
+
+    bool ennemyIsAllowedToAttack(const size_t &k, const int &margin=48);
 
 
 };

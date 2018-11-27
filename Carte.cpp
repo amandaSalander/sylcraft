@@ -534,3 +534,55 @@ Position const Carte::allowedTalkToNPC(Position position) {
 
     return a;
 }
+
+bool Carte::playerIsAllowedToAttack(const Position &position, const int &margin) {
+
+    int pos=position.getX()/32+position.getY()*30/32;
+    auto allPositionToCheck= new std::vector<int>() ;
+
+    for (int i = 0; i < margin/32 ; ++i) {
+        for (int j = 0; j <3 ; ++j) {
+            allPositionToCheck->emplace_back((29+j)*-1);
+            allPositionToCheck->emplace_back(29+j);
+            if (j==3-(2+1)){
+                allPositionToCheck->emplace_back(0);
+                allPositionToCheck->emplace_back(-1);
+                allPositionToCheck->emplace_back(1);
+            }
+        }
+    }
+    std::sort(allPositionToCheck->begin(),allPositionToCheck->end());
+
+//    for (int k = 0; k <allPositionToCheck->size() ; ++k) {
+//        std::cout << allPositionToCheck->at(k) <<std::endl;
+//    }
+    bool a=false;
+    for (int l = 0; l < allPositionToCheck->size() ; ++l) {
+        if (allPositionToCheck->at(l)<0){
+            if (allPositionToCheck->at(l)+pos>0){
+                if (auto *e = dynamic_cast<Ennemy*>(
+                        layers->back().at(
+                                (allPositionToCheck->at(l) + pos)
+                                ) ) ){
+
+                    a=true;
+
+                }
+            }
+        }
+        else {
+            if (allPositionToCheck->at(l)+pos<largeur*hauteur){
+                if (auto *e = dynamic_cast<Ennemy*>(
+                        layers->back().at(
+                                (allPositionToCheck->at(l) + pos)
+                        ) ) ){
+
+                    a=true;
+
+                }
+            }
+        }
+    }
+    return a;
+
+}
