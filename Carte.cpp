@@ -7,6 +7,8 @@
 #include "LootTexture.h"
 #include "DecorationTexture.h"
 #include "HarmingObjects.h"
+#include "NPC.h"
+#include "Ennemy.h"
 #include <math.h>
 
 
@@ -165,6 +167,40 @@ Carte::Carte(std::string filename) {
                 HarmingObjects harmingObjects("fire");
                 harmingObjects.setPosition(Position(i*32,j*32));
                 layers->at(l).emplace_back(new HarmingObjects(harmingObjects));
+            }
+            else if(line[i]=='O' || line[i]=='P' || line[i]=='M'){
+                NPC npc("oldMan");
+
+                switch (line[i]){
+                    case 'O':
+                        npc=NPC("oldMan");
+                        break;
+                    case 'P':
+                        npc= NPC("priest");
+                        break;
+                    case 'M':
+                        npc=NPC("mysteriousLady");
+                        break;
+                }
+
+                npc.setPosition(Position(i*32,j*32));
+                layers->at(l).emplace_back(new NPC(npc));
+            }
+            else if (line[i]=='B' || line[i]=='C'){
+                Ennemy *ennemy;
+                switch (line[i]){
+                    case 'B':
+                        ennemy= new Ennemy("basic_ennemy");
+                        break;
+                    case 'C':
+                        ennemy= new Ennemy("medium_ennemy");
+                    default:
+                        break;
+                }
+
+                ennemy->setPosition(Position(i*32,j*32));
+                layers->at(l).emplace_back(ennemy);
+
             }
             else {
                 layers->at(l).push_back(nullptr);
@@ -420,8 +456,7 @@ bool Carte::addObstacleToMap(Obstacle *obstacle) {
 Position const Carte::isHarming(const Position &position,float &timestep,float &start) {
     int pos=  position.getY()/32*largeur+ position.getX()/32;
 
-    std::cout << "timestep "<< timestep <<std::endl;
-    std::cout << "start "<< start <<std::endl;
+
     if (auto *h = dynamic_cast<HarmingObjects*>(layers->back().at(pos))){
 
 
@@ -448,5 +483,106 @@ Position const Carte::isHarming(const Position &position,float &timestep,float &
 
     }
     else return Position(-1,-1);
+
+}
+
+Position const Carte::allowedTalkToNPC(Position position) {
+    int pos_min=  position.getY()/32*largeur+ position.getX()/32;
+    int pos_max=  position.getY()/32*largeur+ (int) round(position.getX()/32.0);
+
+    /** Get al the value surrouding the player **/
+    std::vector<short> positions;
+    positions.emplace_back(-31);
+    positions.emplace_back(-30);
+    positions.emplace_back(-29);
+    positions.emplace_back(-1);
+    positions.emplace_back(0);
+    positions.emplace_back(1);
+    positions.emplace_back(29);
+    positions.emplace_back(30);
+    positions.emplace_back(31);
+
+
+    Position a(-1,-1);
+
+    for (int i = 0; i <positions.size() ; ++i) {
+        if (positions.at(i)<0){
+            if (pos_min +positions.at(i) >0){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_min+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+            if (pos_max +positions.at(i) >0){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_max+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+        }
+        else {
+            if (pos_min +positions.at((size_t)i) <largeur*hauteur){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_min+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+            if (pos_max +positions.at((size_t)i) >0){
+                if (auto *l = dynamic_cast<NPC*>( layers->at( layers->size()-1 ).at(pos_max+positions.at(i)) )){
+                    a=l->getPosition();
+                }
+            }
+        }
+    }
+
+    return a;
+}
+
+bool Carte::playerIsAllowedToAttack(const Position &position, const int &margin) {
+
+    int pos=position.getX()/32+position.getY()*30/32;
+    auto allPositionToCheck= new std::vector<int>() ;
+
+    for (int i = 0; i < margin/32 ; ++i) {
+        for (int j = 0; j <3 ; ++j) {
+            allPositionToCheck->emplace_back((29+j)*-1);
+            allPositionToCheck->emplace_back(29+j);
+            if (j==3-(2+1)){
+                allPositionToCheck->emplace_back(0);
+                allPositionToCheck->emplace_back(-1);
+                allPositionToCheck->emplace_back(1);
+            }
+        }
+    }
+    std::sort(allPositionToCheck->begin(),allPositionToCheck->end());
+
+//    for (int k = 0; k <allPositionToCheck->size() ; ++k) {
+//        std::cout << allPositionToCheck->at(k) <<std::endl;
+//    }
+    bool a=false;
+    for (int l = 0; l < allPositionToCheck->size() ; ++l) {
+        if (allPositionToCheck->at(l)<0){
+            if (allPositionToCheck->at(l)+pos>0){
+                if (auto *e = dynamic_cast<Ennemy*>(
+                        layers->back().at(
+                                (allPositionToCheck->at(l) + pos)
+                                ) ) ){
+
+                    a=true;
+
+                }
+            }
+        }
+        else {
+            if (allPositionToCheck->at(l)+pos<largeur*hauteur){
+                if (auto *e = dynamic_cast<Ennemy*>(
+                        layers->back().at(
+                                (allPositionToCheck->at(l) + pos)
+                        ) ) ){
+
+                    a=true;
+
+                }
+            }
+        }
+    }
+    return a;
 
 }

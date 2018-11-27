@@ -1,0 +1,5 @@
+Mysterious Lady
+assets/NPC/mysteriousLady.png
+So, you really came here...
+I thought you'd be smarter than that
+You shall be punished for your recklessness

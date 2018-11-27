@@ -12,17 +12,33 @@
 #include "Carte.h"
 #include "PlayerTexture.h"
 #include "LootTexture.h"
+#include "BubbleTalk.h"
+#include "NPC.h"
+#include "EnnemyTexture.h"
+#include <math.h>
+
+
 
 class CarteTexture {
 private:
 
     Carte *carte;
     PlayerTexture playerTexture;
-    SDL_Rect sdl_rect;
-    std::vector<PlayerTexture*> playerInMap;
+    std::vector<SDL_Rect*> *clips;
+    std::vector<PlayerTexture*> *playerInMap;
     std::vector<LootTexture*> lootInMap;
+    std::vector<EnnemyTexture*> *ennemiesInMap;
     int playerIndex;
     bool changedPlayer;
+    BubbleTalk *currentBubble;
+    NPC *currentNPC;
+    size_t indexBubble;
+    std::vector<Position> *initialPositionsOfEnnemies;
+    bool switched;
+    int frame;
+    bool renderCurrentPlayer;
+    int currentEnnemy;
+
 
 public:
     CarteTexture();
@@ -33,7 +49,7 @@ public:
     void render(SDL_Renderer *gRenderer);
 
 
-    void changeCurrentRender(SDL_Keycode key,float &timestep,float &start);
+    void changeCurrentRender(SDL_Keycode key,float &timestep,float &start,SDL_Renderer *gRenderer);
 
 
     Carte *getCarte();
@@ -45,6 +61,10 @@ public:
 
 
     void updateCurrentPlayer(SDL_Keycode key);
+
+    int playerIsAllowedToAttack(const Position &position, const int &margin=48);
+
+    bool ennemyIsAllowedToAttack(const size_t &k, const int &margin=48);
 
 
 };

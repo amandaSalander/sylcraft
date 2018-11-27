@@ -2,10 +2,7 @@
 // Created by amanda on 18/11/18.
 //
 
-#include <vector>
 #include "PlayerStatTexture.h"
-#include "TextTexture.h"
-
 
 PlayerStatTexture::PlayerStatTexture() {
     playerStatTexture= nullptr;
@@ -28,7 +25,7 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
     //Globally used font
     TTF_Font *gFont = nullptr;
     TTF_Init();
-    gFont = TTF_OpenFont( "/home/amanda/CLionProjects/Project_1/fonts/november.ttf",12);
+    gFont = TTF_OpenFont( "/home/amanda/CLionProjects/Project_1/fonts/neuropol x rg.ttf",11);
     TextTexture textTexture;
 
     if( gFont == nullptr ) {

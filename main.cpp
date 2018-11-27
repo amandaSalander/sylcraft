@@ -14,6 +14,8 @@ and may not be redistributed without written permission.*/
 #include "PlayerStatTexture.h"
 #include "HarmingObjects.h"
 #include "Timer.h"
+#include "BubbleTalk.h"
+#include "PlayerLabel.h"
 
 
 //Screen dimension constants
@@ -49,11 +51,9 @@ ObstacleTexture obstacleTexture;
 LootTexture lootTexture;
 CarteTexture carteTexture;
 
-Player a("Hora","Halo",new Classes("healer"),Position(100,100));
-Player b("kiyan","Halo",new Classes("wizard"),Position(300,400));
-
 Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
 Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
+Player e("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
 
 std::string filename="cartes/carte_1.txt";
 
@@ -119,40 +119,6 @@ bool loadMedia() {
         success = false;
     }
 
-    if (!playerTexture.loadImageFromFile("katia_civil.png",gRenderer)){
-        printf( "Failed to load sprite sheet texture!\n" );
-        success = false;
-    }
-    else{
-        playerRectangle.x=0;
-        playerRectangle.y=0;
-        playerRectangle.w=32;
-        playerRectangle.h=32;
-    }
-    if (!obstacleTexture.loadImageFromFile("crystal.gif",gRenderer)){
-        printf( "Failed to load sprite sheet texture!\n" );
-        success = false;
-    }
-    if (!lootTexture.loadImageFromFile("bag.gif",gRenderer)){
-        printf( "Failed to load sprite sheet texture!\n" );
-        success = false;
-    }
-
-    playerTexture.getPlayer().setPosition(Position(300,240));
-    playerTexture.getPlayer().setType("haru_civil.png");
-
-
-
-    a.setType("katia_civil.png");
-    a.setPosition(Position(200,200));
-
-
-
-    b.setType("Aldusa_Grai_de_Civille.png");
-    b.setPosition(Position(300,400));
-
-
-
 
     return success;
 }
@@ -205,12 +171,7 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
-    HarmingObjects harmingObjects("fire");
-    std::cout << harmingObjects.getStrength() <<std::endl;
-    std::cout << harmingObjects.getStamina() <<std::endl;
-    std::cout << harmingObjects.getDefense() <<std::endl;
-    std::cout << harmingObjects.getLuck() <<std::endl;
-    //Start up SDL and create window
+
     if( !init() )
     {
         printf( "Failed to initialize!\n" );
@@ -229,7 +190,7 @@ int main( int argc, char* args[] )
 
             //Event handler
             SDL_Event e;
-
+//            printf( "Failed to initialize!\n" );
             //While application is running
             while( !quit )
             {
@@ -237,14 +198,14 @@ int main( int argc, char* args[] )
                 //Clear screen
                 SDL_RenderClear( gRenderer );
                 //Render texture to screen
+//                printf( "Failed to initialize!\n" );
                 SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
-                carteTexture.setCarte(&carte1
-                );
-                c.setType("haru_civil.png");
+                carteTexture.setCarte(&carte1);
+                c.setType("assets/players/warrior_1.png");
                 c.setPosition(Position(300,200));
 
-                d.setType("mage_1.png");
+                d.setType("assets/players/mage_1.png");
                 d.setPosition(Position(600,400));
 
                 PlayerStatTexture playerStatTexture;
@@ -252,23 +213,12 @@ int main( int argc, char* args[] )
                 playerStatTexture.setPosition(Position(960,0));
                 playerStatTexture.render(gRenderer);
 
-                b.setType("wizard_1.png");
-                playerStatTexture.setPlayer(new Player(b));
+
+
+                playerStatTexture.setPlayer(new Player(d));
                 playerStatTexture.setPosition(Position(960,140));
                 playerStatTexture.render(gRenderer);
 
-                playerStatTexture.setPlayer(new Player(a));
-                playerStatTexture.setPosition(Position(960,280));
-                playerStatTexture.render(gRenderer);
-
-                playerStatTexture.setPlayer(new Player(d));
-                playerStatTexture.setPosition(Position(960,420));
-                playerStatTexture.render(gRenderer);
-
-
-
-                carteTexture.getCarte()->addPlayerToMap(new Player(b),595);
-                carteTexture.getCarte()->addPlayerToMap(new Player(a),594);
                 carteTexture.getCarte()->addPlayerToMap(new Player(c),593);
                 carteTexture.getCarte()->addPlayerToMap(new Player(d),596);
 
@@ -286,7 +236,7 @@ int main( int argc, char* args[] )
                     }
                     else if( e.type == SDL_KEYDOWN ) {
 
-                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start);
+                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start,gRenderer);
 
                         carteTexture.PickUpLoot(e.key.keysym.sym);
 
@@ -298,28 +248,23 @@ int main( int argc, char* args[] )
                             l.setPosition(Position(64,94));
 
                             std::cout << carteTexture.getCarte()->addLootToMap(new Loot(l)) <<std::endl;
-//
+
                         }
                         if (e.key.keysym.sym==SDLK_b){
 
                         }
 
 
-
-//                        time+=time;
                     }
                 }
                 times =times + timestep.getTicks() / 1000.f;
 
-                std::cout << "TIMER " << times <<std::endl;
+
                 carteTexture.render(gRenderer);
 
-                //Restart step timer
-
-//                std::cout << "TIMER " << timeStep <<std::endl;
 
 
-
+                SDL_Delay(50);
                 SDL_RenderPresent( gRenderer );
 
                 timestep.start();

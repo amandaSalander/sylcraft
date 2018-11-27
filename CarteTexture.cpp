@@ -9,16 +9,39 @@
 #include "PlayerTexture.h"
 #include "HarmingObjects.h"
 #include "HarmingObjectsTexture.h"
+#include "NPCTexture.h"
+#include "NPC.h"
+#include "BubbleTalk.h"
+#include "Ennemy.h"
+#include "EnnemyTexture.h"
+#include "PlayerLabel.h"
+#include "EnnemyLabel.h"
 
 
 CarteTexture::CarteTexture() {
 //    carte=Carte("hi");
-    sdl_rect.w=32;
-    sdl_rect.h=32;
-    sdl_rect.x=0;
-    sdl_rect.y=0;
+    /** pushing three empty SDL_rect in clips, each clip in clips represent
+     * current player clip
+     * current ennemy clip
+     * current boss clip
+     * **/
+    clips= new std::vector<SDL_Rect*>();
+    clips->emplace_back(new SDL_Rect({0,0,32,32}));
+    clips->emplace_back(new SDL_Rect({0,32,32,32}));
+    clips->emplace_back(new SDL_Rect({0,0,32,32}));
+    /** **/
     playerIndex= -1;
     changedPlayer=false;
+    currentBubble= nullptr;
+    currentNPC= nullptr;
+    indexBubble=0;
+    playerInMap= new std::vector<PlayerTexture*>();
+    initialPositionsOfEnnemies= new std::vector<Position>();
+    ennemiesInMap= new std::vector<EnnemyTexture*>();
+    switched=false;
+    frame=0;
+    renderCurrentPlayer=true;
+    currentEnnemy=-1;
 
 }
 
@@ -26,7 +49,6 @@ CarteTexture::~CarteTexture() = default;
 
 
 void CarteTexture::render(SDL_Renderer *gRenderer){
-//    lootInMap.clear();
 
     for (const auto &i : *(carte->getLayers()) ) {
 
@@ -52,13 +74,70 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                         l->getType(),
                         gRenderer
                 );
+
+                SDL_Rect *rect= new SDL_Rect({0,0,32,32});
+                if (frame%4==0){
+                    rect->x=0;
+                }
+                else if (frame%4==1){
+                    rect->x=32;
+                }
+                else if (frame%4==2){
+                    rect->x=64;
+                }
+                else if (frame%4==3){
+                    rect->x=96;
+                }
                 lootTexture.render(l->getPosition().getX(),
                                        l->getPosition().getY(),
-                                   nullptr,
+                                   rect,
                                        gRenderer
                 );
             }
             else if (auto *h= dynamic_cast<HarmingObjects*>(j)){
+                auto *rect=new SDL_Rect({0,0,32,32});
+                if (frame%15==0){
+                    rect->x=0;
+                } else if (frame%15==1){
+                    rect->x=32;
+                } else if (frame%15==2){
+                    rect->x=64;
+                } else if (frame%15==3){
+                    rect->x=96;
+                }
+                else if (frame%15==4){
+                    rect->x=128;
+                }
+                else if (frame%15==5){
+                    rect->x=160;
+                }
+                else if (frame%15==6){
+                    rect->x=192;
+                }
+                else if (frame%15==7){
+                    rect->x=224;
+                }
+                else if (frame%15==8){
+                    rect->x=256;
+                }
+                else if (frame%15==9){
+                    rect->x=288;
+                }
+                else if (frame%15==10){
+                    rect->x=320;
+                }
+                else if (frame%15==11){
+                    rect->x=352;
+                }
+                else if (frame%15==12){
+                    rect->x=384;
+                }
+                else if (frame%15==13){
+                    rect->x=416;
+                }
+                else if (frame%15==14){
+                    rect->x=448;
+                }
 
                 HarmingObjectsTexture harmingObjectsTexture;
                 harmingObjectsTexture.loadImageFromFile(
@@ -67,9 +146,47 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
                 harmingObjectsTexture.render(h->getPosition().getX(),
                                    h->getPosition().getY(),
-                                   nullptr,
+                                   rect,
                                    gRenderer
                 );
+                frame= (frame+1)%15;
+            }
+            else if (auto *n= dynamic_cast<NPC*>(j)){
+
+                NPCTexture npcTexture;
+                npcTexture.loadImageFromFile(
+                        n->getType(),
+                        gRenderer
+                );
+                npcTexture.render(n->getPosition().getX(),
+                                             n->getPosition().getY(),
+                                             nullptr,
+                                             gRenderer
+                );
+            }
+            else if (auto *e= dynamic_cast<Ennemy*>(j)){
+
+
+                if (initialPositionsOfEnnemies->size()<3) {
+                    initialPositionsOfEnnemies->emplace_back(e->getPosition());
+
+
+                    EnnemyTexture *ennemyTexture=new EnnemyTexture();
+                    ennemyTexture->setEnnemy(e);
+                    ennemyTexture->loadImageFromFile(
+                            e->getType(),
+                            gRenderer
+                    );
+                    ennemyTexture->render(e->getPosition().getX(),
+                                         e->getPosition().getY(),
+                                         clips->at(1),
+                                         gRenderer
+                    );
+                    ennemiesInMap->emplace_back(ennemyTexture);
+                }
+
+
+
             }
             else if (auto *d= dynamic_cast<Decoration*>(j)){
 
@@ -86,75 +203,164 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             }
             else if (auto *p= dynamic_cast<Player*>(j)){
 
-
                 auto *pT=new PlayerTexture();
                 pT->setPlayer(*p);
+                if (playerIndex==-1){playerInMap->push_back(pT);}
 
-
-                if (pT->loadImageFromFile(p->getType(),gRenderer)){
-
-                    if (playerIndex==-1){playerInMap.push_back(pT);}
-
-                }
-                else {
-                    std::cout<< "COULDN'T LOAD THE PLAYER" <<std::endl;
-                }
-
-            }
-            else {
             }
 
         }
-        if (playerIndex==-1){playerIndex=(int)playerInMap.size()-1;}
+        if (playerIndex==-1){playerIndex=(int)playerInMap->size()-1;}
 
     }
+
+
+
+
+        for ( size_t k = 0; k < ennemiesInMap->size(); k++) {
+
+            if (!switched && ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() >
+                initialPositionsOfEnnemies->at(k).getX()-32
+                    ) {
+                ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-1,
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                ));
+                clips->at(1)=new SDL_Rect({0,32,32,32});
+            }
+            else if (  initialPositionsOfEnnemies->at(k).getX()-
+                       ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()   ==32
+                       ){
+                switched=true;
+
+            }
+
+
+            if (switched){
+
+                ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() + 1,
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                ));
+                clips->at(1)=new SDL_Rect({0,64,32,32});
+            }
+            if (  ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-
+                        initialPositionsOfEnnemies->at(k).getX()
+                          ==32
+                    ){
+                switched=false;
+
+            }
+            auto *ennemyLabel=new EnnemyLabel(
+                    ennemiesInMap->at(k)->getEnnemy()->getAttackEffect(),
+                    ennemiesInMap->at(k)->getEnnemy()->getDefenseEffect(),
+                    ennemiesInMap->at(k)->getEnnemy()->getStamina(),
+                    ennemiesInMap->at(k)->getEnnemy()->getMax_stamina(),
+                    false,
+                    ennemyIsAllowedToAttack(k)
+            );
+            currentEnnemy=playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
+//            std::cout << "A "<< a<<std::endl;
+            std::cout << "K " <<k<<std::endl;
+            if ( currentEnnemy==k){
+                std::cout << "I AM HERE" <<std::endl;
+                ennemyLabel->setAttacked(true);
+            }else {currentEnnemy=-1;ennemyLabel->setAttacked(false);}
+
+
+            ennemiesInMap->at(k)->render(
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getX(),
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getY(),
+                    clips->at(1),
+                    gRenderer
+            );
+            ennemyLabel->render(
+                    Position(ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()+4,
+                             ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()-20),
+                    gRenderer
+                             );
+        }
+
 
 
     if ( playerTexture.getPlayer().getPosition().getY()==0 &&
          playerTexture.getPlayer().getPosition().getX()==0 ){
-        playerTexture.getPlayer().setPosition(playerInMap.at((size_t) playerIndex)->getPlayer().getPosition());
+        playerTexture.getPlayer().setPosition(playerInMap->at((size_t) playerIndex)->getPlayer().getPosition());
     }
 
     SDL_Rect sdl_rect1;
-    for (size_t k = 0; k < playerInMap.size(); ++k) {
+    for (size_t k = 0; k < playerInMap->size(); k++) {
+        auto *playerLabel= new PlayerLabel(
+                k+1,
+                playerInMap->at(k)->getPlayer().getName(),
+                k==playerIndex);
+
         if (k!=playerIndex){
+            sdl_rect1.y=0;sdl_rect1.x=0;sdl_rect1.w=32;sdl_rect1.h=32;
 
-
-            sdl_rect1.y=0;
-            sdl_rect1.x=0;
-            sdl_rect1.w=32;
-            sdl_rect1.h=32;
-
-            playerInMap.at(k)->render(
-                    playerInMap.at(k)->getPlayer().getPosition().getX(),
-                    playerInMap.at(k)->getPlayer().getPosition().getY(),
+            playerInMap->at(k)->loadImageFromFile(
+                    playerInMap->at(k)->getPlayer().getType(),
+                    gRenderer
+                    );
+            playerInMap->at(k)->render(
+                    playerInMap->at(k)->getPlayer().getPosition().getX(),
+                    playerInMap->at(k)->getPlayer().getPosition().getY(),
                     &sdl_rect1,
                     gRenderer
             );
+
         }
         else {
-            if (changedPlayer){
-                playerTexture= *(playerInMap.at((size_t)playerIndex));
-                playerInMap.at((size_t)playerIndex)->render(
-                        playerTexture.getPlayer().getPosition().getX(),
-                        playerTexture.getPlayer().getPosition().getY(),
-                        &sdl_rect,
-                        gRenderer
-                );
+            if (renderCurrentPlayer){
+                if (changedPlayer){
+                    playerTexture= *(playerInMap->at((size_t)playerIndex));
+                }
+                playerInMap->at((size_t)playerIndex)->loadImageFromFile(
+                        playerInMap->at((size_t)playerIndex)->getPlayer().getType(),gRenderer);
+
+            }else {
+                if (changedPlayer){
+                    std::string tmp=playerTexture.getPlayer().getType().substr(0,
+                            playerTexture.getPlayer().getType().find('.'));
+                    tmp+="_harm.png";
+
+                    playerTexture= *(playerInMap->at((size_t)playerIndex));
+                    playerInMap->at((size_t)playerIndex)->loadImageFromFile(tmp,gRenderer);
+                }else {
+                    playerInMap->at((size_t)playerIndex)->loadImageFromFile(
+                            playerInMap->at((size_t)playerIndex)->getPlayer().getType(),gRenderer);
+
+                }
+
             }
-            else {
-                playerInMap.at((size_t)playerIndex)->render(
-                        playerTexture.getPlayer().getPosition().getX(),
-                        playerTexture.getPlayer().getPosition().getY(),
-                        &sdl_rect,
-                        gRenderer
-                );
-            }
+
+            playerInMap->at(k)->render(
+                    playerInMap->at(k)->getPlayer().getPosition().getX(),
+                    playerInMap->at(k)->getPlayer().getPosition().getY(),
+                    clips->at(0),
+                    gRenderer
+            );
 
         }
+        playerLabel->render(
+                Position( playerInMap->at(k)->getPlayer().getPosition().getX()+4,
+                          playerInMap->at(k)->getPlayer().getPosition().getY()-20),
+                gRenderer);
 
     }
+    if (currentBubble!= nullptr &&  currentNPC!= nullptr){
+        currentBubble->render(currentNPC->getName(),currentNPC->getPrompts().at(indexBubble),gRenderer);
+    }
     changedPlayer=false;
+
+    /** START **/
+    /** CHECK AT EACH RENDER IF A PLAYER CAN ATTACK **/
+    if ( playerIsAllowedToAttack(playerTexture.getPlayer().getPosition()) !=-1  ){
+        std::cout << "PLAYER CAN ATTACK " <<std::endl;
+    }else {
+        std::cout << "PLAYER CANNOT ATTACK"<< std::endl;
+    }
+    /** END **/
 
 }
 
@@ -180,28 +386,28 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
             playerIndex=0;
             break;
         case SDLK_2:
-            if (playerInMap.size()>1) {playerIndex=1;}
+            if (playerInMap->size()>1) {playerIndex=1;}
             break;
         case SDLK_3:
-            if (playerInMap.size()>2) {playerIndex=2;}
+            if (playerInMap->size()>2) {playerIndex=2;}
             break;
         case SDLK_4:
-            if (playerInMap.size()>3) {playerIndex=3;}
+            if (playerInMap->size()>3) {playerIndex=3;}
             break;
         case SDLK_5:
-            if (playerInMap.size()>4){ playerIndex=4;}
+            if (playerInMap->size()>4){ playerIndex=4;}
             break;
         case SDLK_6:
-            if (playerInMap.size()>5) playerIndex=5;
+            if (playerInMap->size()>5) playerIndex=5;
             break;
         case SDLK_7:
-            if (playerInMap.size()>6) playerIndex=6;
+            if (playerInMap->size()>6) playerIndex=6;
             break;
         case SDLK_8:
-            if (playerInMap.size()>7) playerIndex=7;
+            if (playerInMap->size()>7) playerIndex=7;
             break;
         case SDLK_9:
-            if (playerInMap.size()>8) playerIndex=8;
+            if (playerInMap->size()>8) playerIndex=8;
             break;
         default:break;
 
@@ -211,34 +417,94 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 
 
-void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start) {
+void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start,SDL_Renderer *gRenderer) {
 
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
-        playerTexture.changeCurrentRender(&sdl_rect,key);
+        playerTexture.changeCurrentRender(clips->at(0),key);
 
         carte->updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
-        playerInMap.at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
+
+        if (playerInMap->size()==0){
+
+        }
+        else {
+
+            playerInMap->at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
+        }
+
 
         Position position= carte->isHarming(playerTexture.getPlayer().getPosition(),timestep,start);
         int index= position.getY()/32*30+position.getX()/32;
         HarmingObjects *harmingObjects= dynamic_cast<HarmingObjects*>(carte->getLayers()->back().at(index));
         if (position.getX()==-1 && position.getY()==-1){
-
+            renderCurrentPlayer=true;
         }
         else {
-
             playerTexture.getPlayer().getClasse()->setStamina(
                     playerTexture.getPlayer().getClasse()->getStamina()-
                         harmingObjects->getStamina()
                     );
+
+            renderCurrentPlayer=false;
+
+            auto *playerMapTemp= new std::vector<PlayerTexture*>();
+            for (int i = 0; i <playerInMap->size() ; ++i) {
+                if (playerInMap->at(i)->getPlayer().getClasse()->getStamina()<=0){
+                    playerIndex=0;
+                    renderCurrentPlayer=true;
+                }else {
+                    playerMapTemp->emplace_back(playerInMap->at(i));
+                }
+            }
+            playerInMap=playerMapTemp;
+
+        }
+
+
+        currentEnnemy=playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
+
+        Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
+
+        if (key==SDLK_c) {
+            if (npcPosition.getY() == -1 && npcPosition.getX() == -1) {
+
+            } else {
+
+                 currentBubble= new BubbleTalk(
+                         new Position(
+                                 npcPosition.getX()-100,
+                                 npcPosition.getY() - 60
+                         )
+                         );
+
+                currentNPC = dynamic_cast<NPC *>(
+                        carte->getLayers()->back().at(
+                                (size_t)npcPosition.getY()/32*30+npcPosition.getX()/32
+                                )
+                );
+
+
+
+
+            }
         }
 
     }
-    std::cout << "PICKING STATE : ( " << carte->allowedPick(playerTexture.getPlayer().getPosition()).getX()
-    <<" , " << carte->allowedPick(playerTexture.getPlayer().getPosition()).getY() << " ) " <<std::endl;
+    if (currentNPC!= nullptr && key ==SDLK_k){
+        if (indexBubble+1 < currentNPC->getPrompts().size()){
+            ++indexBubble;
+        }
+        else {
+            currentNPC= nullptr;
+            currentBubble= nullptr;
+            indexBubble=0;
+        }
+        }
+    }
 
-}
+
+
 
 void CarteTexture::PickUpLoot(SDL_Keycode key) {
     switch (key){
@@ -281,4 +547,50 @@ void CarteTexture::PickUpLoot(SDL_Keycode key) {
             break;
         default:break;
     }
+}
+
+
+int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &margin) {
+
+    int a=-1;
+    int distance;
+    int realMargin( sqrt(2*pow(margin,2)) );
+    for (size_t l = 0; l < ennemiesInMap->size() ; ++l) {
+        distance =(int) sqrt(
+                pow(playerTexture.getPlayer().getPosition().getX()-
+                        ennemiesInMap->at(l)->getEnnemy()->getPosition().getX()
+                        ,2)+
+                pow(playerTexture.getPlayer().getPosition().getY()-
+                            ennemiesInMap->at(l)->getEnnemy()->getPosition().getY()
+                            ,2)
+        ) ;
+
+
+        if (distance <realMargin){
+            a=l;
+            break;
+        }
+    }
+    return a;
+
+}
+
+
+bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
+
+    bool a=false;
+    int distance;
+    int realMargin( (int) sqrt(2*pow(margin,2)) );
+
+
+    distance =(int) sqrt(
+                pow(playerTexture.getPlayer().getPosition().getX()-
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()
+                        ,2)+
+                pow(playerTexture.getPlayer().getPosition().getY()-
+                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                        ,2)) ;
+    if (distance<realMargin) a=true;
+
+    return a;
 }
