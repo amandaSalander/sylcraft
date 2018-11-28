@@ -259,6 +259,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                     false,
                     ennemyIsAllowedToAttack(k)
             );
+            ennemyAttack(k);
             currentEnnemy=playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
 //            std::cout << "A "<< a<<std::endl;
             std::cout << "K " <<k<<std::endl;
@@ -593,4 +594,13 @@ bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
     if (distance<realMargin) a=true;
 
     return a;
+}
+
+void CarteTexture::ennemyAttack(const size_t &k) {
+    if (ennemyIsAllowedToAttack(k)){
+        playerTexture.getPlayer().getClasse()->setStamina(
+                playerTexture.getPlayer().getClasse()->getStamina()-
+                ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()
+                );
+    }
 }

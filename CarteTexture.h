@@ -66,7 +66,7 @@ public:
 
     bool ennemyIsAllowedToAttack(const size_t &k, const int &margin=48);
 
-
+    void ennemyAttack(const size_t &k);
 };
 
 

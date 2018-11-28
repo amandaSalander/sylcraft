@@ -58,6 +58,8 @@ public:
     /** margin can only be a multiplier of 32, e.g. 32,64,96,....  **/
     bool playerIsAllowedToAttack(const Position &position,const int &margin=32);
 
+
+
 };
 
 
