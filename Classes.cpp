@@ -19,6 +19,9 @@ Classes::Classes(std::string type) {
     /** Getting the name of Classe **/
     std::getline(classe,line);
     name=line;
+    /** max stamina  **/
+    std::getline(classe,line);
+    maxStamina=std::stoi(line);
     /** Getting Strength **/
     std::getline(classe,line);
     strength=std::stoi(line);
@@ -138,4 +141,8 @@ int Classes::getLuck() const {
 
 void Classes::setLuck(int luck) {
     this->luck = luck;
+}
+
+int Classes::getMaxStamina() const {
+    return maxStamina;
 }

@@ -3,6 +3,7 @@
 //
 
 #include "PlayerStatTexture.h"
+#include "ElementTexture.h"
 
 PlayerStatTexture::PlayerStatTexture() {
     playerStatTexture= nullptr;
@@ -25,97 +26,108 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
     //Globally used font
     TTF_Font *gFont = nullptr;
     TTF_Init();
-    gFont = TTF_OpenFont( "/home/amanda/CLionProjects/Project_1/fonts/neuropol x rg.ttf",11);
+    gFont = TTF_OpenFont( "fonts/04B_03__.TTF",14);
     TextTexture textTexture;
 
     if( gFont == nullptr ) {
         std::cout <<"Failed to load lazy font! SDL_ttf Error: "<< TTF_GetError() <<std::endl;
     }
 
-    SDL_Color textColor= {50,50,50};
+    SDL_Color textColor= {255,179,91};
+
+    auto *elementTexture =new ElementTexture();
+
+    elementTexture->loadImageFromFile("assets/tiles/player_stat.png",gRenderer);
+
+    auto  *sdl_rect= new SDL_Rect({0,0,32,32});
+    elementTexture->render(position.getX(),position.getY(), nullptr,gRenderer);
+
+
+    elementTexture->loadImageFromFile(player->getType(),gRenderer);
+
+    elementTexture->render(position.getX()+154,position.getY()+15, sdl_rect,gRenderer);
 
     /** START: THIS IS FOR THE BORDER OF PLAYER INFORMATION **/
-    SDL_Rect fillRect= {position.getX(),position.getY(),200,140};
 
-    SDL_SetRenderDrawColor( gRenderer, 201,145,87,0xFF );
+
+    SDL_Rect fillRect= {position.getX()+11,
+                        position.getY()+19,
+                        (int) (124*
+                        (player->getClasse()->getStamina()*1.0/
+                        player->getClasse()->getMaxStamina())),
+                        10};
+
+    SDL_SetRenderDrawColor( gRenderer, 237,67,55,0xFF );
     SDL_RenderFillRect( gRenderer, &fillRect );
 
-    fillRect.y+=2;
-    fillRect.x+=2;
-    fillRect.h-=4;
-    fillRect.w-=4;
-
-
-    SDL_SetRenderDrawColor( gRenderer, 225,173,109, 0xFF );
-    SDL_RenderFillRect( gRenderer, &fillRect );
-
-    /** END: THIS IS FOR THE BORDER OF PLAYER INFORMATION **/
-
-    if( !textTexture.loadFromRenderedText( player->getClasse()->getName()+" : "+ player->getName(), textColor,gRenderer,gFont ) )
-    {
-        std::cout <<"Failed to load TEXT ! SDL_ttf Error: "<<std::endl;
-    }
-    else {
-        textTexture.render(position.getX()+5,position.getY()+5, nullptr,0.0, nullptr,SDL_FLIP_NONE,gRenderer);
+    if (!textTexture.loadFromRenderedText(
+            player->getClasse()->getName()+" : "+player->getName(),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+10,position.getY()+5, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
     }
 
-    /** This vector contain all of the skills of a player **/
-    std::vector<std::string> liste;
-    liste.emplace_back("Strength");
-    liste.emplace_back("Stamina");
-    liste.emplace_back("Defense");
-    liste.emplace_back("Dexterity");
-    liste.emplace_back("Wisdom");
-    liste.emplace_back("Willpower");
-    liste.emplace_back("Luck");
+    textColor= {255,255,255};
 
-    /** For each item in vector we display the graphical bar that it belongs to**/
-    for (int i = 0; i < liste.size(); ++i) {
-        if( !textTexture.loadFromRenderedText(liste.at((size_t)i), textColor,gRenderer,gFont ) )
-        {
-            std::cout <<"Failed to load TEXT ! SDL_ttf Error at : " << liste.at((size_t)i) <<std::endl;
-        }
-        else {
-            textTexture.render(position.getX()+5,position.getY()+20+i*15, nullptr,0.0, nullptr,SDL_FLIP_NONE,gRenderer);
-            SDL_Rect interRect= {position.getX()+80,position.getY()+20+i*15,115,10};
-            SDL_SetRenderDrawColor( gRenderer, 211,211,211, 0xFF );
-            SDL_RenderFillRect( gRenderer, &interRect );
-
-        }
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->attackPower(0)),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+51,position.getY()+36, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
     }
 
-    /** For Each skills we display the exact percentage of the skill**/
-    SDL_Rect interRect= {position.getX()+80,position.getY()+20, (int)( 115.0*(player->getClasse()->getStrength()/20.0 ) )  ,10};
-    SDL_SetRenderDrawColor( gRenderer, 0,116,217, 0xFF );
-    SDL_RenderFillRect( gRenderer, &interRect );
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->defensePower()),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+117,position.getY()+36, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
+    }
 
-    interRect= {position.getX()+80,position.getY()+35, (int)( 115.0*(player->getClasse()->getStamina()/20.0 ) )  ,10};
-    SDL_SetRenderDrawColor( gRenderer, 255,65,54, 0xFF );
-    SDL_RenderFillRect( gRenderer, &interRect );
+    textColor= {50,50,50};
 
-    interRect= {position.getX()+80,position.getY()+50, (int)( 115.0*(player->getClasse()->getDefense()/20.0 ) ) ,10};
-    SDL_SetRenderDrawColor( gRenderer, 46,204,64, 0xFF );
-    SDL_RenderFillRect( gRenderer, &interRect );
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->getStrength()),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+39,position.getY()+68, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
+    }
 
-    interRect= {position.getX()+80,position.getY()+65, (int)( 115.0*(player->getClasse()->getDexterity()/20.0 ) )  ,10};
-    SDL_SetRenderDrawColor( gRenderer, 255,133,27, 0xFF );
-    SDL_RenderFillRect( gRenderer, &interRect );
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->getDefense()),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+81,position.getY()+68, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
+    }
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->getDexterity()),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+123,position.getY()+68, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
+    }
 
-    interRect= {position.getX()+80,position.getY()+80, (int)( 115.0*(player->getClasse()->getWisdom()/20.0 ) )  ,10};
-    SDL_SetRenderDrawColor( gRenderer, 0,31,63, 0xFF );
-    SDL_RenderFillRect( gRenderer, &interRect );
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->getWillpower()),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+39,position.getY()+98, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
+    }
 
-    interRect= {position.getX()+80,position.getY()+95, (int)( 115.0*(player->getClasse()->getWillpower()/20.0 ) )  ,10};
-    SDL_SetRenderDrawColor( gRenderer, 133,20,75, 0xFF );
-    SDL_RenderFillRect( gRenderer, &interRect );
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->getWisdom()),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+81,position.getY()+98, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
+    }
 
-    interRect= {position.getX()+80,position.getY()+110,(int)( 115.0*(player->getClasse()->getLuck()/20.0 ) ) ,10};
-    SDL_SetRenderDrawColor( gRenderer, 61,153,112, 0xFF );
-    SDL_RenderFillRect( gRenderer, &interRect );
-
-
-
-
+    if (!textTexture.loadFromRenderedText(
+            std::to_string(player->getClasse()->getLuck()),textColor,gRenderer,gFont) ){
+        std::cout << "ERROR" <<std::endl;
+    }else {
+        textTexture.render(position.getX()+123,position.getY()+98, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
+    }
+    TTF_CloseFont(gFont);
+    delete elementTexture;
+    delete sdl_rect;
 
 }
 

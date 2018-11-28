@@ -18,6 +18,7 @@ private: int strength;
          int wisdom;
          int willpower;
          int luck;
+         int maxStamina;
          std::string name;
 
 
@@ -62,7 +63,9 @@ public:
 
     void setName(const std::string &name);
 
-    virtual ~Classes();;
+    virtual ~Classes();
+
+    int getMaxStamina() const;;
 };
 
 
