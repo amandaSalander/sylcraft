@@ -39,6 +39,8 @@ private:
     bool renderCurrentPlayer;
     int currentEnnemy;
     int numberOfEnnemies;
+    EnnemyTexture *ennemyInMovement;
+    int indexEnnemyInMovement;
 
 
 public:

@@ -43,7 +43,8 @@ CarteTexture::CarteTexture() {
     renderCurrentPlayer=true;
     currentEnnemy=-1;
     numberOfEnnemies=0;
-
+    ennemyInMovement= nullptr;
+    indexEnnemyInMovement=-1;
 }
 
 CarteTexture::~CarteTexture() = default;
@@ -223,67 +224,69 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
         /** Handling ennemies here **/
 
         for ( size_t k = 0; k < ennemiesInMap->size(); k++) {
+            if (ennemiesInMap->at(k)!= nullptr && k!=indexEnnemyInMovement ){
+                if (!switched && ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() >
+                                 initialPositionsOfEnnemies->at(k).getX()-32
+                        ) {
+                    ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
+                            ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-1,
+                            ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                    ));
+                    clips->at(1)=new SDL_Rect({0,32,32,32});
+                }
+                else if (  initialPositionsOfEnnemies->at(k).getX()-
+                           ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()   ==32
+                        ){
+                    switched=true;
 
-            if (!switched && ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() >
-                initialPositionsOfEnnemies->at(k).getX()-32
-                    ) {
-                ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
-                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-1,
-                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
-                ));
-                clips->at(1)=new SDL_Rect({0,32,32,32});
+                }
+
+
+                if (switched){
+
+                    ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
+                            ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() + 1,
+                            ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
+                    ));
+                    clips->at(1)=new SDL_Rect({0,64,32,32});
+                }
+                if (  ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-
+                      initialPositionsOfEnnemies->at(k).getX()
+                      ==32
+                        ){
+                    switched=false;
+
+                }
+                auto *ennemyLabel=new EnnemyLabel(
+                        ennemiesInMap->at(k)->getEnnemy()->getAttackEffect(),
+                        ennemiesInMap->at(k)->getEnnemy()->getDefenseEffect(),
+                        ennemiesInMap->at(k)->getEnnemy()->getStamina(),
+                        ennemiesInMap->at(k)->getEnnemy()->getMax_stamina(),
+                        false,
+                        ennemyIsAllowedToAttack(k)
+                );
+                ennemyAttack(k);
+
+                currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
+                if ( currentEnnemy==k){
+                    ennemyLabel->setAttacked(true);
+                }
+                else {ennemyLabel->setAttacked(false);}
+
+
+                ennemiesInMap->at(k)->render(
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX(),
+                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getY(),
+                        clips->at(1),
+                        gRenderer
+                );
+                ennemyLabel->render(
+                        Position(ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()+4,
+                                 ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()-20),
+                        gRenderer
+                );
             }
-            else if (  initialPositionsOfEnnemies->at(k).getX()-
-                       ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()   ==32
-                       ){
-                switched=true;
 
-            }
-
-
-            if (switched){
-
-                ennemiesInMap->at(k)->getEnnemy()->setPosition(Position(
-                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() + 1,
-                        ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
-                ));
-                clips->at(1)=new SDL_Rect({0,64,32,32});
-            }
-            if (  ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()-
-                        initialPositionsOfEnnemies->at(k).getX()
-                          ==32
-                    ){
-                switched=false;
-
-            }
-            auto *ennemyLabel=new EnnemyLabel(
-                    ennemiesInMap->at(k)->getEnnemy()->getAttackEffect(),
-                    ennemiesInMap->at(k)->getEnnemy()->getDefenseEffect(),
-                    ennemiesInMap->at(k)->getEnnemy()->getStamina(),
-                    ennemiesInMap->at(k)->getEnnemy()->getMax_stamina(),
-                    false,
-                    ennemyIsAllowedToAttack(k)
-            );
-//            ennemyAttack(k);
-
-            currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
-            if ( currentEnnemy==k){
-                ennemyLabel->setAttacked(true);
-            }
-            else {ennemyLabel->setAttacked(false);}
-
-
-            ennemiesInMap->at(k)->render(
-                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getX(),
-                    ennemiesInMap->at(k)->getEnnemy()->getPosition().getY(),
-                    clips->at(1),
-                    gRenderer
-            );
-            ennemyLabel->render(
-                    Position(ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()+4,
-                             ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()-20),
-                    gRenderer
-                             );
         }
 
 
@@ -559,20 +562,23 @@ int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &m
     int distance;
     int realMargin( sqrt(2*pow(margin,2)) );
     for (size_t l = 0; l < ennemiesInMap->size() ; ++l) {
-        distance =(int) sqrt(
-                pow(playerTexture.getPlayer().getPosition().getX()-
+        if (ennemiesInMap->at(l)!= nullptr){
+            distance =(int) sqrt(
+                    pow(playerTexture.getPlayer().getPosition().getX()-
                         ennemiesInMap->at(l)->getEnnemy()->getPosition().getX()
-                        ,2)+
-                pow(playerTexture.getPlayer().getPosition().getY()-
-                            ennemiesInMap->at(l)->getEnnemy()->getPosition().getY()
+                            ,2)+
+                    pow(playerTexture.getPlayer().getPosition().getY()-
+                        ennemiesInMap->at(l)->getEnnemy()->getPosition().getY()
                             ,2)
-        ) ;
+            ) ;
 
-        std::cout << "L : "<<l <<std::endl;
-        if (distance <realMargin){
-            a=l;
-//            break;
+//            std::cout << "L : "<<l <<std::endl;
+            if (distance <realMargin){
+                a=l;
+            break;
+            }
         }
+
     }
     return a;
 
@@ -583,32 +589,68 @@ bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
     bool a=false;
     int distance;
     int realMargin( (int) sqrt(2*pow(margin,2)) );
-
-
-    distance =(int) sqrt(
+    if (ennemiesInMap->at(k)!= nullptr){
+        distance =(int) sqrt(
                 pow(playerTexture.getPlayer().getPosition().getX()-
                     ennemiesInMap->at(k)->getEnnemy()->getPosition().getX()
                         ,2)+
                 pow(playerTexture.getPlayer().getPosition().getY()-
                     ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
                         ,2)) ;
-    if (distance<realMargin) a=true;
+        if (distance<realMargin) a=true;
+    }
 
     return a;
 }
 
 void CarteTexture::ennemyAttack(const size_t &k) {
     if (ennemyIsAllowedToAttack(k)){
-        if (ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()> playerTexture.getPlayer().getClasse()->getStamina()){
-            playerTexture.getPlayer().getClasse()->setStamina(0);
-        }else{
-            playerTexture.getPlayer().getClasse()->setStamina(
-                    playerTexture.getPlayer().getClasse()->getStamina()-
-                    ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()
-            );
-        }
-        updatePlayersInMap();
+    std::cout << "I AM HERE"  <<std::endl;
+        ennemyInMovement=ennemiesInMap->at(k);
+        indexEnnemyInMovement=(int)k;
+        double a= (playerTexture.getPlayer().getPosition().getY()-ennemyInMovement->getEnnemy()->getPosition().getY())*1.0/
+                (playerTexture.getPlayer().getPosition().getX()-ennemyInMovement->getEnnemy()->getPosition().getX());
+        double b= playerTexture.getPlayer().getPosition().getY()-a*playerTexture.getPlayer().getPosition().getX();
 
+        std::cout << "A : "<<a <<std::endl;
+        std::cout << "B : "<<b <<std::endl;
+
+        double distance= sqrt(
+                pow(playerTexture.getPlayer().getPosition().getX()-ennemyInMovement->getEnnemy()->getPosition().getX(),2)+
+                        pow(playerTexture.getPlayer().getPosition().getY()-ennemyInMovement->getEnnemy()->getPosition().getY(),2)
+                );
+
+        if (a>=0 && playerTexture.getPlayer().getPosition().getX()<ennemyInMovement->getEnnemy()->getPosition().getX()){
+            ennemyInMovement->getEnnemy()->setPosition(Position(
+                    ennemyInMovement->getEnnemy()->getPosition().getX()-1,
+                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()-1)*a+b)
+            ));
+        }else if (
+                a<0 && playerTexture.getPlayer().getPosition().getX()<ennemyInMovement->getEnnemy()->getPosition().getX()
+                ) {
+            ennemyInMovement->getEnnemy()->setPosition(Position(
+                    ennemyInMovement->getEnnemy()->getPosition().getX()+1,
+                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()+1)*a+b)
+            ));
+        }
+        else if (a>=0 && playerTexture.getPlayer().getPosition().getX()>ennemyInMovement->getEnnemy()->getPosition().getX()){
+            ennemyInMovement->getEnnemy()->setPosition(Position(
+                    ennemyInMovement->getEnnemy()->getPosition().getX()-1,
+                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()-1)*a+b)
+            ));
+        }else if (
+                a<0 && playerTexture.getPlayer().getPosition().getX()<ennemyInMovement->getEnnemy()->getPosition().getX()
+                ){
+            ennemyInMovement->getEnnemy()->setPosition(Position(
+                    ennemyInMovement->getEnnemy()->getPosition().getX()+1,
+                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()+1)*a+b)
+            ));
+        }
+
+
+    }
+    else {
+        indexEnnemyInMovement=-1;
     }
 }
 
@@ -628,11 +670,11 @@ void CarteTexture::updatePlayersInMap() {
 void CarteTexture::updateEnnemiesInMap() {
 
     for (int i = 0; i <ennemiesInMap->size() ; ++i) {
-        std::cout <<"ENNEMY STAMINA" << ennemiesInMap->at(i)->getEnnemy()->getStamina() <<std::endl;
+//        std::cout <<"ENNEMY STAMINA" << ennemiesInMap->at(i)->getEnnemy()->getStamina() <<std::endl;
         if (ennemiesInMap->at(i)->getEnnemy()->getStamina()==0){
 
             auto *l =new Loot("heart");
-            l->setPosition(ennemiesInMap->at(i)->getEnnemy()->getPosition());
+            l->setPosition(Position (ennemiesInMap->at(i)->getEnnemy()->getPosition()));
             carte->addLootToMap(l);
             ennemiesInMap->erase(ennemiesInMap->begin() + i);
             initialPositionsOfEnnemies->erase(initialPositionsOfEnnemies->begin()+i);
@@ -646,7 +688,7 @@ void CarteTexture::playerAttack() {
 
         int a=playerTexture.getPlayer().getClasse()->attackPower(5);
 
-        if (currentEnnemy!=-1) {
+        if (currentEnnemy!=-1 && ennemiesInMap->at(currentEnnemy)!= nullptr) {
 
             if (a >= ennemiesInMap->at(currentEnnemy)->getEnnemy()->getStamina()) {
                 ennemiesInMap->at(currentEnnemy)->getEnnemy()->setStamina(0);
