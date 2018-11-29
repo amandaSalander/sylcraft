@@ -38,6 +38,7 @@ private:
     int frame;
     bool renderCurrentPlayer;
     int currentEnnemy;
+    int numberOfEnnemies;
 
 
 public:
@@ -67,6 +68,15 @@ public:
     bool ennemyIsAllowedToAttack(const size_t &k, const int &margin=48);
 
     void ennemyAttack(const size_t &k);
+
+    /** when a player in the map has a stamina equal to zero deleted it frpm the playerInMap **/
+    void updatePlayersInMap();
+
+    /****/
+    void updateEnnemiesInMap();
+    void playerAttack();
+
+
 };
 
 

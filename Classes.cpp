@@ -59,9 +59,11 @@ int Classes::attackPower(const int &_luck) {
 
     int a;
     if (d(gen)){
-        a= int ( (strength*8+willpower*2+wisdom*4)/8* 0.25 );
+        a= int ( (strength*6+willpower+wisdom*4)/11* 0.25 );
     }else {
-        a= (strength*5+willpower*2+wisdom*3)/8;
+        if (strength==0){a=0;}else {
+            a= (strength*6+willpower+wisdom*4)/11;
+        }
     }
     return a;
 

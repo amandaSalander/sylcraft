@@ -42,6 +42,7 @@ CarteTexture::CarteTexture() {
     frame=0;
     renderCurrentPlayer=true;
     currentEnnemy=-1;
+    numberOfEnnemies=0;
 
 }
 
@@ -49,7 +50,7 @@ CarteTexture::~CarteTexture() = default;
 
 
 void CarteTexture::render(SDL_Renderer *gRenderer){
-
+//    initialPositionsOfEnnemies->clear();
     for (const auto &i : *(carte->getLayers()) ) {
 
         for (auto j : i) {
@@ -166,26 +167,25 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             }
             else if (auto *e= dynamic_cast<Ennemy*>(j)){
 
-
-                if (initialPositionsOfEnnemies->size()<3) {
-                    initialPositionsOfEnnemies->emplace_back(e->getPosition());
-
-
-                    EnnemyTexture *ennemyTexture=new EnnemyTexture();
-                    ennemyTexture->setEnnemy(e);
-                    ennemyTexture->loadImageFromFile(
-                            e->getType(),
-                            gRenderer
-                    );
-                    ennemyTexture->render(e->getPosition().getX(),
-                                         e->getPosition().getY(),
-                                         clips->at(1),
-                                         gRenderer
-                    );
-                    ennemiesInMap->emplace_back(ennemyTexture);
-                }
-
-
+                    bool firstRender=true;
+                    if (numberOfEnnemies!=0){
+                        firstRender=false;
+                    }
+                    if (firstRender){
+                        EnnemyTexture *ennemyTexture=new EnnemyTexture();
+                        ennemyTexture->setEnnemy(e);
+                        ennemyTexture->loadImageFromFile(
+                                e->getType(),
+                                gRenderer
+                        );
+                        ennemyTexture->render(e->getPosition().getX(),
+                                              e->getPosition().getY(),
+                                              clips->at(1),
+                                              gRenderer
+                        );
+                        ennemiesInMap->emplace_back(ennemyTexture);
+                        initialPositionsOfEnnemies->emplace_back(e->getPosition());
+                    }
 
             }
             else if (auto *d= dynamic_cast<Decoration*>(j)){
@@ -214,8 +214,13 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
     }
 
+    numberOfEnnemies= ennemiesInMap->size();
 
 
+
+//    std::cout << "NUMBER "<<numberOfEnnemies <<std::endl;
+
+        /** Handling ennemies here **/
 
         for ( size_t k = 0; k < ennemiesInMap->size(); k++) {
 
@@ -259,14 +264,13 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                     false,
                     ennemyIsAllowedToAttack(k)
             );
-            ennemyAttack(k);
-            currentEnnemy=playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
-//            std::cout << "A "<< a<<std::endl;
-            std::cout << "K " <<k<<std::endl;
+//            ennemyAttack(k);
+
+            currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
             if ( currentEnnemy==k){
-                std::cout << "I AM HERE" <<std::endl;
                 ennemyLabel->setAttacked(true);
-            }else {currentEnnemy=-1;ennemyLabel->setAttacked(false);}
+            }
+            else {ennemyLabel->setAttacked(false);}
 
 
             ennemiesInMap->at(k)->render(
@@ -356,12 +360,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
     /** START **/
     /** CHECK AT EACH RENDER IF A PLAYER CAN ATTACK **/
-    if ( playerIsAllowedToAttack(playerTexture.getPlayer().getPosition()) !=-1  ){
-        std::cout << "PLAYER CAN ATTACK " <<std::endl;
-    }else {
-        std::cout << "PLAYER CANNOT ATTACK"<< std::endl;
-    }
-    /** END **/
+
 
 }
 
@@ -420,6 +419,11 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start,SDL_Renderer *gRenderer) {
 
+    std::cout << "***********************************" <<std::endl;
+    if(key== SDLK_x){
+        playerAttack();
+    }
+    std::cout << "***********************************" <<std::endl;
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
         playerTexture.changeCurrentRender(clips->at(0),key);
@@ -462,8 +466,6 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
         }
 
-
-        currentEnnemy=playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
 
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
@@ -566,16 +568,15 @@ int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &m
                             ,2)
         ) ;
 
-
+        std::cout << "L : "<<l <<std::endl;
         if (distance <realMargin){
             a=l;
-            break;
+//            break;
         }
     }
     return a;
 
 }
-
 
 bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
 
@@ -598,9 +599,72 @@ bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
 
 void CarteTexture::ennemyAttack(const size_t &k) {
     if (ennemyIsAllowedToAttack(k)){
-        playerTexture.getPlayer().getClasse()->setStamina(
-                playerTexture.getPlayer().getClasse()->getStamina()-
-                ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()
-                );
+        if (ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()> playerTexture.getPlayer().getClasse()->getStamina()){
+            playerTexture.getPlayer().getClasse()->setStamina(0);
+        }else{
+            playerTexture.getPlayer().getClasse()->setStamina(
+                    playerTexture.getPlayer().getClasse()->getStamina()-
+                    ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()
+            );
+        }
+        updatePlayersInMap();
+
     }
+}
+
+void CarteTexture::updatePlayersInMap() {
+    auto *playerMapTemp= new std::vector<PlayerTexture*>();
+    for (int i = 0; i <playerInMap->size() ; ++i) {
+        if (playerInMap->at(i)->getPlayer().getClasse()->getStamina()<=0){
+            playerIndex=0;
+            renderCurrentPlayer=true;
+        }else {
+            playerMapTemp->emplace_back(playerInMap->at(i));
+        }
+    }
+    playerInMap=playerMapTemp;
+}
+
+void CarteTexture::updateEnnemiesInMap() {
+
+    for (int i = 0; i <ennemiesInMap->size() ; ++i) {
+        std::cout <<"ENNEMY STAMINA" << ennemiesInMap->at(i)->getEnnemy()->getStamina() <<std::endl;
+        if (ennemiesInMap->at(i)->getEnnemy()->getStamina()==0){
+
+            auto *l =new Loot("heart");
+            l->setPosition(ennemiesInMap->at(i)->getEnnemy()->getPosition());
+            carte->addLootToMap(l);
+            ennemiesInMap->erase(ennemiesInMap->begin() + i);
+            initialPositionsOfEnnemies->erase(initialPositionsOfEnnemies->begin()+i);
+        }
+    }
+
+}
+
+void CarteTexture::playerAttack() {
+
+
+        int a=playerTexture.getPlayer().getClasse()->attackPower(5);
+
+        if (currentEnnemy!=-1) {
+
+            if (a >= ennemiesInMap->at(currentEnnemy)->getEnnemy()->getStamina()) {
+                ennemiesInMap->at(currentEnnemy)->getEnnemy()->setStamina(0);
+                updateEnnemiesInMap();
+                currentEnnemy=-1;
+            } else {
+                ennemiesInMap->at(currentEnnemy)->getEnnemy()->setStamina(
+                        ennemiesInMap->at(currentEnnemy)->getEnnemy()->getStamina()
+                        - a);
+
+            }
+
+            playerTexture.getPlayer().getClasse()->setStrength(
+                    (int) (playerTexture.getPlayer().getClasse()->getStrength() / 1.33)
+            );
+            if (playerTexture.getPlayer().getClasse()->getStrength() <=3){
+                playerTexture.getPlayer().getClasse()->setStrength(0);
+            }
+
+        }
 }

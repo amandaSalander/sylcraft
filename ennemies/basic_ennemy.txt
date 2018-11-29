@@ -3,3 +3,4 @@ assets/ennemies/basic_ennemy_1_sprites.png
 10
 2
 20
+2

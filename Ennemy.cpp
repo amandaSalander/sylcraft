@@ -45,3 +45,6 @@ int Ennemy::getMax_stamina() const {
 }
 
 
+void Ennemy::setStamina(int stamina) {
+    Ennemy::stamina = stamina;
+}

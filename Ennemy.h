@@ -25,6 +25,8 @@ public:
     int getDefenseEffect() const;
 
     int getMax_stamina() const;
+
+    void setStamina(int stamina);
 };
 
 
