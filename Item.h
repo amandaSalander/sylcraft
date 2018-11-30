@@ -7,9 +7,14 @@
 
 #include <string>
 #include <iostream>
+#include "Element.h"
+#include <fstream>
 
-class Item {
+class Item : public Element {
+private:
     std::string name;
+public:
+    Item(std::string path);
 };
 
 

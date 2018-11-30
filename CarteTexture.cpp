@@ -16,6 +16,7 @@
 #include "EnnemyTexture.h"
 #include "PlayerLabel.h"
 #include "EnnemyLabel.h"
+#include "ItemTexture.h"
 
 
 CarteTexture::CarteTexture() {
@@ -164,6 +165,19 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                              n->getPosition().getY(),
                                              nullptr,
                                              gRenderer
+                );
+            }
+            else if (auto *i= dynamic_cast<Item*>(j)){
+                ItemTexture itemtexture;
+                SDL_Rect *rect= new SDL_Rect({0,0,32,32});
+                itemtexture.loadImageFromFile(
+                        i->getType(),
+                        gRenderer
+                );
+                itemtexture.render(i->getPosition().getX(),
+                                  i->getPosition().getY(),
+                                  rect,
+                                  gRenderer
                 );
             }
             else if (auto *e= dynamic_cast<Ennemy*>(j)){

@@ -9,11 +9,13 @@
 #include <vector>
 #include <fstream>
 #include "Element.h"
+#include "Quest.h"
 
 class NPC: public Element {
 private:
     std::vector<std::string> prompts;
     std::string name;
+    std::vector<Quest*> *quests;
 public:
     NPC(std::string type);
 
@@ -24,6 +26,8 @@ public:
     const std::string &getName() const;
 
     void setName(const std::string &name);
+
+    std::vector<Quest *> *getQuests() const;
 
 };
 

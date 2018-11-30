@@ -16,9 +16,23 @@ NPC::NPC(std::string type) {
     std::getline(file,line);
     setType(line);
 
+    /** get quest**/
+
+    std::getline(file,line);
+
+    if (line!="null"){
+        quests= new std::vector<Quest*>();
+        quests->emplace_back( new Quest(line));
+
+
+    }
+    else {
+        quests= nullptr;
+    }
     while (getline(file,line)){
         prompts.emplace_back(line);
     }
+
 }
 
 const std::vector<std::string> &NPC::getPrompts() const {
@@ -35,4 +49,8 @@ const std::string &NPC::getName() const {
 
 void NPC::setName(const std::string &name) {
     NPC::name = name;
+}
+
+std::vector<Quest *> *NPC::getQuests() const {
+    return quests;
 }

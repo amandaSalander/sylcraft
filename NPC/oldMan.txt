@@ -1,5 +1,6 @@
 Old man
 assets/NPC/old_man.png
+null
 Hey, young player !
 I don't know you
 you know when I was young, I liked potato

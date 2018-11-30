@@ -16,6 +16,7 @@ and may not be redistributed without written permission.*/
 #include "Timer.h"
 #include "BubbleTalk.h"
 #include "PlayerLabel.h"
+#include "Quest.h"
 
 
 //Screen dimension constants
@@ -171,6 +172,9 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
+    {
+        Quest quest("find_book");
+    }
 
     if( !init() )
     {

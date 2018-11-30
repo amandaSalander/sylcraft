@@ -39,7 +39,7 @@ Carte::Carte(std::string filename) {
         layers->emplace_back(std::vector<Element*>());
     }
 
-
+    Item  *item= nullptr;
 
     while (std::getline(carteFile,line,'\n')){
 
@@ -184,7 +184,14 @@ Carte::Carte(std::string filename) {
                 }
 
                 npc.setPosition(Position(i*32,j*32));
+                if (npc.getQuests()!= nullptr){
+                    std::cout << "ITEEEEEEM" <<std::endl;
+                    item= npc.getQuests()->at(0)->getItems()->at(0);
+                }
+
                 layers->at(l).emplace_back(new NPC(npc));
+
+
             }
             else if (line[i]=='B' || line[i]=='C'){
                 Ennemy *ennemy;
@@ -203,7 +210,12 @@ Carte::Carte(std::string filename) {
 
             }
             else {
-                layers->at(l).push_back(nullptr);
+                if (item!= nullptr){
+                        layers->at(l).emplace_back(item);
+                        item= nullptr;
+                }else {
+                    layers->at(l).push_back(nullptr);
+                }
             }
         }
         j++;
