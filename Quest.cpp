@@ -64,3 +64,11 @@ Quest::~Quest() {
 std::vector<Item *> *Quest::getItems() const {
     return items;
 }
+
+const std::string &Quest::getTitle() const {
+    return title;
+}
+
+std::vector<std::string> *Quest::getTalks() const {
+    return talks;
+}

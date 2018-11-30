@@ -9,20 +9,16 @@
 #include <iostream>
 #include "Classes.h"
 
-int Player::players_number=0;
+
 
 Player::Player() {
-    players_number++;
+
 }
 
 Player::Player(std::string na,std::string te,Classes *cl,Position po): name(std::move(na)),team(std::move(te)),classe(cl) {
-    players_number++;
-//    setPosition(po);
+    inventory= new std::vector<Item*>();
 }
 
-Player::~Player() {
-    players_number--;
-}
 
 const std::string &Player::getName() const {
     return name;
@@ -41,13 +37,8 @@ void Player::setTeam(const std::string &team) {
 }
 
 
-int Player::getPlayers_number() {
-    return players_number;
-}
 
-void Player::setPlayers_number(int players_number) {
-    Player::players_number = players_number;
-}
+
 
 Classes *Player::getClasse() const {
     return classe;
@@ -55,4 +46,18 @@ Classes *Player::getClasse() const {
 
 void Player::setClasse(Classes *classe) {
     Player::classe = classe;
+}
+
+bool Player::addToIventory(Item *item) {
+    if (inventory->size()<max_item){
+        inventory->emplace_back(item);
+        return true;
+    }
+    else {
+        return  false;
+    }
+}
+
+std::vector<Item *> *Player::getInventory() const {
+    return inventory;
 }

@@ -16,10 +16,8 @@
 // THIS METHOD IS TO TEST A NEW FEATURE WHICH IS RENDERING CARTE BY LAYERS, THE LAST LAYERS CONTAIN ONLY OBSTACLE OBJECTS
 Carte::Carte(std::string filename) {
     std::string line;
-
     std::ifstream carteFile(filename);
-
-
+    
     std::cout << carteFile.is_open() << std::endl;
     largeur=960;
     hauteur=640;
@@ -30,7 +28,7 @@ Carte::Carte(std::string filename) {
     hauteur=std::stoi(line);
     std::getline(carteFile,line);
     int layer=std::stoi(line);
-
+    itemsInMap= new std::vector<Item*>();
     size_t l=0;
     int j=0;
 
@@ -187,6 +185,7 @@ Carte::Carte(std::string filename) {
                 if (npc.getQuests()!= nullptr){
                     std::cout << "ITEEEEEEM" <<std::endl;
                     item= npc.getQuests()->at(0)->getItems()->at(0);
+                    itemsInMap->emplace_back(npc.getQuests()->at(0)->getItems()->at(0));
                 }
 
                 layers->at(l).emplace_back(new NPC(npc));
@@ -229,21 +228,15 @@ Carte::Carte(std::string filename) {
 
     }
 
+    carteFile.close();
+
 
 }
-
-
-
 
 
 std::vector<std::vector<Element *>>* Carte::getLayers() const {
     return layers;
 }
-
-//const std::vector<std::vector<Element *>> &Carte::getLayers() const {
-//    return layers;
-//}
-
 
 void Carte::addPlayerToMap(Player* player, int position) {
     if (!layers->empty()){
@@ -597,4 +590,21 @@ bool Carte::playerIsAllowedToAttack(const Position &position, const int &margin)
     }
     return a;
 
+}
+
+bool Carte::allowedToPickItem(const Position &position,const int &margin) {
+    bool a=false;
+    double distance;
+    for (int i = 0; i < itemsInMap->size(); ++i) {
+        distance=sqrt(
+                pow (position.getX()- itemsInMap->at(i)->getPosition().getX(), 2)+
+                pow (position.getY()- itemsInMap->at(i)->getPosition().getY(), 2)
+                );
+        if (distance<margin){
+            a=true;
+            break;
+        }
+        std::cout << "ITEM "<< i<< itemsInMap->at(i)->getType() <<std::endl;
+    }
+    return a;
 }

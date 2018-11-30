@@ -15,6 +15,7 @@
 #include "Player.h"
 #include "Loot.h"
 #include "Obstacle.h"
+#include "Item.h"
 
 #include <SDL2/SDL.h>
 #include <algorithm>
@@ -24,12 +25,11 @@ class Carte {
 private:
     int largeur; // en pixel
     int hauteur; //en pixel
-
     std::vector<std::vector<Element*>>* layers;
-public:
-    Carte():largeur(0),hauteur(0){};
+    std::vector<Item*> *itemsInMap;
 
-    // THIS METHOD IS TO TEST A NEW FEATURE WHICH IS RENDERING CARTE BY LAYERS, THE LAST LAYERS CONTAIN ONLY OBSTACLE OBJECTS
+public:
+
     Carte(std::string filename);
 
     std::vector<std::vector<Element *>>* getLayers() const;
@@ -57,6 +57,8 @@ public:
 
     /** margin can only be a multiplier of 32, e.g. 32,64,96,....  **/
     bool playerIsAllowedToAttack(const Position &position,const int &margin=32);
+
+    bool allowedToPickItem(const Position &position,const int &margin=32);
 
 
 

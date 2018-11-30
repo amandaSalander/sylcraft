@@ -7,15 +7,21 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include "Classes.h"
 #include "Element.h"
+#include "Item.h"
+
+const int max_item=4;
 
 class Player : public Element {
 private:
     std::string name;
     std::string team;
     Classes *classe;
-public:static int players_number;
+    std::vector<Item*> *inventory;
+
+
 
 public:
     Player();
@@ -30,16 +36,13 @@ public:
     void setTeam(const std::string &team);
 
 
-
-    static int getPlayers_number();
-
-    static void setPlayers_number(int players_number);
-
-    ~Player() override;
-
     Classes *getClasse() const;
 
     void setClasse(Classes *classe);
+
+    bool addToIventory(Item *item);
+
+    std::vector<Item *> *getInventory() const;
 
 };
 

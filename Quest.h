@@ -31,6 +31,10 @@ public:
     ~Quest();
 
     std::vector<Item *> *getItems() const;
+
+    const std::string &getTitle() const;
+
+    std::vector<std::string> *getTalks() const;
 };
 
 

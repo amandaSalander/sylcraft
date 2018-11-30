@@ -56,6 +56,7 @@ Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
 Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
 Player e("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
 
+
 std::string filename="cartes/carte_1.txt";
 
 Carte carte1(filename);
@@ -68,7 +69,10 @@ bool init()
 {
     //Initialization flag
     bool success = true;
-
+    c.addToIventory(new Item("book"));
+    c.addToIventory(new Item("scroll"));
+    c.addToIventory(new Item("book"));
+    c.addToIventory(new Item("scroll"));
     //Initialize SDL
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
@@ -206,6 +210,10 @@ int main( int argc, char* args[] )
                 SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
                 carteTexture.setCarte(&carte1);
+
+
+//                c.addToIventory(new Item("book"));
+
                 c.setType("assets/players/warrior_1.png");
                 c.setPosition(Position(300,200));
 

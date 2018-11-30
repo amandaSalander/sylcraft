@@ -125,6 +125,24 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
     }else {
         textTexture.render(position.getX()+123,position.getY()+98, nullptr,0.0, nullptr, SDL_FLIP_NONE,gRenderer);
     }
+    auto *s=new SDL_Rect({0,0,32,32});
+
+    int j=0;
+    for (int i = 0; i <player->getInventory()->size() ; ++i) {
+        elementTexture->loadImageFromFile(player->getInventory()->at(i)->getType(),gRenderer);
+
+        if (i>1){j=1;}
+        elementTexture->render(
+                position.getX()+140+(i%2)*24,
+                position.getY()+70+j*25,
+                s,
+                gRenderer);
+
+        std::cout << " I : " << i << std::endl;
+
+
+    }
+
     TTF_CloseFont(gFont);
     delete elementTexture;
     delete sdl_rect;

@@ -31,6 +31,7 @@ private:
     int playerIndex;
     bool changedPlayer;
     BubbleTalk *currentBubble;
+    int displayQuest;
     NPC *currentNPC;
     size_t indexBubble;
     std::vector<Position> *initialPositionsOfEnnemies;

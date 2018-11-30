@@ -16,6 +16,7 @@ private:
     std::vector<std::string> prompts;
     std::string name;
     std::vector<Quest*> *quests;
+    std::string id;
 public:
     NPC(std::string type);
 

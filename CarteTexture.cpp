@@ -46,6 +46,7 @@ CarteTexture::CarteTexture() {
     numberOfEnnemies=0;
     ennemyInMovement= nullptr;
     indexEnnemyInMovement=-1;
+    displayQuest=-1;
 }
 
 CarteTexture::~CarteTexture() = default;
@@ -166,6 +167,17 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                              nullptr,
                                              gRenderer
                 );
+                if (n->getQuests()!= nullptr){
+                    ElementTexture elementTexture;
+                    elementTexture.loadImageFromFile("assets/tiles/gem_01a.png",gRenderer);
+                    elementTexture.render(
+                            n->getPosition().getX()+8,
+                            n->getPosition().getY()-16,
+                            nullptr,
+                            gRenderer
+                    );
+                }
+
             }
             else if (auto *i= dynamic_cast<Item*>(j)){
                 ItemTexture itemtexture;
@@ -370,8 +382,18 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 gRenderer);
 
     }
-    if (currentBubble!= nullptr &&  currentNPC!= nullptr){
-        currentBubble->render(currentNPC->getName(),currentNPC->getPrompts().at(indexBubble),gRenderer);
+    if (currentBubble!= nullptr &&  currentNPC!= nullptr ){
+        if (displayQuest==-1){
+            currentBubble->render(currentNPC->getName(),currentNPC->getPrompts().at(indexBubble),gRenderer);
+        }else {
+            if (currentNPC->getQuests()!= nullptr){
+                currentBubble->render(currentNPC->getQuests()->at(0)->getTitle(),
+                        currentNPC->getQuests()->at(0)->getTalks()->at(indexBubble),
+                        gRenderer);
+            }
+
+        }
+
     }
     changedPlayer=false;
 
@@ -436,11 +458,10 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start,SDL_Renderer *gRenderer) {
 
-    std::cout << "***********************************" <<std::endl;
+
     if(key== SDLK_x){
         playerAttack();
     }
-    std::cout << "***********************************" <<std::endl;
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
         playerTexture.changeCurrentRender(clips->at(0),key);
@@ -486,7 +507,10 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
-        if (key==SDLK_c) {
+        if (key==SDLK_z){
+           std::cout <<  carte->allowedToPickItem(playerTexture.getPlayer().getPosition()) <<std::endl;
+        }
+        if (key==SDLK_c || key==SDLK_v) {
             if (npcPosition.getY() == -1 && npcPosition.getX() == -1) {
 
             } else {
@@ -504,16 +528,35 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
                                 )
                 );
 
-
-
+                displayQuest=-1;
 
             }
+            if (key==SDLK_v){
+                displayQuest=1;
+                indexBubble=0;
+
+            }
+            if (key==SDLK_c){
+                indexBubble=0;
+                displayQuest=-1;
+            }
         }
+
 
     }
     if (currentNPC!= nullptr && key ==SDLK_k){
         if (indexBubble+1 < currentNPC->getPrompts().size()){
             ++indexBubble;
+        }
+        else if (displayQuest!=-1){
+            if (indexBubble+1 < currentNPC->getQuests()->at(0)->getTalks()->size()){
+                ++indexBubble;
+            }
+            else {
+                currentNPC= nullptr;
+                currentBubble= nullptr;
+                indexBubble=0;
+            }
         }
         else {
             currentNPC= nullptr;
@@ -522,8 +565,6 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
         }
         }
     }
-
-
 
 
 void CarteTexture::PickUpLoot(SDL_Keycode key) {
