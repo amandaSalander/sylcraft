@@ -1,6 +1,6 @@
 3
 1
-Book
+book
 assets/item/book.png
 0
 400

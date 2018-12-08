@@ -620,20 +620,22 @@ item_t* Carte::allowedToPickItem(const Position &position,const int &margin) {
 
 }
 
-void Carte::pickItem(const Position &position, const int &margin) {
+std::string* Carte::pickItem(const Position &position, const int &margin) {
 
     if (allowedToPickItem(position,margin)){
         for (auto &a: *npcs){
             if (a->getNpc_id()== allowedToPickItem(position,margin)->npc_id){
                 if (a->getQuests()->at(0)->getId()==allowedToPickItem(position,margin)->quest_id){
-                    std::cout <<"NPC NAME" << a->getName() << std::endl;
+                    std::cout <<"NPC NAME " << a->getName() << std::endl;
                     a->getQuests()->at(0)->getItems()->at(0)->setFound(true);
-                }
+                    return new std::string( a->getQuests()->at(0)->getItems()->at(0)->getName() );
+                }else return nullptr;
 
-            }
+            }else return nullptr;
         }
     }
     else {
         std::cout << "YOU ARE EITHER IN THE RANGE OF PICKING ANY ITEM NEEEEEEEEEEEEOW " <<std::endl;
+       return nullptr;
     }
 }

@@ -68,7 +68,7 @@ public:
 
     item_t* allowedToPickItem(const Position &position,const int &margin=32);
 
-    void pickItem(const Position &position,const int &margin=32);
+    std::string* pickItem(const Position &position,const int &margin=32);
 
 
 

@@ -512,7 +512,12 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
         if (key==SDLK_z){
-          carte->pickItem(playerTexture.getPlayer().getPosition()) ;
+            if (carte->pickItem(playerTexture.getPlayer().getPosition())){
+                playerTexture.getPlayer().addToIventory(new Item(
+                        *(carte->pickItem(playerTexture.getPlayer().getPosition()))
+                        ));
+            }
+
         }
         if (key==SDLK_c || key==SDLK_v) {
             if (npcPosition.getY() == -1 && npcPosition.getX() == -1) {

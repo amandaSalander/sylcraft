@@ -26,6 +26,8 @@ public:
     void setFound(bool found);
 
     bool isFound() const;
+
+    const std::string &getName() const;
 };
 
 

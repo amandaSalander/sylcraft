@@ -1,6 +1,6 @@
 1
 2
-Scroll
+scroll
 assets/item/scroll.png
 0
 800

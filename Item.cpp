@@ -53,3 +53,7 @@ void Item::setFound(bool found) {
 bool Item::isFound() const {
     return found;
 }
+
+const std::string &Item::getName() const {
+    return name;
+}
