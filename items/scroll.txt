@@ -1,0 +1,7 @@
+1
+2
+Scroll
+assets/item/scroll.png
+0
+800
+400
