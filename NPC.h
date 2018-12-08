@@ -13,10 +13,11 @@
 
 class NPC: public Element {
 private:
+    unsigned short npc_id;
     std::vector<std::string> prompts;
     std::string name;
     std::vector<Quest*> *quests;
-    std::string id;
+
 public:
     NPC(std::string type);
 
@@ -29,6 +30,8 @@ public:
     void setName(const std::string &name);
 
     std::vector<Quest *> *getQuests() const;
+
+    unsigned short getNpc_id() const;
 
 };
 

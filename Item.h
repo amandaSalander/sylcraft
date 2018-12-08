@@ -12,9 +12,20 @@
 
 class Item : public Element {
 private:
+    unsigned short quest_id;
+    unsigned short npc_id;
+    bool found;
     std::string name;
 public:
     Item(std::string path);
+
+    unsigned short getQuest_id() const;
+
+    unsigned short getNpc_id() const;
+
+    void setFound(bool found);
+
+    bool isFound() const;
 };
 
 

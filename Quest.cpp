@@ -6,9 +6,17 @@
 
 
 Quest::Quest(std::string type) {
-//    std::cout << "CREATE" <<std::endl;
+
     std::ifstream quest("quests/" + type +".txt");
     std::string line;
+
+    /** Get npc_id of the quest**/
+    std::getline(quest,line);
+    npc_id= (unsigned short)std::stoi(line);
+
+    /** Get id of the quest**/
+    std::getline(quest,line);
+    id= (unsigned short)std::stoi(line);
 
     /** Get title of the quest**/
     std::getline(quest,line);
@@ -49,10 +57,11 @@ Quest::Quest(std::string type) {
     while (std::getline(quest,line)){
         talks->emplace_back(line);
     }
+
+    quest.close();
 }
 
 Quest::~Quest() {
-//    std::cout << "DELETE" <<std::endl;
     delete  items;
     items= nullptr;
     delete gifts;
@@ -71,4 +80,8 @@ const std::string &Quest::getTitle() const {
 
 std::vector<std::string> *Quest::getTalks() const {
     return talks;
+}
+
+unsigned short Quest::getId() const {
+    return id;
 }

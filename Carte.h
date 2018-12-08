@@ -16,17 +16,25 @@
 #include "Loot.h"
 #include "Obstacle.h"
 #include "Item.h"
+#include "NPC.h"
 
 #include <SDL2/SDL.h>
 #include <algorithm>
+
+struct item_t
+{
+    unsigned short quest_id;
+    unsigned short npc_id;
+};
 
 class Carte {
 
 private:
     int largeur; // en pixel
-    int hauteur; //en pixel
+    int hauteur; // en pixel
     std::vector<std::vector<Element*>>* layers;
     std::vector<Item*> *itemsInMap;
+    std::vector<NPC*> *npcs;
 
 public:
 
@@ -58,7 +66,9 @@ public:
     /** margin can only be a multiplier of 32, e.g. 32,64,96,....  **/
     bool playerIsAllowedToAttack(const Position &position,const int &margin=32);
 
-    bool allowedToPickItem(const Position &position,const int &margin=32);
+    item_t* allowedToPickItem(const Position &position,const int &margin=32);
+
+    void pickItem(const Position &position,const int &margin=32);
 
 
 

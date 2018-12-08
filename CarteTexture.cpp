@@ -182,15 +182,19 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             else if (auto *i= dynamic_cast<Item*>(j)){
                 ItemTexture itemtexture;
                 SDL_Rect *rect= new SDL_Rect({0,0,32,32});
-                itemtexture.loadImageFromFile(
-                        i->getType(),
-                        gRenderer
-                );
-                itemtexture.render(i->getPosition().getX(),
-                                  i->getPosition().getY(),
-                                  rect,
-                                  gRenderer
-                );
+
+                if (! (i->isFound() )  ){
+                    itemtexture.loadImageFromFile(
+                            i->getType(),
+                            gRenderer
+                    );
+                    itemtexture.render(i->getPosition().getX(),
+                                       i->getPosition().getY(),
+                                       rect,
+                                       gRenderer
+                    );
+                }
+
             }
             else if (auto *e= dynamic_cast<Ennemy*>(j)){
 
@@ -508,7 +512,7 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
         if (key==SDLK_z){
-           std::cout <<  carte->allowedToPickItem(playerTexture.getPlayer().getPosition()) <<std::endl;
+          carte->pickItem(playerTexture.getPlayer().getPosition()) ;
         }
         if (key==SDLK_c || key==SDLK_v) {
             if (npcPosition.getY() == -1 && npcPosition.getX() == -1) {
@@ -626,8 +630,6 @@ int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &m
                         ennemiesInMap->at(l)->getEnnemy()->getPosition().getY()
                             ,2)
             ) ;
-
-//            std::cout << "L : "<<l <<std::endl;
             if (distance <realMargin){
                 a=l;
             break;
@@ -725,7 +727,6 @@ void CarteTexture::updatePlayersInMap() {
 void CarteTexture::updateEnnemiesInMap() {
 
     for (int i = 0; i <ennemiesInMap->size() ; ++i) {
-//        std::cout <<"ENNEMY STAMINA" << ennemiesInMap->at(i)->getEnnemy()->getStamina() <<std::endl;
         if (ennemiesInMap->at(i)->getEnnemy()->getStamina()==0){
 
             auto *l =new Loot("heart");

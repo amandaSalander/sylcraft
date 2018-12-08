@@ -32,6 +32,8 @@ Carte::Carte(std::string filename) {
     size_t l=0;
     int j=0;
 
+    npcs = new std::vector<NPC*>();
+
     layers =new std::vector<std::vector<Element*>>();
     for (int k = 0; k < layer; ++k) {
         layers->emplace_back(std::vector<Element*>());
@@ -181,6 +183,8 @@ Carte::Carte(std::string filename) {
                         break;
                 }
 
+
+
                 npc.setPosition(Position(i*32,j*32));
                 if (npc.getQuests()!= nullptr){
                     std::cout << "ITEEEEEEM" <<std::endl;
@@ -189,6 +193,9 @@ Carte::Carte(std::string filename) {
                 }
 
                 layers->at(l).emplace_back(new NPC(npc));
+                npcs->emplace_back( dynamic_cast<NPC*>(
+                        layers->at(l).at( layers->at(l).size()-1 ) )
+                        );
 
 
             }
@@ -592,19 +599,41 @@ bool Carte::playerIsAllowedToAttack(const Position &position, const int &margin)
 
 }
 
-bool Carte::allowedToPickItem(const Position &position,const int &margin) {
-    bool a=false;
+item_t* Carte::allowedToPickItem(const Position &position,const int &margin) {
+    unsigned  short a=0;
+    item_t *t= nullptr;
     double distance;
-    for (int i = 0; i < itemsInMap->size(); ++i) {
+    for (unsigned  long i = 0; i < itemsInMap->size(); ++i) {
         distance=sqrt(
                 pow (position.getX()- itemsInMap->at(i)->getPosition().getX(), 2)+
                 pow (position.getY()- itemsInMap->at(i)->getPosition().getY(), 2)
                 );
         if (distance<margin){
-            a=true;
+            a=itemsInMap->at(i)->getNpc_id();
+            t= new item_t();
+            t->npc_id=itemsInMap->at(i)->getNpc_id();
+            t->quest_id=itemsInMap->at(i)->getQuest_id();
             break;
         }
-        std::cout << "ITEM "<< i<< itemsInMap->at(i)->getType() <<std::endl;
     }
-    return a;
+    return t;
+
+}
+
+void Carte::pickItem(const Position &position, const int &margin) {
+
+    if (allowedToPickItem(position,margin)){
+        for (auto &a: *npcs){
+            if (a->getNpc_id()== allowedToPickItem(position,margin)->npc_id){
+                if (a->getQuests()->at(0)->getId()==allowedToPickItem(position,margin)->quest_id){
+                    std::cout <<"NPC NAME" << a->getName() << std::endl;
+                    a->getQuests()->at(0)->getItems()->at(0)->setFound(true);
+                }
+
+            }
+        }
+    }
+    else {
+        std::cout << "YOU ARE EITHER IN THE RANGE OF PICKING ANY ITEM NEEEEEEEEEEEEOW " <<std::endl;
+    }
 }

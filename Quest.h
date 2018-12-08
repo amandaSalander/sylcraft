@@ -18,8 +18,11 @@ enum QUEST_STATE {
     QUEST_COMPLETED,
     QUEST_ONGOING
 };
+
 class Quest {
 private:
+    unsigned short npc_id;
+    unsigned short id;
     std::string title;
     std::vector<Item*> *items;
     QUEST_STATE quest_state;
@@ -35,6 +38,8 @@ public:
     const std::string &getTitle() const;
 
     std::vector<std::string> *getTalks() const;
+
+    unsigned short getId() const;
 };
 
 

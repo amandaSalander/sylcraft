@@ -69,10 +69,7 @@ bool init()
 {
     //Initialization flag
     bool success = true;
-    c.addToIventory(new Item("book"));
-    c.addToIventory(new Item("scroll"));
-    c.addToIventory(new Item("book"));
-    c.addToIventory(new Item("scroll"));
+
     //Initialize SDL
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {

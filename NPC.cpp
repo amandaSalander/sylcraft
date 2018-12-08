@@ -11,6 +11,11 @@ NPC::NPC(std::string type) {
 
     /** get  name **/
     std::getline(file,line);
+    npc_id=(unsigned short)std::stoi(line);
+
+
+    /** get  name **/
+    std::getline(file,line);
     name=line;
 
     std::getline(file,line);
@@ -53,4 +58,8 @@ void NPC::setName(const std::string &name) {
 
 std::vector<Quest *> *NPC::getQuests() const {
     return quests;
+}
+
+unsigned short NPC::getNpc_id() const {
+    return npc_id;
 }

@@ -1,3 +1,4 @@
+3
 Priest
 assets/NPC/priest.png
 find_book
