@@ -3,6 +3,7 @@
 //
 
 
+#include <sstream>
 #include "NPC.h"
 
 NPC::NPC(std::string type) {
@@ -27,7 +28,14 @@ NPC::NPC(std::string type) {
 
     if (line!="null"){
         quests= new std::vector<Quest*>();
-        quests->emplace_back( new Quest(line));
+        std::stringstream ss(line);
+        std::string item;
+        char delimeter=',';
+        while (std::getline(ss, item, delimeter))
+        {
+            quests->emplace_back( new Quest(item));
+        }
+
 
 
     }

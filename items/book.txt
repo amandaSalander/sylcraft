@@ -3,5 +3,5 @@
 book
 assets/item/book.png
 0
-400
-400
+576
+576

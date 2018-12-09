@@ -179,21 +179,24 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 }
 
             }
-            else if (auto *i= dynamic_cast<Item*>(j)){
-                ItemTexture itemtexture;
-                SDL_Rect *rect= new SDL_Rect({0,0,32,32});
+            else if (auto *item= dynamic_cast<Item*>(j)){
 
-                if (! (i->isFound() )  ){
+
+                if (item->isFound())continue;
+                else {
+                    ItemTexture itemtexture;
+                    SDL_Rect *rect= new SDL_Rect({0,0,32,32});
                     itemtexture.loadImageFromFile(
-                            i->getType(),
+                            item->getType(),
                             gRenderer
                     );
-                    itemtexture.render(i->getPosition().getX(),
-                                       i->getPosition().getY(),
+                    itemtexture.render(item->getPosition().getX(),
+                                       item->getPosition().getY(),
                                        rect,
                                        gRenderer
                     );
                 }
+
 
             }
             else if (auto *e= dynamic_cast<Ennemy*>(j)){

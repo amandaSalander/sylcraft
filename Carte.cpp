@@ -188,8 +188,6 @@ Carte::Carte(std::string filename) {
                 npc.setPosition(Position(i*32,j*32));
                 if (npc.getQuests()!= nullptr){
                     std::cout << "ITEEEEEEM" <<std::endl;
-                    item= npc.getQuests()->at(0)->getItems()->at(0);
-                    itemsInMap->emplace_back(npc.getQuests()->at(0)->getItems()->at(0));
                 }
 
                 layers->at(l).emplace_back(new NPC(npc));
@@ -215,13 +213,19 @@ Carte::Carte(std::string filename) {
                 layers->at(l).emplace_back(ennemy);
 
             }
-            else {
-                if (item!= nullptr){
-                        layers->at(l).emplace_back(item);
-                        item= nullptr;
-                }else {
-                    layers->at(l).push_back(nullptr);
+            else if (line[i]=='X'){
+                Item *it = nullptr;
+                switch (line[i]){
+                    case 'X':
+                        it= new Item("book");
+                        break;
                 }
+                it->setPosition(Position(i*32,j*32));
+                layers->at(l).emplace_back(it);
+                itemsInMap->emplace_back(it);
+            }
+            else {
+                    layers->at(l).push_back(nullptr);
             }
         }
         j++;
@@ -604,16 +608,18 @@ item_t* Carte::allowedToPickItem(const Position &position,const int &margin) {
     item_t *t= nullptr;
     double distance;
     for (unsigned  long i = 0; i < itemsInMap->size(); ++i) {
+
+
         distance=sqrt(
                 pow (position.getX()- itemsInMap->at(i)->getPosition().getX(), 2)+
                 pow (position.getY()- itemsInMap->at(i)->getPosition().getY(), 2)
                 );
-        if (distance<margin){
-            a=itemsInMap->at(i)->getNpc_id();
-            t= new item_t();
-            t->npc_id=itemsInMap->at(i)->getNpc_id();
-            t->quest_id=itemsInMap->at(i)->getQuest_id();
-            break;
+        /** TODO : fix bug that allow player to pick item that is not visible**/
+        if (distance<margin ){
+                t= new item_t();
+                t->npc_id=itemsInMap->at(i)->getNpc_id();
+                t->quest_id=itemsInMap->at(i)->getQuest_id();
+                itemsInMap->at(i)->setFound(true);
         }
     }
     return t;
@@ -626,7 +632,6 @@ std::string* Carte::pickItem(const Position &position, const int &margin) {
         for (auto &a: *npcs){
             if (a->getNpc_id()== allowedToPickItem(position,margin)->npc_id){
                 if (a->getQuests()->at(0)->getId()==allowedToPickItem(position,margin)->quest_id){
-                    std::cout <<"NPC NAME " << a->getName() << std::endl;
                     a->getQuests()->at(0)->getItems()->at(0)->setFound(true);
                     return new std::string( a->getQuests()->at(0)->getItems()->at(0)->getName() );
                 }else return nullptr;
@@ -635,7 +640,6 @@ std::string* Carte::pickItem(const Position &position, const int &margin) {
         }
     }
     else {
-        std::cout << "YOU ARE EITHER IN THE RANGE OF PICKING ANY ITEM NEEEEEEEEEEEEOW " <<std::endl;
        return nullptr;
     }
 }

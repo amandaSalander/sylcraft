@@ -138,8 +138,6 @@ void PlayerStatTexture::render(SDL_Renderer *gRenderer) {
                 s,
                 gRenderer);
 
-        std::cout << " I : " << i << std::endl;
-
 
     }
 

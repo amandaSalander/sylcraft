@@ -1,0 +1,7 @@
+3
+1
+diamant
+assets/item/diamant.png
+0
+400
+400
