@@ -540,6 +540,21 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
                 displayQuest=-1;
 
+                if (currentNPC->getQuests()){
+                    for (int i = 0; i <currentNPC->getQuests()->size() ; ++i) {
+                        if (currentNPC->getQuests()->at(i)->getQuest_state()==QUEST_COMPLETED){
+                            auto *loot= new Loot("heart");
+                            loot->setPosition(Position(
+                                    currentNPC->getPosition().getX()+32,
+                                    currentNPC->getPosition().getY()+32
+                            ));
+                            carte->addLootToMap(loot);
+                            currentNPC->getQuests()->at(i)->setQuest_state(QUEST_ONGOING);
+                        }
+                    }
+                }
+
+
             }
             if (key==SDLK_v){
                 displayQuest=1;

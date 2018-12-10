@@ -85,3 +85,15 @@ std::vector<std::string> *Quest::getTalks() const {
 unsigned short Quest::getId() const {
     return id;
 }
+
+QUEST_STATE Quest::getQuest_state() const {
+    return quest_state;
+}
+
+void Quest::setQuest_state(QUEST_STATE quest_state) {
+    Quest::quest_state = quest_state;
+}
+
+std::vector<Loot *> *Quest::getGifts() const {
+    return gifts;
+}

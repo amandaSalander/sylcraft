@@ -647,6 +647,8 @@ std::string* Carte::pickItem(const Position &position, const int &margin) {
                                 if (i->getItem_id()==b->item_id){
                                     std::cout <<"ITEM IS " << i->getName() << std::endl;
                                     returnVal= new std::string(i->getName());
+                                    c->setQuest_state(QUEST_COMPLETED);
+                                    break;
                                 }
                             }
                         }

@@ -40,6 +40,12 @@ public:
     std::vector<std::string> *getTalks() const;
 
     unsigned short getId() const;
+
+    QUEST_STATE getQuest_state() const;
+
+    void setQuest_state(QUEST_STATE quest_state);
+
+    std::vector<Loot *> *getGifts() const;
 };
 
 
