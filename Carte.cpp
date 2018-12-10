@@ -39,7 +39,6 @@ Carte::Carte(std::string filename) {
         layers->emplace_back(std::vector<Element*>());
     }
 
-    Item  *item= nullptr;
 
     while (std::getline(carteFile,line,'\n')){
 
@@ -186,9 +185,6 @@ Carte::Carte(std::string filename) {
 
 
                 npc.setPosition(Position(i*32,j*32));
-                if (npc.getQuests()!= nullptr){
-                    std::cout << "ITEEEEEEM" <<std::endl;
-                }
 
                 layers->at(l).emplace_back(new NPC(npc));
                 npcs->emplace_back( dynamic_cast<NPC*>(
@@ -213,16 +209,25 @@ Carte::Carte(std::string filename) {
                 layers->at(l).emplace_back(ennemy);
 
             }
-            else if (line[i]=='X'){
+            else if (line[i]=='X' || line[i]=='S' || line[i]=='D'){
                 Item *it = nullptr;
                 switch (line[i]){
                     case 'X':
                         it= new Item("book");
                         break;
+                    case 'S':
+                        it= new Item("scroll");
+                        break;
+                    case 'D':
+                        it= new Item("diamant");
+                        break;
+                    default:
+                        break;
                 }
                 it->setPosition(Position(i*32,j*32));
                 layers->at(l).emplace_back(it);
                 itemsInMap->emplace_back(it);
+                std::cout << it->getName() << std::endl;
             }
             else {
                     layers->at(l).push_back(nullptr);
@@ -619,6 +624,7 @@ item_t* Carte::allowedToPickItem(const Position &position,const int &margin) {
                 t= new item_t();
                 t->npc_id=itemsInMap->at(i)->getNpc_id();
                 t->quest_id=itemsInMap->at(i)->getQuest_id();
+                t->item_id=itemsInMap->at(i)->getItem_id();
                 itemsInMap->at(i)->setFound(true);
         }
     }
@@ -628,18 +634,30 @@ item_t* Carte::allowedToPickItem(const Position &position,const int &margin) {
 
 std::string* Carte::pickItem(const Position &position, const int &margin) {
 
-    if (allowedToPickItem(position,margin)){
+    std::string *returnVal= nullptr;
+    if ( auto b=allowedToPickItem(position,margin) ){
         for (auto &a: *npcs){
-            if (a->getNpc_id()== allowedToPickItem(position,margin)->npc_id){
-                if (a->getQuests()->at(0)->getId()==allowedToPickItem(position,margin)->quest_id){
-                    a->getQuests()->at(0)->getItems()->at(0)->setFound(true);
-                    return new std::string( a->getQuests()->at(0)->getItems()->at(0)->getName() );
-                }else return nullptr;
+            if (a->getNpc_id()==b->npc_id){
+                std::cout <<"NPC name "<< a->getName() <<std::endl;
+                if (a->getQuests()){
+                    for( auto &c : *a->getQuests()){
+                        if (c->getId()==b->quest_id){
+                            std::cout <<"QUEST IS "<< c->getId() <<std::endl;
+                            for( auto &i : *c->getItems()){
+                                if (i->getItem_id()==b->item_id){
+                                    std::cout <<"ITEM IS " << i->getName() << std::endl;
+                                    returnVal= new std::string(i->getName());
+                                }
+                            }
+                        }
 
-            }else return nullptr;
+                    }
+                }
+            }
+
+
         }
     }
-    else {
-       return nullptr;
-    }
+
+    return returnVal;
 }

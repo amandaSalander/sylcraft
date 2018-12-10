@@ -18,6 +18,10 @@ Item::Item(std::string type) {
     std::getline(item,line);
     quest_id=(unsigned short )std::stoi(line);
 
+    /** get the quest_id of the item**/
+    std::getline(item,line);
+    item_id=(unsigned short )std::stoi(line);
+
     /** get the name of the item**/
     std::getline(item,line);
     name=line;
@@ -56,4 +60,8 @@ bool Item::isFound() const {
 
 const std::string &Item::getName() const {
     return name;
+}
+
+unsigned short Item::getItem_id() const {
+    return item_id;
 }

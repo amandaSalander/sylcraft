@@ -25,6 +25,7 @@ struct item_t
 {
     unsigned short quest_id;
     unsigned short npc_id;
+    unsigned short item_id;
 };
 
 class Carte {

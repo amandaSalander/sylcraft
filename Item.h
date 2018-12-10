@@ -14,6 +14,7 @@ class Item : public Element {
 private:
     unsigned short quest_id;
     unsigned short npc_id;
+    unsigned short item_id;
     bool found;
     std::string name;
 public:
@@ -28,6 +29,8 @@ public:
     bool isFound() const;
 
     const std::string &getName() const;
+
+    unsigned short getItem_id() const;
 };
 
 

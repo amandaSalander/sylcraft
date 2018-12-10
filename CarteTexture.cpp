@@ -515,10 +515,8 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
         Position npcPosition=carte->allowedTalkToNPC(playerTexture.getPlayer().getPosition());
 
         if (key==SDLK_z){
-            if (carte->pickItem(playerTexture.getPlayer().getPosition())){
-                playerTexture.getPlayer().addToIventory(new Item(
-                        *(carte->pickItem(playerTexture.getPlayer().getPosition()))
-                        ));
+            if (auto a=carte->pickItem(playerTexture.getPlayer().getPosition())){
+                playerTexture.getPlayer().addToIventory(new Item(*a));
             }
 
         }

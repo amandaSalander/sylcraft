@@ -1,7 +1,8 @@
 1
 2
+3
 scroll
 assets/item/scroll.png
 0
-800
-800
+96
+576
