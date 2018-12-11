@@ -45,7 +45,8 @@ Carte::Carte(std::string filename) {
 
         for (int i = 0; i <largeur ; ++i) {
 
-            if (line[i] == '*' || line[i]=='8' || line[i]=='5' || line[i]=='9') {
+            if (line[i] == '*' || line[i]=='8' || line[i]=='5' || line[i]=='9' || line[i]=='7' || line[i]=='w'
+            || line[i]=='1'|| line[i]=='z' || line[i]=='x' || line[i]=='2') {
 
                 Obstacle obstacle;
 
@@ -55,6 +56,12 @@ Carte::Carte(std::string filename) {
                     case '*':
                         obstacle.setType("assets/obstacles/crystal.gif");
                         break;
+                    case '1':
+                        obstacle.setType("assets/obstacles/house_1.png");
+                        break;
+                    case '2':
+                        obstacle.setType("assets/obstacles/house_2.png");
+                        break;
                     case '8':
                         obstacle.setType("assets/obstacles/tree_blue.png");
                         break;
@@ -63,6 +70,18 @@ Carte::Carte(std::string filename) {
                         break;
                     case '9':
                         obstacle.setType("assets/obstacles/invisible.png");
+                        break;
+                    case '7':
+                        obstacle.setType("assets/obstacles/tree_pink.png");
+                        break;
+                    case 'w':
+                        obstacle.setType("assets/obstacles/water.png");
+                        break;
+                    case 'z':
+                        obstacle.setType("assets/obstacles/work_1.png");
+                        break;
+                    case 'x':
+                        obstacle.setType("assets/obstacles/work_2.png");
                         break;
                     default:break;
                 }
@@ -167,7 +186,8 @@ Carte::Carte(std::string filename) {
                 harmingObjects.setPosition(Position(i*32,j*32));
                 layers->at(l).emplace_back(new HarmingObjects(harmingObjects));
             }
-            else if(line[i]=='O' || line[i]=='P' || line[i]=='M'){
+            else if(line[i]=='O' || line[i]=='P' || line[i]=='M' || line[i]=='L' || line[i]=='Z'
+            || line[i]=='X' || line[i]=='W' || line[i]=='Y'){
                 NPC npc("oldMan");
 
                 switch (line[i]){
@@ -179,6 +199,23 @@ Carte::Carte(std::string filename) {
                         break;
                     case 'M':
                         npc=NPC("mysteriousLady");
+                        break;
+                    case 'L':
+                        npc=NPC("little_girl");
+                        break;
+                    case 'Z':
+                        npc=NPC("little_boy");
+                        break;
+                    case 'X':
+                        npc=NPC("little_boy");
+                        break;
+                    case 'W':
+                        npc=NPC("worker_man");
+                        break;
+                    case 'Y':
+                        npc=NPC("worker_woman");
+                        break;
+                    default:
                         break;
                 }
 

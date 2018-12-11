@@ -57,7 +57,7 @@ Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
 Player e("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
 
 
-std::string filename="cartes/carte_1.txt";
+std::string filename="cartes/carte_2.txt";
 
 Carte carte1(filename);
 
@@ -245,7 +245,7 @@ int main( int argc, char* args[] )
                     }
                     else if( e.type == SDL_KEYDOWN ) {
 
-                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start,gRenderer);
+                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start);
 
                         carteTexture.PickUpLoot(e.key.keysym.sym);
 
@@ -253,9 +253,7 @@ int main( int argc, char* args[] )
 
                         if (e.key.keysym.sym==SDLK_b){
                             Loot l("heart");
-
                             l.setPosition(Position(64,94));
-
                             std::cout << carteTexture.getCarte()->addLootToMap(new Loot(l)) <<std::endl;
 
                         }

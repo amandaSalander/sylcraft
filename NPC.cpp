@@ -71,3 +71,13 @@ std::vector<Quest *> *NPC::getQuests() const {
 unsigned short NPC::getNpc_id() const {
     return npc_id;
 }
+
+bool NPC::allQuestCleaned() {
+    bool a=true;
+    for(auto &q:*quests){
+        if (q->getQuest_state()==QUEST_NOT_STARTED){
+            a=false;
+        }
+    }
+    return a;
+}

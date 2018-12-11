@@ -54,7 +54,6 @@ CarteTexture::~CarteTexture() = default;
 
 
 void CarteTexture::render(SDL_Renderer *gRenderer){
-//    initialPositionsOfEnnemies->clear();
     for (const auto &i : *(carte->getLayers()) ) {
 
         for (auto j : i) {
@@ -168,7 +167,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                              nullptr,
                                              gRenderer
                 );
-                if (n->getQuests()!= nullptr){
+                if (n->getQuests()!= nullptr && !n->allQuestCleaned()){
                     ElementTexture elementTexture;
                     elementTexture.loadImageFromFile("assets/tiles/gem_01a.png",gRenderer);
                     elementTexture.render(
@@ -251,9 +250,6 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
     numberOfEnnemies= static_cast<int>(ennemiesInMap->size());
 
-
-
-//    std::cout << "NUMBER "<<numberOfEnnemies <<std::endl;
 
         /** Handling ennemies here **/
 
@@ -409,9 +405,6 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 }
 
 
-
-
-
 Carte *CarteTexture::getCarte(){
     return carte;
 }
@@ -463,6 +456,7 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start) {
 
+    size_t nextAvailableQuest(0);
 
     if(key== SDLK_x){
         playerAttack();
@@ -560,6 +554,12 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
             if (key==SDLK_v){
                 displayQuest=1;
                 indexBubble=0;
+                for(auto &k: *currentNPC->getQuests()){
+                    if (k->getQuest_state()==QUEST_ONGOING || k->getQuest_state()==QUEST_COMPLETED){
+                        nextAvailableQuest++;
+                        std::cout << "NEXT "<< nextAvailableQuest <<std::endl;
+                    }
+                }
 
             }
             if (key==SDLK_c){
@@ -575,7 +575,11 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
             ++indexBubble;
         }
         else if (displayQuest!=-1){
-            if (indexBubble+1 < currentNPC->getQuests()->at(0)->getTalks()->size()){
+
+
+            if (indexBubble+1 < currentNPC->getQuests()->at(
+                    nextAvailableQuest
+                    )->getTalks()->size()){
                 ++indexBubble;
             }
             else {

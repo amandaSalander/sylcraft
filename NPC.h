@@ -33,6 +33,7 @@ public:
 
     unsigned short getNpc_id() const;
 
+    bool allQuestCleaned();
 };
 
 
