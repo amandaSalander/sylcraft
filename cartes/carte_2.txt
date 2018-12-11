@@ -6,13 +6,13 @@
 --------------------e--------d
 kbbbbbbbbbbbbbbbbbbbabbbbbbbbd
 jcccccccccaccacccccccccacccccd
-----------n--n---------de----d
+---------$n--n---------de----d
 ----------n--n---------n-----d
 ----------n--n---------n-----d
-----------n--n---------de----a
+----------n--n----$$---de----a
 bbbbbbbbbbibbibbbbbbbbbaibbbba
 ccccchgccchgcccccchgcccccccccc
------de---de------de----------
+--$-$de---de------de----------
 -----de---de------de----------
 -----de---de------de----------
 -----de---de------de----------

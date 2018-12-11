@@ -27,6 +27,8 @@ public:
     int getMax_stamina() const;
 
     void setStamina(int stamina);
+
+    void setAttackEffect(int attackEffect);
 };
 
 

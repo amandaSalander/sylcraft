@@ -130,7 +130,7 @@ Carte::Carte(std::string filename) {
 
             else if (line[i]=='a' || line[i]=='b' || line[i]=='c' || line[i]=='d' || line[i]=='e'
                      || line[i]=='f' || line[i]=='h' || line[i]=='g' || line[i]=='i' || line[i]=='j'
-                     || line[i]=='k' || line[i]=='l' || line[i]=='m' || line[i]=='n'){
+                     || line[i]=='k' || line[i]=='l' || line[i]=='m' || line[i]=='n' || line[i]=='$'){
                 Decoration decoration;
                 decoration.setPosition(Position(i*32,j*32));
 
@@ -176,6 +176,9 @@ Carte::Carte(std::string filename) {
                         break;
                     case 'n':
                         decoration.setType("assets/tiles/tile_n.jpg");
+                        break;
+                    case '$':
+                        decoration.setType("assets/tiles/flower_1.png");
                         break;
                     default:break;
                 }

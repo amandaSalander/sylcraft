@@ -676,6 +676,8 @@ bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
 }
 
 void CarteTexture::ennemyAttack(const size_t &k) {
+
+    /** in this context allowed to attack mean that the ennemy can get near the player **/
     if (ennemyIsAllowedToAttack(k)){
     std::cout << "I AM HERE"  <<std::endl;
         ennemyInMovement=ennemiesInMap->at(k);
@@ -724,6 +726,22 @@ void CarteTexture::ennemyAttack(const size_t &k) {
             );
         }
 
+        if (ennemyIsAllowedToAttack(k,32)){
+            std::cout << "I CAN KICK THE PLAYER"<<std::endl;
+            if (ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()>0){
+                playerTexture.getPlayer().getClasse()->setStamina(
+                        playerTexture.getPlayer().getClasse()->getStamina()-1
+                );
+                ennemiesInMap->at(k)->getEnnemy()->setAttackEffect(
+                        ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()-1
+                );
+                /** renderCurrentPlayer to false means that the player is injured **/
+                renderCurrentPlayer= false;
+                updatePlayersInMap();
+            } else{ renderCurrentPlayer=true;}
+
+        }
+
 
 
 
@@ -734,7 +752,8 @@ void CarteTexture::ennemyAttack(const size_t &k) {
          * the ennemy must come back to its initial position
          * for that we have to calculate a and b to get to right y position **/
         indexEnnemyInMovement=-1;
-        resetEnnemyPosition();
+        /** the function has a weird behaviour :/ **/
+        //resetEnnemyPosition();
 
 
 
