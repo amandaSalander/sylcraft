@@ -687,37 +687,44 @@ void CarteTexture::ennemyAttack(const size_t &k) {
         std::cout << "A : "<<a <<std::endl;
         std::cout << "B : "<<b <<std::endl;
 
-        double distance= sqrt(
-                pow(playerTexture.getPlayer().getPosition().getX()-ennemyInMovement->getEnnemy()->getPosition().getX(),2)+
-                        pow(playerTexture.getPlayer().getPosition().getY()-ennemyInMovement->getEnnemy()->getPosition().getY(),2)
-                );
+        /** if a >0 and ennemy x position is smaller than current player x position
+         * increment x of ennemey each frame by 1
+         * and update y position of ennemey according to the values of a and b by y=ax+b
+         * **/
+        auto val =ennemyInMovement->getEnnemy()->getPosition().getX();
+        if (a>0 && val < playerTexture.getPlayer().getPosition().getX() ){
+            ennemyInMovement->getEnnemy()->setPosition(
+                    Position(
+                          val+1,
+                          static_cast<int>(a * (val + 1) + b)
+                            )
+                    );
+        }
+        else if( a>0 && val > playerTexture.getPlayer().getPosition().getX() ){
+            ennemyInMovement->getEnnemy()->setPosition(
+                    Position(
+                            val-1,
+                            static_cast<int>(a * (val -1) + b)
+                    )
+            );
+        }
+        else if (a<0 && val < playerTexture.getPlayer().getPosition().getX() ){
+            ennemyInMovement->getEnnemy()->setPosition(
+                    Position(
+                            val+1,
+                            static_cast<int>(a * (val + 1) + b)
+                    )
+            );
+        }else {
+            ennemyInMovement->getEnnemy()->setPosition(
+                    Position(
+                            val-1,
+                            static_cast<int>(a * (val -1) + b)
+                    )
+            );
+        }
 
-        if (a>=0 && playerTexture.getPlayer().getPosition().getX()<ennemyInMovement->getEnnemy()->getPosition().getX()){
-            ennemyInMovement->getEnnemy()->setPosition(Position(
-                    ennemyInMovement->getEnnemy()->getPosition().getX()-1,
-                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()-1)*a+b)
-            ));
-        }else if (
-                a<0 && playerTexture.getPlayer().getPosition().getX()<ennemyInMovement->getEnnemy()->getPosition().getX()
-                ) {
-            ennemyInMovement->getEnnemy()->setPosition(Position(
-                    ennemyInMovement->getEnnemy()->getPosition().getX()+1,
-                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()+1)*a+b)
-            ));
-        }
-        else if (a>=0 && playerTexture.getPlayer().getPosition().getX()>ennemyInMovement->getEnnemy()->getPosition().getX()){
-            ennemyInMovement->getEnnemy()->setPosition(Position(
-                    ennemyInMovement->getEnnemy()->getPosition().getX()-1,
-                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()-1)*a+b)
-            ));
-        }else if (
-                a<0 && playerTexture.getPlayer().getPosition().getX()<ennemyInMovement->getEnnemy()->getPosition().getX()
-                ){
-            ennemyInMovement->getEnnemy()->setPosition(Position(
-                    ennemyInMovement->getEnnemy()->getPosition().getX()+1,
-                    (int)((ennemyInMovement->getEnnemy()->getPosition().getX()+1)*a+b)
-            ));
-        }
+
 
 
     }

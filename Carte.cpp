@@ -13,7 +13,6 @@
 
 
 
-// THIS METHOD IS TO TEST A NEW FEATURE WHICH IS RENDERING CARTE BY LAYERS, THE LAST LAYERS CONTAIN ONLY OBSTACLE OBJECTS
 Carte::Carte(std::string filename) {
     std::string line;
     std::ifstream carteFile(filename);
@@ -46,7 +45,7 @@ Carte::Carte(std::string filename) {
         for (int i = 0; i <largeur ; ++i) {
 
             if (line[i] == '*' || line[i]=='8' || line[i]=='5' || line[i]=='9' || line[i]=='7' || line[i]=='w'
-            || line[i]=='1'|| line[i]=='z' || line[i]=='x' || line[i]=='2') {
+            || line[i]=='1'|| line[i]=='z' || line[i]=='x' || line[i]=='2' || line[i]=='6') {
 
                 Obstacle obstacle;
 
@@ -73,6 +72,9 @@ Carte::Carte(std::string filename) {
                         break;
                     case '7':
                         obstacle.setType("assets/obstacles/tree_pink.png");
+                        break;
+                    case '6':
+                        obstacle.setType("assets/obstacles/tree_weird.png");
                         break;
                     case 'w':
                         obstacle.setType("assets/obstacles/water.png");
