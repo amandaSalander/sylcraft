@@ -206,9 +206,6 @@ Carte::Carte(std::string filename) {
                     case 'Z':
                         npc=NPC("little_boy");
                         break;
-                    case 'X':
-                        npc=NPC("little_boy");
-                        break;
                     case 'W':
                         npc=NPC("worker_man");
                         break;
@@ -231,7 +228,7 @@ Carte::Carte(std::string filename) {
 
             }
             else if (line[i]=='B' || line[i]=='C'){
-                Ennemy *ennemy;
+                Ennemy *ennemy= nullptr;
                 switch (line[i]){
                     case 'B':
                         ennemy= new Ennemy("basic_ennemy");
@@ -246,7 +243,9 @@ Carte::Carte(std::string filename) {
                 layers->at(l).emplace_back(ennemy);
 
             }
-            else if (line[i]=='X' || line[i]=='S' || line[i]=='D'){
+            else if (line[i]=='X' || line[i]=='S' || line[i]=='D' || line[i]=='(' || line[i]==')'
+                || line[i]=='_' || line[i]=='^'
+            ){
                 Item *it = nullptr;
                 switch (line[i]){
                     case 'X':
@@ -257,6 +256,18 @@ Carte::Carte(std::string filename) {
                         break;
                     case 'D':
                         it= new Item("diamant");
+                        break;
+                    case '(':
+                        it= new Item("candy_1");
+                        break;
+                    case ')':
+                        it= new Item("candy_2");
+                        break;
+                    case '_':
+                        it= new Item("candy_3");
+                        break;
+                    case '^':
+                        it= new Item("candy_4");
                         break;
                     default:
                         break;

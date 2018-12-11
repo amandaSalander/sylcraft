@@ -1,0 +1,17 @@
+7
+Worker woman
+assets/NPC/worker_woman.png
+null
+Welcome to the Inn !
+as you may have noticed there is nothing here
+here, in my inn you can relax...
+from all the monster that keep coming here.
+Have you heard about the Evil Monster ?
+Please don't meddle in his business
+He will kill you.
+No one here, want to see any of you die.
+I can help you to increase your skills
+My husband before dying collected a lot of loots
+if you help me in fulfilling my quests, I'll give
+you energy, defense skills and perhaps luck
+see you later !

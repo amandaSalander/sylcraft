@@ -1,0 +1,21 @@
+4
+Little girl
+assets/NPC/little_girl.png
+find_candy_1,find_candy_2,find_candy_3,find_candy_4
+Helloooo !
+I am a little girl
+would you like me to read a story ?
+a long time ago, a young warrior
+with his friends came to the town
+they were so kind, that they were
+able to save us from all the monsters
+it's my mommy who related it to me,...
+but an Evil monster came
+and all the brave warriors,
+knights, mage and healers...
+were killed....
+I know I'm just a little girl
+but if you want to stay alive
+don't meddle in the Evil monster business
+stay here to play with me, pleaaase..
+my brother do not want to play with me.

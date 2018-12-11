@@ -54,7 +54,7 @@ CarteTexture carteTexture;
 
 Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
 Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
-Player e("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
+Player k("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
 
 
 std::string filename="cartes/carte_2.txt";
@@ -217,6 +217,11 @@ int main( int argc, char* args[] )
                 d.setType("assets/players/mage_1.png");
                 d.setPosition(Position(600,400));
 
+
+                k.setType("assets/players/knight_2.png");
+                k.setPosition(Position(600,500));
+
+
                 PlayerStatTexture playerStatTexture;
                 playerStatTexture.setPlayer(new Player(c));
                 playerStatTexture.setPosition(Position(960,0));
@@ -228,8 +233,13 @@ int main( int argc, char* args[] )
                 playerStatTexture.setPosition(Position(960,140));
                 playerStatTexture.render(gRenderer);
 
+                playerStatTexture.setPlayer(new Player(k));
+                playerStatTexture.setPosition(Position(960,280));
+                playerStatTexture.render(gRenderer);
+
                 carteTexture.getCarte()->addPlayerToMap(new Player(c),593);
                 carteTexture.getCarte()->addPlayerToMap(new Player(d),596);
+                carteTexture.getCarte()->addPlayerToMap(new Player(k),597);
 
 
 

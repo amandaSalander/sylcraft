@@ -1,0 +1,8 @@
+4
+5
+5
+candy_2
+assets/item/candy_2.png
+0
+320
+576
