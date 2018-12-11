@@ -45,7 +45,8 @@ Carte::Carte(std::string filename) {
         for (int i = 0; i <largeur ; ++i) {
 
             if (line[i] == '*' || line[i]=='8' || line[i]=='5' || line[i]=='9' || line[i]=='7' || line[i]=='w'
-            || line[i]=='1'|| line[i]=='z' || line[i]=='x' || line[i]=='2' || line[i]=='6') {
+            || line[i]=='1'|| line[i]=='z' || line[i]=='x' || line[i]=='2' || line[i]=='6' || line[i]=='3'
+            || line[i]=='%' || line[i]=='`' || line[i]=='&' || line[i]=='.') {
 
                 Obstacle obstacle;
 
@@ -60,6 +61,9 @@ Carte::Carte(std::string filename) {
                         break;
                     case '2':
                         obstacle.setType("assets/obstacles/house_2.png");
+                        break;
+                    case '3':
+                        obstacle.setType("assets/obstacles/house_3.png");
                         break;
                     case '8':
                         obstacle.setType("assets/obstacles/tree_blue.png");
@@ -84,6 +88,18 @@ Carte::Carte(std::string filename) {
                         break;
                     case 'x':
                         obstacle.setType("assets/obstacles/work_2.png");
+                        break;
+                    case '%':
+                        obstacle.setType("assets/obstacles/block_1.png");
+                        break;
+                    case '`':
+                        obstacle.setType("assets/obstacles/status_1.png");
+                        break;
+                    case '&':
+                        obstacle.setType("assets/obstacles/status_2.png");
+                        break;
+                    case '.':
+                        obstacle.setType("assets/obstacles/status_3.png");
                         break;
                     default:break;
                 }
@@ -130,7 +146,8 @@ Carte::Carte(std::string filename) {
 
             else if (line[i]=='a' || line[i]=='b' || line[i]=='c' || line[i]=='d' || line[i]=='e'
                      || line[i]=='f' || line[i]=='h' || line[i]=='g' || line[i]=='i' || line[i]=='j'
-                     || line[i]=='k' || line[i]=='l' || line[i]=='m' || line[i]=='n' || line[i]=='$'){
+                     || line[i]=='k' || line[i]=='l' || line[i]=='m' || line[i]=='n' || line[i]=='$'
+                     || line[i]=='~'){
                 Decoration decoration;
                 decoration.setPosition(Position(i*32,j*32));
 
@@ -180,6 +197,9 @@ Carte::Carte(std::string filename) {
                     case '$':
                         decoration.setType("assets/tiles/flower_1.png");
                         break;
+                    case '~':
+                        decoration.setType("assets/tiles/flower_2.png");
+                        break;
                     default:break;
                 }
 
@@ -192,7 +212,7 @@ Carte::Carte(std::string filename) {
                 layers->at(l).emplace_back(new HarmingObjects(harmingObjects));
             }
             else if(line[i]=='O' || line[i]=='P' || line[i]=='M' || line[i]=='L' || line[i]=='Z'
-            || line[i]=='X' || line[i]=='W' || line[i]=='Y'){
+            || line[i]=='W' || line[i]=='Y'){
                 NPC npc("oldMan");
 
                 switch (line[i]){
