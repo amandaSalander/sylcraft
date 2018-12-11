@@ -729,7 +729,15 @@ void CarteTexture::ennemyAttack(const size_t &k) {
 
     }
     else {
+        /**
+         * if the ennemy is not in its initial place and the player is out of the range
+         * the ennemy must come back to its initial position
+         * for that we have to calculate a and b to get to right y position **/
         indexEnnemyInMovement=-1;
+        resetEnnemyPosition();
+
+
+
     }
 }
 
@@ -787,4 +795,56 @@ void CarteTexture::playerAttack() {
             }
 
         }
+}
+
+void CarteTexture::resetEnnemyPosition() {
+    for (size_t i = 0; i <ennemiesInMap->size() ; ++i) {
+        if (ennemiesInMap->at(i)->getEnnemy()->getPosition().getY() !=
+            initialPositionsOfEnnemies->at(i).getY()
+        ){
+            std::cout << "I AM HERE " <<std::endl;
+            /** calculate the line y=ax+b that make the ennemy come back to its original place **/
+            double a= (initialPositionsOfEnnemies->at(i).getY()-
+                    ennemiesInMap->at(i)->getEnnemy()->getPosition().getY())*1.0/
+                      (initialPositionsOfEnnemies->at(i).getX()-
+                      ennemiesInMap->at(i)->getEnnemy()->getPosition().getX());
+
+            double b= initialPositionsOfEnnemies->at(i).getY()-a*
+                    initialPositionsOfEnnemies->at(i).getX();
+
+            auto val =ennemiesInMap->at(i)->getEnnemy()->getPosition().getX();
+            auto val1 =initialPositionsOfEnnemies->at(i).getX();
+            if (a>0 && val < val1 ){
+                ennemiesInMap->at(i)->getEnnemy()->setPosition(
+                        Position(
+                                val+1,
+                                static_cast<int>(a * (val + 1) + b)
+                        )
+                );
+            }
+            else if( a>0 && val > val1){
+                ennemiesInMap->at(i)->getEnnemy()->setPosition(
+                        Position(
+                                val-1,
+                                static_cast<int>(a * (val -1) + b)
+                        )
+                );
+            }
+            else if (a<0 && val < val1 ){
+                ennemiesInMap->at(i)->getEnnemy()->setPosition(
+                        Position(
+                                val+1,
+                                static_cast<int>(a * (val + 1) + b)
+                        )
+                );
+            }else {
+                ennemiesInMap->at(i)->getEnnemy()->setPosition(
+                        Position(
+                                val-1,
+                                static_cast<int>(a * (val -1) + b)
+                        )
+                );
+            }
+        }
+    }
 }

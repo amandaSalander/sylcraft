@@ -72,12 +72,16 @@ public:
 
     void ennemyAttack(const size_t &k);
 
-    /** when a player in the map has a stamina equal to zero deleted it frpm the playerInMap **/
+    /** when a player in the map has a stamina equal to zero deleted it from the playerInMap **/
     void updatePlayersInMap();
 
     /****/
     void updateEnnemiesInMap();
     void playerAttack();
+
+    /** if an ennemy has moved from it initial place to attack a player, if the player is out of range
+     * the ennemy must come back to it's original place and get back to its random movement**/
+    void resetEnnemyPosition();
 
 
 };
