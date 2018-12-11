@@ -2,6 +2,7 @@
 // Created by amanda on 30/11/18.
 //
 
+#include <sstream>
 #include "Quest.h"
 
 
@@ -27,12 +28,18 @@ Quest::Quest(std::string type) {
     std::getline(quest,line);
     items->emplace_back(new Item(line));
 
-    /** Get the loots of the quest **/
+    /** Get the gifts/loots of the quest **/
     gifts=new std::vector<Loot*>();
     std::getline(quest,line);
     std::vector<std::string> list;
+    std::stringstream ss(line);
+    std::string item;
+    char delimeter=',';
+    while (std::getline(ss, item, delimeter))
+    {
+        gifts->emplace_back( new Loot(item));
+    }
 
-    gifts->emplace_back(new Loot(line));
 
     /** Get the state of the quest **/
     std::getline(quest,line);

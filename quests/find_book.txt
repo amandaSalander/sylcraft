@@ -2,7 +2,7 @@
 1
 Find my precious book
 book
-heart
+heart,apple
 0
 I have lost my precious book
 last time when I was walking

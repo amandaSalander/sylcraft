@@ -49,6 +49,7 @@ CarteTexture::CarteTexture() {
     displayQuest=-1;
 }
 
+
 CarteTexture::~CarteTexture() = default;
 
 
@@ -206,7 +207,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                         firstRender=false;
                     }
                     if (firstRender){
-                        EnnemyTexture *ennemyTexture=new EnnemyTexture();
+                        auto *ennemyTexture=new EnnemyTexture();
                         ennemyTexture->setEnnemy(e);
                         ennemyTexture->loadImageFromFile(
                                 e->getType(),
@@ -248,7 +249,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
     }
 
-    numberOfEnnemies= ennemiesInMap->size();
+    numberOfEnnemies= static_cast<int>(ennemiesInMap->size());
 
 
 
@@ -301,10 +302,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 ennemyAttack(k);
 
                 currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
-                if ( currentEnnemy==k){
-                    ennemyLabel->setAttacked(true);
-                }
-                else {ennemyLabel->setAttacked(false);}
+                ennemyLabel->setAttacked(currentEnnemy == k);
 
 
                 ennemiesInMap->at(k)->render(
@@ -332,7 +330,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
     SDL_Rect sdl_rect1;
     for (size_t k = 0; k < playerInMap->size(); k++) {
         auto *playerLabel= new PlayerLabel(
-                k+1,
+                static_cast<const int &>(k + 1),
                 playerInMap->at(k)->getPlayer().getName(),
                 k==playerIndex);
 
@@ -463,7 +461,7 @@ void CarteTexture::updateCurrentPlayer(SDL_Keycode key) {
 
 
 
-void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start,SDL_Renderer *gRenderer) {
+void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &start) {
 
 
     if(key== SDLK_x){
@@ -475,18 +473,16 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
         carte->updatePosition(playerTexture.getPlayer().getPosition(),playerIndex);
 
-        if (playerInMap->size()==0){
-
-        }
+        if (playerInMap->empty()){}
         else {
-
             playerInMap->at((size_t)playerIndex)->getPlayer().setPosition(playerTexture.getPlayer().getPosition());
         }
 
 
         Position position= carte->isHarming(playerTexture.getPlayer().getPosition(),timestep,start);
         int index= position.getY()/32*30+position.getX()/32;
-        HarmingObjects *harmingObjects= dynamic_cast<HarmingObjects*>(carte->getLayers()->back().at(index));
+        auto *harmingObjects= dynamic_cast<HarmingObjects*>(carte->getLayers()->back().at(
+                static_cast<unsigned long>(index)));
         if (position.getX()==-1 && position.getY()==-1){
             renderCurrentPlayer=true;
         }
@@ -499,12 +495,12 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
             renderCurrentPlayer=false;
 
             auto *playerMapTemp= new std::vector<PlayerTexture*>();
-            for (int i = 0; i <playerInMap->size() ; ++i) {
-                if (playerInMap->at(i)->getPlayer().getClasse()->getStamina()<=0){
+            for (auto &i : *playerInMap) {
+                if (i->getPlayer().getClasse()->getStamina()<=0){
                     playerIndex=0;
                     renderCurrentPlayer=true;
                 }else {
-                    playerMapTemp->emplace_back(playerInMap->at(i));
+                    playerMapTemp->emplace_back(i);
                 }
             }
             playerInMap=playerMapTemp;
@@ -541,15 +537,20 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
                 displayQuest=-1;
 
                 if (currentNPC->getQuests()){
-                    for (int i = 0; i <currentNPC->getQuests()->size() ; ++i) {
-                        if (currentNPC->getQuests()->at(i)->getQuest_state()==QUEST_COMPLETED){
-                            auto *loot= new Loot("heart");
-                            loot->setPosition(Position(
-                                    currentNPC->getPosition().getX()+32,
-                                    currentNPC->getPosition().getY()+32
-                            ));
-                            carte->addLootToMap(loot);
-                            currentNPC->getQuests()->at(i)->setQuest_state(QUEST_ONGOING);
+                    for (auto &i : *currentNPC->getQuests()) {
+                        if (i->getQuest_state()==QUEST_COMPLETED){
+
+                            for (int j = 0; j < i->getGifts()->size(); ++j) {
+                                auto ll= i->getGifts()->at(static_cast<unsigned long>(j));
+                                ll->setPosition(Position(
+                                        currentNPC->getPosition().getX()+32*(j%2),
+                                        currentNPC->getPosition().getY()+32-32*(j%2)
+                                ));
+
+                                carte->addLootToMap(ll);
+                            }
+
+                            i->setQuest_state(QUEST_ONGOING);
                         }
                     }
                 }
@@ -602,10 +603,6 @@ void CarteTexture::PickUpLoot(SDL_Keycode key) {
             }
             else {
                 Loot loot=carte->deleteLoot(pos);
-                std::cout << "strength : "<< loot.getStrength() <<std::endl;
-                std::cout << "stamina : "<< loot.getStamina() <<std::endl;
-                std::cout << "defense : "<< loot.getDefense() <<std::endl;
-                std::cout << "luck : "<< loot.getLuck() <<std::endl;
 
                 playerTexture.getPlayer().getClasse()->setStrength(
                         playerTexture.getPlayer().getClasse()->getStrength()+
@@ -622,13 +619,6 @@ void CarteTexture::PickUpLoot(SDL_Keycode key) {
             }
 
             carte->updatePlayerStat(playerTexture.getPlayer(),playerIndex);
-
-            std::cout << "*********************************************************************" <<std::endl;
-            std::cout << "PLAYER STRENGTH : "<< playerTexture.getPlayer().getClasse()->getStrength()<<std::endl;
-            std::cout << "PLAYER STAMINA : "<< playerTexture.getPlayer().getClasse()->getStamina()<<std::endl;
-            std::cout << "PLAYER DEFENSE : "<< playerTexture.getPlayer().getClasse()->getDefense()<<std::endl;
-            std::cout << "PLAYER LUCK : "<< playerTexture.getPlayer().getClasse()->getLuck()<<std::endl;
-            std::cout << "*********************************************************************" <<std::endl;
         }
             break;
         default:break;
@@ -640,7 +630,7 @@ int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &m
 
     int a=-1;
     int distance;
-    int realMargin( sqrt(2*pow(margin,2)) );
+    int realMargin(static_cast<int>(sqrt(2 * pow(margin, 2))));
     for (size_t l = 0; l < ennemiesInMap->size() ; ++l) {
         if (ennemiesInMap->at(l)!= nullptr){
             distance =(int) sqrt(
@@ -651,8 +641,8 @@ int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &m
                         ennemiesInMap->at(l)->getEnnemy()->getPosition().getY()
                             ,2)
             ) ;
-            if (distance <realMargin){
-                a=l;
+            if (realMargin > distance){
+                a= static_cast<int>(l);
             break;
             }
         }
@@ -734,12 +724,12 @@ void CarteTexture::ennemyAttack(const size_t &k) {
 
 void CarteTexture::updatePlayersInMap() {
     auto *playerMapTemp= new std::vector<PlayerTexture*>();
-    for (int i = 0; i <playerInMap->size() ; ++i) {
-        if (playerInMap->at(i)->getPlayer().getClasse()->getStamina()<=0){
+    for (auto &i : *playerInMap) {
+        if (i->getPlayer().getClasse()->getStamina()<=0){
             playerIndex=0;
             renderCurrentPlayer=true;
         }else {
-            playerMapTemp->emplace_back(playerInMap->at(i));
+            playerMapTemp->emplace_back(i);
         }
     }
     playerInMap=playerMapTemp;
@@ -747,7 +737,7 @@ void CarteTexture::updatePlayersInMap() {
 
 void CarteTexture::updateEnnemiesInMap() {
 
-    for (int i = 0; i <ennemiesInMap->size() ; ++i) {
+    for (size_t i = 0; i <ennemiesInMap->size() ; ++i) {
         if (ennemiesInMap->at(i)->getEnnemy()->getStamina()==0){
 
             auto *l =new Loot("heart");
@@ -764,16 +754,16 @@ void CarteTexture::playerAttack() {
 
 
         int a=playerTexture.getPlayer().getClasse()->attackPower(5);
+        auto k= (unsigned long)currentEnnemy;
+        if (currentEnnemy!=-1 && ennemiesInMap->at(k)!= nullptr) {
 
-        if (currentEnnemy!=-1 && ennemiesInMap->at(currentEnnemy)!= nullptr) {
-
-            if (a >= ennemiesInMap->at(currentEnnemy)->getEnnemy()->getStamina()) {
-                ennemiesInMap->at(currentEnnemy)->getEnnemy()->setStamina(0);
+            if (a >= ennemiesInMap->at(k)->getEnnemy()->getStamina()) {
+                ennemiesInMap->at(k)->getEnnemy()->setStamina(0);
                 updateEnnemiesInMap();
                 currentEnnemy=-1;
             } else {
-                ennemiesInMap->at(currentEnnemy)->getEnnemy()->setStamina(
-                        ennemiesInMap->at(currentEnnemy)->getEnnemy()->getStamina()
+                ennemiesInMap->at(k)->getEnnemy()->setStamina(
+                        ennemiesInMap->at(k)->getEnnemy()->getStamina()
                         - a);
 
             }
