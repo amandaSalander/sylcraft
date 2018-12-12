@@ -57,7 +57,7 @@ Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
 Player k("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
 
 
-std::string filename="cartes/carte_2.txt";
+std::string filename="cartes/carte_3.txt";
 
 Carte carte1(filename);
 

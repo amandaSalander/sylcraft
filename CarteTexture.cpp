@@ -787,18 +787,71 @@ void CarteTexture::ennemyAttack(const size_t &k) {
 
 
     }
-    else {
-        /**
-         * if the ennemy is not in its initial place and the player is out of the range
-         * the ennemy must come back to its initial position
-         * for that we have to calculate a and b to get to right y position **/
-        indexEnnemyInMovement=-1;
-        /** the function has a weird behaviour :/ **/
-        //resetEnnemyPosition();
+    /** replace it with reset method **/
+    else if( ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()!=initialPositionsOfEnnemies->at(k).getY() ){
 
+        double a= (initialPositionsOfEnnemies->at(k).getY()-
+                ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()*1.0 )/
+                  (initialPositionsOfEnnemies->at(k).getX()-ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() );
+        double b= initialPositionsOfEnnemies->at(k).getY()
+                -a*initialPositionsOfEnnemies->at(k).getX();
+
+
+
+        if (abs(a)>5) a=5;
+        if (abs(b)>1000)b=1000;
+
+        int val= ennemiesInMap->at(k)->getEnnemy()->getPosition().getX();
+        int val2=initialPositionsOfEnnemies->at(k).getX();
+
+        /** sometimes a and b are too much large so the ennemies get out of the map
+         * to contain that if the position y is too large we set it directly back to the initial position **/
+        auto v1= static_cast<int>(a * (val + 1) + b);
+        auto v2= static_cast<int>(a * (val - 1) + b);
+        if (abs(v2)>1000) v2=initialPositionsOfEnnemies->at(k).getY();
+        if (abs(v1)>1000) v1=initialPositionsOfEnnemies->at(k).getY();
+        if (a>0 && val < val2){
+            ennemiesInMap->at(k)->getEnnemy()->setPosition(
+                    Position(
+                            val+1,
+                            v1
+                    )
+            );
+        }
+        else if( a>0 && val > val2 ){
+            ennemiesInMap->at(k)->getEnnemy()->setPosition(
+                    Position(
+                            val-1,
+                            v2
+                    )
+            );
+        }
+        else if (a<0 && val < val2 ){
+            ennemiesInMap->at(k)->getEnnemy()->setPosition(
+                    Position(
+                            val+1,
+                            v1
+                    )
+            );
+        }else {
+            ennemiesInMap->at(k)->getEnnemy()->setPosition(
+                    Position(
+                            val-1,
+                            v2
+                    )
+            );
+        }
 
 
     }
+    else {
+        /**
+         if the ennemy is in its initial position, it stays in it's random position  **/
+        indexEnnemyInMovement=-1;
+    }
+
+    /* std::cout << "("<<ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() <<"," <<
+    ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()<< ")" <<std::endl; */
 }
 
 void CarteTexture::updatePlayersInMap() {
