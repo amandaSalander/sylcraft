@@ -388,9 +388,19 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
             currentBubble->render(currentNPC->getName(),currentNPC->getPrompts().at(indexBubble),gRenderer);
         }else {
             if (currentNPC->getQuests()!= nullptr){
-                currentBubble->render(currentNPC->getQuests()->at(0)->getTitle(),
-                        currentNPC->getQuests()->at(0)->getTalks()->at(indexBubble),
-                        gRenderer);
+                size_t nextAvailableQuest(0);
+                for (int i = 0; i < currentNPC->getQuests()->size(); ++i) {
+                    if( currentNPC->getQuests()->at(i)->getQuest_state()==QUEST_ONGOING){
+                        nextAvailableQuest++;
+                    }
+                }
+                /** checking if there is still a quest to show **/
+                if (nextAvailableQuest <currentNPC->getQuests()->size()){
+                    currentBubble->render(currentNPC->getQuests()->at(nextAvailableQuest)->getTitle(),
+                                          currentNPC->getQuests()->at(nextAvailableQuest)->getTalks()->at(indexBubble),
+                                          gRenderer);
+                }
+
             }
 
         }
@@ -511,6 +521,8 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
         }
         if (key==SDLK_c || key==SDLK_v) {
+
+
             if (npcPosition.getY() == -1 && npcPosition.getX() == -1) {
 
             } else {
@@ -554,12 +566,6 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
             if (key==SDLK_v){
                 displayQuest=1;
                 indexBubble=0;
-                for(auto &k: *currentNPC->getQuests()){
-                    if (k->getQuest_state()==QUEST_ONGOING || k->getQuest_state()==QUEST_COMPLETED){
-                        nextAvailableQuest++;
-                        std::cout << "NEXT "<< nextAvailableQuest <<std::endl;
-                    }
-                }
 
             }
             if (key==SDLK_c){
@@ -570,23 +576,38 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
 
     }
+    if (currentNPC){
+        for(auto &k: *currentNPC->getQuests()){
+            if (k->getQuest_state()==QUEST_ONGOING || k->getQuest_state()==QUEST_COMPLETED){
+                nextAvailableQuest++;
+                std::cout << "NEXT "<< nextAvailableQuest <<std::endl;
+            }
+        }
+    }
     if (currentNPC!= nullptr && key ==SDLK_k){
+
+        std::cout << "available quest is " << nextAvailableQuest <<std::endl;
         if (indexBubble+1 < currentNPC->getPrompts().size()){
             ++indexBubble;
         }
         else if (displayQuest!=-1){
 
-
-            if (indexBubble+1 < currentNPC->getQuests()->at(
-                    nextAvailableQuest
-                    )->getTalks()->size()){
-                ++indexBubble;
-            }
-            else {
+            /** if nextAvailableQuest superior to or equal to size of quest we do not show anything **/
+            if (nextAvailableQuest < currentNPC->getQuests()->size()){
+                if (indexBubble+1 < currentNPC->getQuests()->at(nextAvailableQuest)->getTalks()->size()){
+                    ++indexBubble;
+                }
+                else {
+                    currentNPC= nullptr;
+                    currentBubble= nullptr;
+                    indexBubble=0;
+                }
+            }else {
                 currentNPC= nullptr;
                 currentBubble= nullptr;
                 indexBubble=0;
             }
+
         }
         else {
             currentNPC= nullptr;
