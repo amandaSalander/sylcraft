@@ -394,11 +394,15 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                         nextAvailableQuest++;
                     }
                 }
+                std::cout << "BUBBLE INDEX "<< indexBubble <<std::endl;
                 /** checking if there is still a quest to show **/
                 if (nextAvailableQuest <currentNPC->getQuests()->size()){
-                    currentBubble->render(currentNPC->getQuests()->at(nextAvailableQuest)->getTitle(),
-                                          currentNPC->getQuests()->at(nextAvailableQuest)->getTalks()->at(indexBubble),
-                                          gRenderer);
+                    if (indexBubble < currentNPC->getQuests()->at(nextAvailableQuest)->getTalks()->size() ){
+                        currentBubble->render(currentNPC->getQuests()->at(nextAvailableQuest)->getTitle(),
+                                              currentNPC->getQuests()->at(nextAvailableQuest)->getTalks()->at(indexBubble),
+                                              gRenderer);
+                    }
+
                 }
 
             }
