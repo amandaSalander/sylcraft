@@ -50,6 +50,7 @@ CarteTexture::CarteTexture() {
     ennemyInMovement= nullptr;
     indexEnnemyInMovement=-1;
     displayQuest=-1;
+    bossTexture= nullptr;
 }
 
 
@@ -80,24 +81,68 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                         b->getType(),
                         gRenderer
                         );
+
                 bossTexture.render(b->getPosition().getX(),
                                    b->getPosition().getY(),
                                    clips->at(2),
                                    gRenderer
                 );
+                bossTexture.setBoss(b);
+                this->bossTexture=new BossTexture(bossTexture);
 
-                auto *bossLabel=new BossLabel(
-                        b->getName(),
-                        b->getAttack_strength(),
-                        b->getDefense_strength(),
-                        b->getStamina(),
-                        b->getMax_stamina()
-                );
+                BossLabel *bossLabel= nullptr;
+
+                if (playerTexture.getPlayer().getClasse()){
+                    if (playerTexture.getPlayer().getClasse()->getMargin_attack()){
+                        bossLabel=new BossLabel(
+                                b->getName(),
+                                b->getAttack_strength(),
+                                b->getDefense_strength(),
+                                b->getStamina(),
+                                b->getMax_stamina(),
+                                playerIsAllowedToAttackBoss(
+                                        playerTexture.getPlayer().getPosition(),
+                                        playerTexture.getPlayer().getClasse()->getMargin_attack()
+                                ),
+                                bossIsAllowedToAttackPlayer(
+                                        playerTexture.getPlayer().getPosition(),
+                                        b->getMargin_detection()
+                                        )
+                        );
+                    }
+                    else {
+                        bossLabel=new BossLabel(
+                                b->getName(),
+                                b->getAttack_strength(),
+                                b->getDefense_strength(),
+                                b->getStamina(),
+                                b->getMax_stamina(),
+                                playerIsAllowedToAttackBoss(
+                                        playerTexture.getPlayer().getPosition()
+                                )
+                        );
+                    }
+                }else {
+                    bossLabel=new BossLabel(
+                            b->getName(),
+                            b->getAttack_strength(),
+                            b->getDefense_strength(),
+                            b->getStamina(),
+                            b->getMax_stamina(),
+                            playerIsAllowedToAttackBoss(
+                                    playerTexture.getPlayer().getPosition()
+                            )
+                    );
+                }
+
+
                 bossLabel->render(
                         Position(b->getPosition().getX()+4,
                                 b->getPosition().getY()-32),
                                 gRenderer
                         );
+
+                bossAttack(playerTexture.getPlayer().getPosition());
             }
             else if (auto *l= dynamic_cast<Loot*>(j)){
 
@@ -455,8 +500,11 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
     }
     changedPlayer=false;
 
+    clips->at(2)=new SDL_Rect({32*(frame%3),0,32,32});
     /** START **/
     /** CHECK AT EACH RENDER IF A PLAYER CAN ATTACK **/
+
+
 
 
 }
@@ -662,7 +710,13 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
             indexBubble=0;
         }
         }
-    }
+
+        if (playerTexture.getPlayer().getPosition().getY()<bossTexture->getBoss()->getPosition().getY()){
+            clips->at(2)=new SDL_Rect({clips->at(2)->x,96,32,32});
+        }else {
+            clips->at(2)=new SDL_Rect({clips->at(2)->x,0,32,32});
+        }
+}
 
 
 void CarteTexture::PickUpLoot(SDL_Keycode key) {
@@ -702,7 +756,6 @@ int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &m
 
     int a=-1;
     int distance;
-    int realMargin(static_cast<int>(sqrt(2 * pow(margin, 2))));
     for (size_t l = 0; l < ennemiesInMap->size() ; ++l) {
         if (ennemiesInMap->at(l)!= nullptr){
             distance =(int) sqrt(
@@ -713,7 +766,7 @@ int CarteTexture::playerIsAllowedToAttack(const Position &position, const int &m
                         ennemiesInMap->at(l)->getEnnemy()->getPosition().getY()
                             ,2)
             ) ;
-            if (realMargin > distance){
+            if (margin> distance){
                 a= static_cast<int>(l);
             break;
             }
@@ -728,7 +781,6 @@ bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
 
     bool a=false;
     int distance;
-    int realMargin( (int) sqrt(2*pow(margin,2)) );
     if (ennemiesInMap->at(k)!= nullptr){
         distance =(int) sqrt(
                 pow(playerTexture.getPlayer().getPosition().getX()-
@@ -737,7 +789,7 @@ bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
                 pow(playerTexture.getPlayer().getPosition().getY()-
                     ennemiesInMap->at(k)->getEnnemy()->getPosition().getY()
                         ,2)) ;
-        if (distance<realMargin) a=true;
+        if (distance<margin) a=true;
     }
 
     return a;
@@ -990,3 +1042,87 @@ void CarteTexture::resetEnnemyPosition() {
     }
 }
 
+bool CarteTexture::playerIsAllowedToAttackBoss(const Position &position, const int &margin) {
+
+    bool a=false;
+    int distance;
+    for (size_t l = 0; l < ennemiesInMap->size() ; ++l) {
+        if (bossTexture){
+            distance =(int) sqrt(
+                    pow(playerTexture.getPlayer().getPosition().getX()-
+                        bossTexture->getBoss()->getPosition().getX()
+                            ,2)+
+                    pow(playerTexture.getPlayer().getPosition().getY()-
+                        bossTexture->getBoss()->getPosition().getY()
+                            ,2)
+            ) ;
+            if (margin > distance){
+                a= true;
+                break;
+            }
+        }
+
+    }
+    return a;
+}
+
+bool CarteTexture::bossIsAllowedToAttackPlayer(const Position &position,const int &margin) {
+    bool a=false;
+    int distance;
+    if (bossTexture){
+      distance= (int) sqrt(
+              pow(position.getX()-bossTexture->getBoss()->getPosition().getX(),2)+
+              pow(position.getY()-bossTexture->getBoss()->getPosition().getY(),2)
+              );
+      if (margin> distance){
+          a=true;
+      }
+    }
+    return a;
+}
+
+void CarteTexture::bossAttack(const Position &position) {
+    if (bossTexture){
+        int l=32;
+        if (clips->at(2)->y){ l=-32;}
+        if (bossIsAllowedToAttackPlayer(position,
+                bossTexture->getBoss()->getMargin_detection())){
+            std::cout << "The player is here, so stupid !"<<std::endl;
+
+
+
+            for (int i = 0; i <3 ; ++i) {
+                auto *h= new HarmingObjects("fire");
+                int k=0;
+                if(i==1){k=-32;}
+                else if(i==2){k=32;}
+
+                h->setPosition(
+                        Position(
+                                bossTexture->getBoss()->getPosition().getX()+k,
+                                bossTexture->getBoss()->getPosition().getY()+l
+                                )
+                        );
+                carte->addHarmingObjectToMap(h);
+            }
+
+            if (bossIsAllowedToAttackPlayer(
+                    position,
+                    bossTexture->getBoss()->getMargin_attack()
+                    )){
+                std::cout << "I can kill him now !!"<<std::endl;
+            }
+        }else {
+            for (int i = 0; i <3 ; ++i) {
+                int k=0;
+                if(i==1){k=-32;}
+                else if(i==2){k=32;}
+                carte->deleteHarmingObjectMap(Position(
+                        bossTexture->getBoss()->getPosition().getX() +k,
+                        bossTexture->getBoss()->getPosition().getY() + l
+                ));
+            }
+        }
+    }
+    clips->at(2)=new SDL_Rect({32*(frame%3),0,32,32});
+}

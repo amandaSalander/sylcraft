@@ -3,3 +3,11 @@
 //
 
 #include "BossTexture.h"
+
+Boss *BossTexture::getBoss() const {
+    return boss;
+}
+
+void BossTexture::setBoss(Boss *boss) {
+    BossTexture::boss = boss;
+}

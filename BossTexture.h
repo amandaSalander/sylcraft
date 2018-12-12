@@ -7,9 +7,16 @@
 
 
 #include "ElementTexture.h"
+#include "Boss.h"
 
 class BossTexture: public ElementTexture {
+public:
+    Boss *getBoss() const;
 
+    void setBoss(Boss *boss);
+
+private:
+    Boss *boss;
 };
 
 

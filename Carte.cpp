@@ -153,7 +153,7 @@ Carte::Carte(std::string filename) {
             else if (line[i]=='a' || line[i]=='b' || line[i]=='c' || line[i]=='d' || line[i]=='e'
                      || line[i]=='f' || line[i]=='h' || line[i]=='g' || line[i]=='i' || line[i]=='j'
                      || line[i]=='k' || line[i]=='l' || line[i]=='m' || line[i]=='n' || line[i]=='$'
-                     || line[i]=='~'){
+                     || line[i]=='~' || line[i]==':'){
                 Decoration decoration;
                 decoration.setPosition(Position(i*32,j*32));
 
@@ -205,6 +205,9 @@ Carte::Carte(std::string filename) {
                         break;
                     case '~':
                         decoration.setType("assets/tiles/flower_2.png");
+                        break;
+                    case ':':
+                        decoration.setType("assets/tiles/flower_3.png");
                         break;
                     default:break;
                 }
@@ -741,4 +744,27 @@ std::string* Carte::pickItem(const Position &position, const int &margin) {
     }
 
     return returnVal;
+}
+
+bool Carte::addHarmingObjectToMap(HarmingObjects *harmingObject) {
+    int pos=  harmingObject->getPosition().getY()/32*largeur+ harmingObject->getPosition().getX()/32;
+
+    if (layers->at( layers->size()-1 )[pos]== nullptr){
+
+        layers->at(layers->size()-1 )[pos]=harmingObject;
+        return  true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool Carte::deleteHarmingObjectMap(const Position &position) {
+    int pos=  position.getY()/32*largeur+ position.getX()/32;
+
+
+    Element *e=layers->at(layers->size()-1)[pos];
+    layers->at(layers->size()-1)[pos]= nullptr;
+
+//    return *dynamic_cast<Loot*>(e);
 }

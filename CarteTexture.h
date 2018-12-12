@@ -15,6 +15,7 @@
 #include "BubbleTalk.h"
 #include "NPC.h"
 #include "EnnemyTexture.h"
+#include "BossTexture.h"
 #include <math.h>
 
 
@@ -42,6 +43,8 @@ private:
     int numberOfEnnemies;
     EnnemyTexture *ennemyInMovement;
     int indexEnnemyInMovement;
+    BossTexture *bossTexture;
+    Position *bossInitialPoisition;
 
 
 public:
@@ -83,7 +86,11 @@ public:
      * the ennemy must come back to it's original place and get back to its random movement**/
     void resetEnnemyPosition();
 
+    bool playerIsAllowedToAttackBoss(const Position &position, const int &margin=48);
 
+    bool bossIsAllowedToAttackPlayer(const Position &position, const int &margin=48);
+
+    void bossAttack(const Position &position);
 };
 
 

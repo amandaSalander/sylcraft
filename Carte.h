@@ -17,6 +17,7 @@
 #include "Obstacle.h"
 #include "Item.h"
 #include "NPC.h"
+#include "HarmingObjects.h"
 
 #include <SDL2/SDL.h>
 #include <algorithm>
@@ -70,6 +71,10 @@ public:
     item_t* allowedToPickItem(const Position &position,const int &margin=32);
 
     std::string* pickItem(const Position &position,const int &margin=32);
+
+    bool addHarmingObjectToMap(HarmingObjects *harmingObject);
+
+    bool deleteHarmingObjectMap(const Position &position );
 
 
 
