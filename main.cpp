@@ -18,7 +18,7 @@ and may not be redistributed without written permission.*/
 #include "PlayerLabel.h"
 #include "Quest.h"
 #include "Boss.h"
-
+#include "Menu.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1160;
@@ -36,39 +36,24 @@ void close();
 //The window we'll be rendering to
 SDL_Window* gWindow = nullptr;
 
-
-
 //The window renderer
 SDL_Renderer* gRenderer = nullptr;
 //Current displayed texture
-//
 SDL_Texture* gTexture = nullptr;
 
 //Loads individual image as texture
 SDL_Texture* loadTexture( std::string path );
 Timer timestep;
-PlayerTexture playerTexture;
-SDL_Rect playerRectangle;
-ObstacleTexture obstacleTexture;
-LootTexture lootTexture;
+
+
 CarteTexture carteTexture;
 
-Player c("Kate","Killer Bee",new Classes("warrior"),Position(400,400));
-Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
-Player k("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
-
-
-std::string filename="cartes/carte_3.txt";
-
-Carte carte1(filename);
 
 float times=0;
 float start=0;
 
 
-bool init()
-{
-    Boss boss("boss_1");
+bool init() {
     //Initialization flag
     bool success = true;
 
@@ -81,7 +66,7 @@ bool init()
     else
     {
         //Create window
-        gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        gWindow = SDL_CreateWindow( "SylCraft @amandaSalander", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow == nullptr )
         {
             printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
@@ -111,8 +96,6 @@ bool init()
     return success;
 }
 
-
-
 bool loadMedia() {
     //Loading success flag
     bool success = true;
@@ -127,10 +110,7 @@ bool loadMedia() {
     return success;
 }
 
-
-
 void close() {
-    playerTexture.free();
     //Free loaded image
     SDL_DestroyTexture( gTexture );
     gTexture = nullptr;
@@ -175,9 +155,34 @@ SDL_Texture* loadTexture( std::string path )
 
 int main( int argc, char* args[] )
 {
-    {
-        Quest quest("find_book");
-    }
+    /** stateInGame
+     * if 1 first menu
+     * if 2 choice of number of player
+     * if 3 choice of carte
+     * if 4 playing game **/
+
+    int stateInGame=1;
+    std::string filename="cartes/carte_3.txt";
+
+    Carte carte1(filename);
+
+    Player c("Eazeman","Killer Bee",new Classes("warrior"),Position(400,400));
+    Player d("Nil","Killer Bee",new Classes("mage"),Position(500,400));
+    Player k("Lorr","Killer Bee",new Classes("knight"),Position(600,500));
+    Player i("Jaina","Killer Bee",new Classes("wizard"),Position(200,500));
+
+    c.setType("assets/players/warrior_1.png");
+    c.setPosition(Position(300,200));
+
+    d.setType("assets/players/mage_1.png");
+    d.setPosition(Position(600,400));
+
+
+    k.setType("assets/players/knight_2.png");
+    k.setPosition(Position(600,500));
+
+    i.setType("assets/players/wizard_1.png");
+    i.setPosition(Position(200,500));
 
     if( !init() )
     {
@@ -197,7 +202,6 @@ int main( int argc, char* args[] )
 
             //Event handler
             SDL_Event e;
-//            printf( "Failed to initialize!\n" );
             //While application is running
             while( !quit )
             {
@@ -205,81 +209,126 @@ int main( int argc, char* args[] )
                 //Clear screen
                 SDL_RenderClear( gRenderer );
                 //Render texture to screen
-//                printf( "Failed to initialize!\n" );
                 SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
                 carteTexture.setCarte(&carte1);
 
-
-//                c.addToIventory(new Item("book"));
-
-                c.setType("assets/players/warrior_1.png");
-                c.setPosition(Position(300,200));
-
-                d.setType("assets/players/mage_1.png");
-                d.setPosition(Position(600,400));
-
-
-                k.setType("assets/players/knight_2.png");
-                k.setPosition(Position(600,500));
-
-
-                PlayerStatTexture playerStatTexture;
-                playerStatTexture.setPlayer(new Player(c));
-                playerStatTexture.setPosition(Position(960,0));
-                playerStatTexture.render(gRenderer);
+                if (stateInGame==4){
+                    PlayerStatTexture playerStatTexture;
+                    playerStatTexture.setPlayer(new Player(c));
+                    playerStatTexture.setPosition(Position(960,0));
+                    playerStatTexture.render(gRenderer);
 
 
 
-                playerStatTexture.setPlayer(new Player(d));
-                playerStatTexture.setPosition(Position(960,140));
-                playerStatTexture.render(gRenderer);
+                    playerStatTexture.setPlayer(new Player(d));
+                    playerStatTexture.setPosition(Position(960,140));
+                    playerStatTexture.render(gRenderer);
 
-                playerStatTexture.setPlayer(new Player(k));
-                playerStatTexture.setPosition(Position(960,280));
-                playerStatTexture.render(gRenderer);
+                    playerStatTexture.setPlayer(new Player(k));
+                    playerStatTexture.setPosition(Position(960,280));
+                    playerStatTexture.render(gRenderer);
 
-                carteTexture.getCarte()->addPlayerToMap(new Player(c),593);
-                carteTexture.getCarte()->addPlayerToMap(new Player(d),596);
-                carteTexture.getCarte()->addPlayerToMap(new Player(k),597);
-
-
+                    playerStatTexture.setPlayer(new Player(i));
+                    playerStatTexture.setPosition(Position(960,280+140));
+                    playerStatTexture.render(gRenderer);
 
 
-
+                }
 
                 //Handle events on queue
                 while( SDL_PollEvent( &e ) != 0 ) {
+
                     //User requests quit
                     if( e.type == SDL_QUIT )
                     {
                         quit = true;
                     }
                     else if( e.type == SDL_KEYDOWN ) {
+                        if (stateInGame==4){
+                            carteTexture.changeCurrentRender(e.key.keysym.sym,times,start);
 
-                        carteTexture.changeCurrentRender(e.key.keysym.sym,times,start);
+                            carteTexture.PickUpLoot(e.key.keysym.sym);
 
-                        carteTexture.PickUpLoot(e.key.keysym.sym);
+                            carteTexture.updateCurrentPlayer(e.key.keysym.sym);
 
-                        carteTexture.updateCurrentPlayer(e.key.keysym.sym);
+                            if (e.key.keysym.sym==SDLK_b){
+                                Loot l("heart");
+                                l.setPosition(Position(64,94));
+                                std::cout << carteTexture.getCarte()->addLootToMap(new Loot(l)) <<std::endl;
 
-                        if (e.key.keysym.sym==SDLK_b){
-                            Loot l("heart");
-                            l.setPosition(Position(64,94));
-                            std::cout << carteTexture.getCarte()->addLootToMap(new Loot(l)) <<std::endl;
+                            }
+                            if (e.key.keysym.sym==SDLK_b){
 
+                            }
                         }
-                        if (e.key.keysym.sym==SDLK_b){
+//                        else {
+//                            if(e.key.keysym.sym==SDLK_SPACE){
+//                                std::cout << "I am back space" <<std::endl;
+//                            }
+//                        }
 
+                        if (e.key.keysym.sym==SDLK_RETURN){
+                            stateInGame= 4;
                         }
+
+
 
 
                     }
                 }
                 times =times + timestep.getTicks() / 1000.f;
 
+                if (stateInGame==4){
+                    carteTexture.getCarte()->addPlayerToMap(new Player(c),593);
+                    carteTexture.getCarte()->addPlayerToMap(new Player(d),596);
+                    carteTexture.getCarte()->addPlayerToMap(new Player(k),597);
+                    carteTexture.getCarte()->addPlayerToMap(new Player(i),598);
+                    carteTexture.render(gRenderer);
+                }else if(stateInGame==1) {
+                    ElementTexture elementTexture;
 
-                carteTexture.render(gRenderer);
+                    elementTexture.loadImageFromFile("assets/tiles/wallpaper.jpg",gRenderer);
+                    elementTexture.render(0,0, nullptr,gRenderer);
+                    Menu menu("menu_1");
+                    TTF_Font *gFont = nullptr;
+                    TTF_Init();
+                    gFont = TTF_OpenFont( "fonts/RifficFree-Bold.ttf",64);
+                    SDL_Color textColor= {255,255,255};
+                    TextTexture textTexture;
+                    if( !textTexture.loadFromRenderedText( menu.getTitle(), textColor,gRenderer,gFont ) )
+                    {
+                        std::cout <<"Failed to load TEXT ! SDL_ttf Error: "<<std::endl;
+                    }
+                    else {
+                        textTexture.render(450,100, nullptr,0.0, nullptr,SDL_FLIP_NONE,gRenderer);
+                    }
+                    gFont = TTF_OpenFont( "fonts/RifficFree-Bold.ttf",32);
+                    if( !textTexture.loadFromRenderedText( menu.getSubtitle(), textColor,gRenderer,gFont ) )
+                    {
+                        std::cout <<"Failed to load TEXT ! SDL_ttf Error: "<<std::endl;
+                    }
+                    else {
+                        textTexture.render(450,180, nullptr,0.0, nullptr,SDL_FLIP_NONE,gRenderer);
+                    }
+
+                    textColor={255,255,255};
+
+
+                    elementTexture.loadImageFromFile("assets/tiles/start.png",gRenderer);
+                    elementTexture.render(430,220, nullptr,gRenderer);
+
+                    if( !textTexture.loadFromRenderedText( menu.getChoices()->at(0), textColor,gRenderer,gFont ) )
+                    {
+                        std::cout <<"Failed to load TEXT ! SDL_ttf Error: "<<std::endl;
+                    }
+                    else {
+                        textTexture.render(530,290, nullptr,0.0, nullptr,SDL_FLIP_NONE,gRenderer);
+                    }
+
+                    TTF_CloseFont(gFont);
+                }
+
 
 
 

@@ -1124,5 +1124,4 @@ void CarteTexture::bossAttack(const Position &position) {
             }
         }
     }
-    clips->at(2)=new SDL_Rect({32*(frame%3),0,32,32});
 }
