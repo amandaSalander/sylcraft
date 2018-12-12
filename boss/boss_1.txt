@@ -1,0 +1,13 @@
+Akira
+assets/boss/boss_1.png
+50
+50
+15
+5
+72
+64
+fire-4
+assets/obstacles/crystal.gif-2
+so you came here....
+hahahahahahaha
+you will all die by my hands

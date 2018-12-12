@@ -17,6 +17,9 @@
 #include "PlayerLabel.h"
 #include "EnnemyLabel.h"
 #include "ItemTexture.h"
+#include "Boss.h"
+#include "BossTexture.h"
+#include "BossLabel.h"
 
 
 CarteTexture::CarteTexture() {
@@ -70,6 +73,31 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                        nullptr,
                                        gRenderer
                 );
+            }
+            else if(auto *b= dynamic_cast<Boss*>(j)){
+                BossTexture bossTexture;
+                bossTexture.loadImageFromFile(
+                        b->getType(),
+                        gRenderer
+                        );
+                bossTexture.render(b->getPosition().getX(),
+                                   b->getPosition().getY(),
+                                   clips->at(2),
+                                   gRenderer
+                );
+
+                auto *bossLabel=new BossLabel(
+                        b->getName(),
+                        b->getAttack_strength(),
+                        b->getDefense_strength(),
+                        b->getStamina(),
+                        b->getMax_stamina()
+                );
+                bossLabel->render(
+                        Position(b->getPosition().getX()+4,
+                                b->getPosition().getY()-32),
+                                gRenderer
+                        );
             }
             else if (auto *l= dynamic_cast<Loot*>(j)){
 
@@ -961,3 +989,4 @@ void CarteTexture::resetEnnemyPosition() {
         }
     }
 }
+

@@ -17,6 +17,7 @@ and may not be redistributed without written permission.*/
 #include "BubbleTalk.h"
 #include "PlayerLabel.h"
 #include "Quest.h"
+#include "Boss.h"
 
 
 //Screen dimension constants
@@ -67,6 +68,7 @@ float start=0;
 
 bool init()
 {
+    Boss boss("boss_1");
     //Initialization flag
     bool success = true;
 

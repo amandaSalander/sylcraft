@@ -9,6 +9,7 @@
 #include "HarmingObjects.h"
 #include "NPC.h"
 #include "Ennemy.h"
+#include "Boss.h"
 #include <math.h>
 
 
@@ -142,6 +143,11 @@ Carte::Carte(std::string filename) {
 
 
 
+            }
+            else if(line[i]=='A'){
+                Boss boss("boss_1");
+                boss.setPosition(Position(i*32,j*32));
+                layers->at(l).push_back(new Boss(boss));
             }
 
             else if (line[i]=='a' || line[i]=='b' || line[i]=='c' || line[i]=='d' || line[i]=='e'
