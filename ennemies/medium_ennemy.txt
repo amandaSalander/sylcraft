@@ -3,4 +3,5 @@ assets/ennemies/medium_ennemy_1_sprites.png
 10
 4
 20
-2
+64
+48

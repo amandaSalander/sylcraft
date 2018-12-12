@@ -293,11 +293,26 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                         ennemiesInMap->at(k)->getEnnemy()->getStamina(),
                         ennemiesInMap->at(k)->getEnnemy()->getMax_stamina(),
                         false,
-                        ennemyIsAllowedToAttack(k)
+                        ennemyIsAllowedToAttack(k,ennemiesInMap->at(k)->getEnnemy()->getMargin_detection())
                 );
                 ennemyAttack(k);
 
-                currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),54);
+                if (playerTexture.getPlayer().getClasse()){
+                    if (playerTexture.getPlayer().getClasse()->getMargin_attack())
+                        currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),
+                                playerTexture.getPlayer().getClasse()->getMargin_attack()
+                        );
+                    else{
+                        currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),
+                                                               32
+                        );
+                    }
+                }else {
+                    currentEnnemy= playerIsAllowedToAttack(playerTexture.getPlayer().getPosition(),
+                                                           32
+                    );
+                }
+
                 ennemyLabel->setAttacked(currentEnnemy == k);
 
 
@@ -703,7 +718,7 @@ bool CarteTexture::ennemyIsAllowedToAttack(const size_t &k, const int &margin) {
 void CarteTexture::ennemyAttack(const size_t &k) {
 
     /** in this context allowed to attack mean that the ennemy can get near the player **/
-    if (ennemyIsAllowedToAttack(k)){
+    if (  ennemyIsAllowedToAttack( k,ennemiesInMap->at(k)->getEnnemy()->getMargin_detection() ) ){
     std::cout << "I AM HERE"  <<std::endl;
         ennemyInMovement=ennemiesInMap->at(k);
         indexEnnemyInMovement=(int)k;
@@ -751,7 +766,8 @@ void CarteTexture::ennemyAttack(const size_t &k) {
             );
         }
 
-        if (ennemyIsAllowedToAttack(k,32)){
+        /** if the ennemy is near the player to attack him **/
+        if (ennemyIsAllowedToAttack(k,ennemiesInMap->at(k)->getEnnemy()->getMargin_attack())){
             std::cout << "I CAN KICK THE PLAYER"<<std::endl;
             if (ennemiesInMap->at(k)->getEnnemy()->getAttackEffect()>0){
                 playerTexture.getPlayer().getClasse()->setStamina(

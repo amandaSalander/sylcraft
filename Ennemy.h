@@ -14,9 +14,11 @@ private:
     int attackEffect;
     int defenseEffect;
     int max_stamina;
+    int margin_detection;
+    int margin_attack;
 
 public:
-    Ennemy(std::string type);
+    Ennemy(const std::string &type);
 
     int getStamina() const;
 
@@ -29,6 +31,10 @@ public:
     void setStamina(int stamina);
 
     void setAttackEffect(int attackEffect);
+
+    int getMargin_detection() const;
+
+    int getMargin_attack() const;
 };
 
 

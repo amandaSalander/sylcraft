@@ -6,7 +6,7 @@
 #include "Ennemy.h"
 
 
-Ennemy::Ennemy(std::string type) {
+Ennemy::Ennemy(const std::string &type) {
     std::ifstream file("ennemies/" + type +".txt");
     std::string line;
 
@@ -24,6 +24,12 @@ Ennemy::Ennemy(std::string type) {
 
     std::getline(file,line);
     max_stamina=std::stoi(line);
+
+    std::getline(file,line);
+    margin_detection=std::stoi(line);
+
+    std::getline(file,line);
+    margin_attack=std::stoi(line);
 
     file.close();
 }
@@ -51,4 +57,12 @@ void Ennemy::setStamina(int stamina) {
 
 void Ennemy::setAttackEffect(int attackEffect) {
     Ennemy::attackEffect = attackEffect;
+}
+
+int Ennemy::getMargin_detection() const {
+    return margin_detection;
+}
+
+int Ennemy::getMargin_attack() const {
+    return margin_attack;
 }

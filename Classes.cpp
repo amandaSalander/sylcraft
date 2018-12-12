@@ -43,6 +43,8 @@ Classes::Classes(std::string type) {
     /** Getting Luck **/
     std::getline(classe,line);
     luck=std::stoi(line);
+    std::getline(classe,line);
+    margin_attack=std::stoi(line);
 
 
 }
@@ -147,4 +149,8 @@ void Classes::setLuck(int luck) {
 
 int Classes::getMaxStamina() const {
     return maxStamina;
+}
+
+int Classes::getMargin_attack() const {
+    return margin_attack;
 }

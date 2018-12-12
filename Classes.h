@@ -19,6 +19,7 @@ private: int strength;
          int willpower;
          int luck;
          int maxStamina;
+         int margin_attack;
          std::string name;
 
 
@@ -65,7 +66,9 @@ public:
 
     virtual ~Classes();
 
-    int getMaxStamina() const;;
+    int getMaxStamina() const;
+
+    int getMargin_attack() const;;
 };
 
 
