@@ -101,3 +101,7 @@ std::vector<std::string> *Boss::getObstacles() const {
 std::vector<std::string> *Boss::getPrompts() const {
     return prompts;
 }
+
+void Boss::setStamina(int stamina) {
+    Boss::stamina = stamina;
+}

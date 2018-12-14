@@ -22,6 +22,9 @@ Carte::Carte(std::string filename) {
     largeur=960;
     hauteur=640;
 
+    killedAllEnnemy=false;
+    killedBoss=false;
+
     std::getline(carteFile,line);
     largeur=std::stoi(line);
     std::getline(carteFile,line);
@@ -767,4 +770,21 @@ bool Carte::deleteHarmingObjectMap(const Position &position) {
     layers->at(layers->size()-1)[pos]= nullptr;
 
 //    return *dynamic_cast<Loot*>(e);
+}
+
+
+bool Carte::isKilledAllEnnemy() const {
+    return killedAllEnnemy;
+}
+
+void Carte::setKilledAllEnnemy(bool killedAllEnnemy) {
+    Carte::killedAllEnnemy = killedAllEnnemy;
+}
+
+bool Carte::isKilledBoss() const {
+    return killedBoss;
+}
+
+void Carte::setKilledBoss(bool killedBoss) {
+    Carte::killedBoss = killedBoss;
 }

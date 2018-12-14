@@ -45,6 +45,7 @@ private:
     int indexEnnemyInMovement;
     BossTexture *bossTexture;
     Position *bossInitialPoisition;
+    bool firstRender;
 
 
 public:
@@ -91,6 +92,8 @@ public:
     bool bossIsAllowedToAttackPlayer(const Position &position, const int &margin=48);
 
     void bossAttack(const Position &position);
+
+    void playerAttackBoss();
 };
 
 

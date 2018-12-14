@@ -207,7 +207,7 @@ int main( int argc, char* args[] )
             {
                 SDL_UpdateWindowSurface( gWindow );
                 //Clear screen
-                SDL_RenderClear( gRenderer );
+//                SDL_RenderClear( gRenderer );
                 //Render texture to screen
                 SDL_RenderCopy( gRenderer, gTexture, nullptr, nullptr);
                 //Update screen
@@ -262,11 +262,6 @@ int main( int argc, char* args[] )
 
                             }
                         }
-//                        else {
-//                            if(e.key.keysym.sym==SDLK_SPACE){
-//                                std::cout << "I am back space" <<std::endl;
-//                            }
-//                        }
 
                         if (e.key.keysym.sym==SDLK_RETURN){
                             stateInGame= 4;
@@ -331,8 +326,6 @@ int main( int argc, char* args[] )
 
 
 
-
-                SDL_Delay(50);
                 SDL_RenderPresent( gRenderer );
 
                 timestep.start();

@@ -47,6 +47,8 @@ public:
     std::vector<std::string> *getObstacles() const;
 
     std::vector<std::string> *getPrompts() const;
+
+    void setStamina(int stamina);
 };
 
 

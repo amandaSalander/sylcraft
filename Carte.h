@@ -37,6 +37,8 @@ private:
     std::vector<std::vector<Element*>>* layers;
     std::vector<Item*> *itemsInMap;
     std::vector<NPC*> *npcs;
+    bool killedAllEnnemy;
+    bool killedBoss;
 
 public:
 
@@ -76,6 +78,13 @@ public:
 
     bool deleteHarmingObjectMap(const Position &position );
 
+    bool isKilledAllEnnemy() const;
+
+    void setKilledAllEnnemy(bool killedAllEnnemy);
+
+    bool isKilledBoss() const;
+
+    void setKilledBoss(bool killedBoss);
 
 
 };

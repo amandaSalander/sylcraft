@@ -5,7 +5,7 @@ assets/boss/boss_1.png
 15
 5
 72
-64
+54
 fire-4
 assets/obstacles/crystal.gif-2
 so you came here....

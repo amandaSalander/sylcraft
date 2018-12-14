@@ -51,6 +51,7 @@ CarteTexture::CarteTexture() {
     indexEnnemyInMovement=-1;
     displayQuest=-1;
     bossTexture= nullptr;
+    firstRender=true;
 }
 
 
@@ -75,18 +76,74 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                        gRenderer
                 );
             }
-            else if(auto *b= dynamic_cast<Boss*>(j)){
+            else if (auto *item= dynamic_cast<Item*>(j)){
+
+
+                if (item->isFound())continue;
+                else {
+                    ItemTexture itemtexture;
+                    SDL_Rect *rect= new SDL_Rect({0,0,32,32});
+                    itemtexture.loadImageFromFile(
+                            item->getType(),
+                            gRenderer
+                    );
+                    itemtexture.render(item->getPosition().getX(),
+                                       item->getPosition().getY(),
+                                       rect,
+                                       gRenderer
+                    );
+                }
+
+
+            }
+            else if (auto *d= dynamic_cast<Decoration*>(j)){
+
+                DecorationTexture decorationTexture;
+                decorationTexture.loadImageFromFile(
+                        d->getType(),
+                        gRenderer
+                );
+                decorationTexture.render(d->getPosition().getX(),
+                                         d->getPosition().getY(),
+                                         nullptr,
+                                         gRenderer
+                );
+            }
+            else if (auto *n= dynamic_cast<NPC*>(j)){
+
+                NPCTexture npcTexture;
+                npcTexture.loadImageFromFile(
+                        n->getType(),
+                        gRenderer
+                );
+                npcTexture.render(n->getPosition().getX(),
+                                  n->getPosition().getY(),
+                                  nullptr,
+                                  gRenderer
+                );
+                if (n->getQuests()!= nullptr && !n->allQuestCleaned()){
+                    ElementTexture elementTexture;
+                    elementTexture.loadImageFromFile("assets/tiles/gem_01a.png",gRenderer);
+                    elementTexture.render(
+                            n->getPosition().getX()+8,
+                            n->getPosition().getY()-16,
+                            nullptr,
+                            gRenderer
+                    );
+                }
+
+            }
+
+
+            if(auto *b= dynamic_cast<Boss*>(j)){
+
                 BossTexture bossTexture;
                 bossTexture.loadImageFromFile(
                         b->getType(),
                         gRenderer
                         );
 
-                bossTexture.render(b->getPosition().getX(),
-                                   b->getPosition().getY(),
-                                   clips->at(2),
-                                   gRenderer
-                );
+
                 bossTexture.setBoss(b);
                 this->bossTexture=new BossTexture(bossTexture);
 
@@ -104,10 +161,8 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                         playerTexture.getPlayer().getPosition(),
                                         playerTexture.getPlayer().getClasse()->getMargin_attack()
                                 ),
-                                bossIsAllowedToAttackPlayer(
-                                        playerTexture.getPlayer().getPosition(),
-                                        b->getMargin_detection()
-                                        )
+                                bossIsAllowedToAttackPlayer(b->getPosition(),b->getMargin_detection())
+
                         );
                     }
                     else {
@@ -119,7 +174,8 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                                 b->getMax_stamina(),
                                 playerIsAllowedToAttackBoss(
                                         playerTexture.getPlayer().getPosition()
-                                )
+                                ),
+                                bossIsAllowedToAttackPlayer(b->getPosition(),b->getMargin_detection())
                         );
                     }
                 }else {
@@ -130,19 +186,27 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                             b->getStamina(),
                             b->getMax_stamina(),
                             playerIsAllowedToAttackBoss(
-                                    playerTexture.getPlayer().getPosition()
-                            )
+                                    playerTexture.getPlayer().getPosition(),64
+                            ),
+                            bossIsAllowedToAttackPlayer(b->getPosition(),b->getMargin_detection())
                     );
                 }
 
+                if (carte->isKilledAllEnnemy()) {
+                    bossTexture.render(b->getPosition().getX(),
+                                       b->getPosition().getY(),
+                                       clips->at(2),
+                                       gRenderer
+                    );
+                    bossLabel->render(
+                            Position(b->getPosition().getX() + 4,
+                                     b->getPosition().getY() - 32),
+                            gRenderer
+                    );
+                    bossAttack(playerTexture.getPlayer().getPosition());
+                }
 
-                bossLabel->render(
-                        Position(b->getPosition().getX()+4,
-                                b->getPosition().getY()-32),
-                                gRenderer
-                        );
 
-                bossAttack(playerTexture.getPlayer().getPosition());
             }
             else if (auto *l= dynamic_cast<Loot*>(j)){
 
@@ -228,57 +292,15 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
                 frame= (frame+1)%15;
             }
-            else if (auto *n= dynamic_cast<NPC*>(j)){
-
-                NPCTexture npcTexture;
-                npcTexture.loadImageFromFile(
-                        n->getType(),
-                        gRenderer
-                );
-                npcTexture.render(n->getPosition().getX(),
-                                             n->getPosition().getY(),
-                                             nullptr,
-                                             gRenderer
-                );
-                if (n->getQuests()!= nullptr && !n->allQuestCleaned()){
-                    ElementTexture elementTexture;
-                    elementTexture.loadImageFromFile("assets/tiles/gem_01a.png",gRenderer);
-                    elementTexture.render(
-                            n->getPosition().getX()+8,
-                            n->getPosition().getY()-16,
-                            nullptr,
-                            gRenderer
-                    );
-                }
-
-            }
-            else if (auto *item= dynamic_cast<Item*>(j)){
 
 
-                if (item->isFound())continue;
-                else {
-                    ItemTexture itemtexture;
-                    SDL_Rect *rect= new SDL_Rect({0,0,32,32});
-                    itemtexture.loadImageFromFile(
-                            item->getType(),
-                            gRenderer
-                    );
-                    itemtexture.render(item->getPosition().getX(),
-                                       item->getPosition().getY(),
-                                       rect,
-                                       gRenderer
-                    );
-                }
-
-
-            }
             else if (auto *e= dynamic_cast<Ennemy*>(j)){
 
                     bool firstRender=true;
                     if (numberOfEnnemies!=0){
                         firstRender=false;
                     }
-                    if (firstRender){
+                    if (firstRender && carte->isKilledAllEnnemy()==false){
                         auto *ennemyTexture=new EnnemyTexture();
                         ennemyTexture->setEnnemy(e);
                         ennemyTexture->loadImageFromFile(
@@ -294,19 +316,6 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                         initialPositionsOfEnnemies->emplace_back(e->getPosition());
                     }
 
-            }
-            else if (auto *d= dynamic_cast<Decoration*>(j)){
-
-                DecorationTexture decorationTexture;
-                decorationTexture.loadImageFromFile(
-                        d->getType(),
-                        gRenderer
-                );
-                decorationTexture.render(d->getPosition().getX(),
-                                   d->getPosition().getY(),
-                                         nullptr,
-                                   gRenderer
-                );
             }
             else if (auto *p= dynamic_cast<Player*>(j)){
 
@@ -325,7 +334,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
 
 
         /** Handling ennemies here **/
-
+        if (carte->isKilledAllEnnemy()==false){
         for ( size_t k = 0; k < ennemiesInMap->size(); k++) {
             if (ennemiesInMap->at(k)!= nullptr && k!=indexEnnemyInMovement ){
                 if (!switched && ennemiesInMap->at(k)->getEnnemy()->getPosition().getX() >
@@ -402,6 +411,7 @@ void CarteTexture::render(SDL_Renderer *gRenderer){
                 );
             }
 
+        }
         }
 
 
@@ -565,6 +575,7 @@ void CarteTexture::changeCurrentRender(SDL_Keycode key,float &timestep,float &st
 
     if(key== SDLK_x){
         playerAttack();
+        playerAttackBoss();
     }
 
     if ( carte->allowedMovement(key,playerTexture.getPlayer().getPosition())){
@@ -959,6 +970,15 @@ void CarteTexture::updateEnnemiesInMap() {
             initialPositionsOfEnnemies->erase(initialPositionsOfEnnemies->begin()+i);
         }
     }
+    if (ennemiesInMap->empty()){
+        std::cout << "KILLED ALL ENNEMY"<<std::endl;
+        carte->setKilledAllEnnemy(true);
+    }
+    else {
+        std::cout << "WHYYY"<<std::endl;
+        carte->setKilledAllEnnemy(false);
+    }
+
 
 }
 
@@ -988,6 +1008,7 @@ void CarteTexture::playerAttack() {
             }
 
         }
+        updateEnnemiesInMap();
 }
 
 void CarteTexture::resetEnnemyPosition() {
@@ -1111,6 +1132,13 @@ void CarteTexture::bossAttack(const Position &position) {
                     bossTexture->getBoss()->getMargin_attack()
                     )){
                 std::cout << "I can kill him now !!"<<std::endl;
+                playerTexture.getPlayer().getClasse()->setStamina(
+                        playerTexture.getPlayer().getClasse()->getStamina()-1
+                        );
+                updatePlayersInMap();
+                renderCurrentPlayer=false;
+            }else {
+                renderCurrentPlayer=true;
             }
         }else {
             for (int i = 0; i <3 ; ++i) {
@@ -1122,6 +1150,23 @@ void CarteTexture::bossAttack(const Position &position) {
                         bossTexture->getBoss()->getPosition().getY() + l
                 ));
             }
+        }
+    }
+}
+
+void CarteTexture::playerAttackBoss() {
+    if (playerIsAllowedToAttackBoss(playerTexture.getPlayer().getPosition(),
+            playerTexture.getPlayer().getClasse()->getMargin_attack())){
+        std::cout << "ATTACK BOSS"<<std::endl;
+        bossTexture->getBoss()->setStamina(
+                bossTexture->getBoss()->getStamina()-playerTexture.getPlayer().getClasse()->attackPower(10)
+                );
+    }
+    if (bossTexture->getBoss()->getStamina()<=0){
+        for (auto &p:*playerInMap){
+            p->getPlayer().getClasse()->setStamina(
+                    p->getPlayer().getClasse()->getStamina()+20
+                    );
         }
     }
 }
